@@ -16,7 +16,7 @@ func _ready():
 
 func _process(delta):
 	time += delta * 80
-	a = lerp(a, noise.get_noise_3d(position.x, position.y, time)*0.3 + 0.1 - ((Player.speed.x/100) / Player.position.distance_to(position)), 0.2)
+	a = lerp(a, noise.get_noise_3d(position.x, position.y, time)*0.3 + 0.1 - ((Player.speed.x/50) / Player.position.distance_to(position)), 0.2)
 	trans.y = Vector2(a, yscale)
 	trans.origin = position
 	transform = trans

@@ -54,26 +54,26 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ButtonDown" type="Label" parent="Buttons"]
-margin_right = 64.0
-margin_bottom = 17.0
-custom_styles/normal = SubResource( 1 )
-custom_fonts/font = SubResource( 2 )
-text = "[DOWN] READ"
-autowrap = true
-uppercase = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ButtonV" type="Label" parent="Buttons"]
+[node name="ButtonUp" type="Label" parent="Buttons"]
 visible = false
 margin_top = 19.0
 margin_right = 64.0
 margin_bottom = 36.0
 custom_styles/normal = SubResource( 1 )
 custom_fonts/font = SubResource( 2 )
-text = "    READ"
+text = "[UP] ENTER"
+autowrap = true
+uppercase = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ButtonDown" type="Label" parent="Buttons"]
+margin_right = 64.0
+margin_bottom = 17.0
+custom_styles/normal = SubResource( 1 )
+custom_fonts/font = SubResource( 2 )
+text = "[DOWN] READ"
 autowrap = true
 uppercase = true
 __meta__ = {

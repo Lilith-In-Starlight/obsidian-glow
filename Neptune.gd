@@ -5,17 +5,20 @@ signal door_entered
 enum STATES {
 	GROUND,
 	AIR,
-	ATTACK,
+	DASH,
 }
 
 const MAX_SPEED := 900.0 # Max speed in every direction
-const MAX_WALK := 110.0
-const MAX_AIRSPEED := 140.0
+const MAX_WALK := 80.0
+const MAX_AIRSPEED := 120.0
+const MAX_WALK_RUN := 130.0
+const MAX_AIRSPEED_RUN := 150.0
 const WALK_ACCEL := 20.0
-const JUMP_FORCE := -200.0
+const JUMP_FORCE := -250.0
 
 onready var Animations := $Animations
-onready var AttackParticle := $AttackParticle
+onready var DashParticle := $DashParticle
+onready var Hitbox := $Hitbox
 
 var speed := Vector2(0, 0)
 
@@ -26,25 +29,44 @@ var move_right := false
 var move_up := false
 var move_down := false
 var jump_press := false
-var att_press := false
+var dash_press := false
+var attack_press := false
 
 var current_state = STATES.GROUND
 
 var direction := "_r"
 
+var DashTimer := Timer.new()
+var ReDashTimer := Timer.new()
 var AttackTimer := Timer.new()
 var ReAttackTimer := Timer.new()
-var can_attack := true
+var can_dash := true
 
 var press_opposite := false
-var attack_echo := false
+var dash_echo := false
 
 var entering_door := false
 var door_position := 0.0
 
+var can_attack := true
+var swording := false
+var attack_echo := false
+var sword_dir := "l"
+
+var knockback := Vector2(0,0)
+var walk := false
+
 func _ready():
+	add_child(DashTimer)
+	DashTimer.wait_time = 0.2
+	DashTimer.one_shot = true
+	DashTimer.connect("timeout", self, "dash_ended")
+	add_child(ReDashTimer)
+	ReDashTimer.wait_time = 0.08
+	ReDashTimer.one_shot = true
+	ReDashTimer.connect("timeout", self, "dash_again")
 	add_child(AttackTimer)
-	AttackTimer.wait_time = 0.22
+	AttackTimer.wait_time = 0.2
 	AttackTimer.one_shot = true
 	AttackTimer.connect("timeout", self, "attack_ended")
 	add_child(ReAttackTimer)
@@ -60,12 +82,14 @@ func _process(delta):
 		move_left = Input.is_key_pressed(KEY_LEFT)
 		move_right = Input.is_key_pressed(KEY_RIGHT)
 		jump_press = Input.is_key_pressed(KEY_Z)
-		att_press = Input.is_key_pressed(KEY_C)
+		dash_press = Input.is_key_pressed(KEY_C)
+		attack_press = Input.is_key_pressed(KEY_X)
 	else:
 		move_up = false
 		move_down = false
 		jump_press = false
-		att_press = false
+		dash_press = false
+		attack_press = false
 		if abs(door_position - position.x) > 5:
 			if door_position < position.x:
 				move_left = true
@@ -81,15 +105,42 @@ func _process(delta):
 
 
 func _physics_process(delta):
-	AttackParticle.visible = current_state == STATES.ATTACK
-	if current_state != STATES.ATTACK:
-		AttackParticle.animation = "default"
+	DashParticle.visible = current_state == STATES.DASH
+	if current_state != STATES.DASH:
+		DashParticle.animation = "default"
+	
+	Hitbox.monitoring = swording
+	Hitbox.monitorable = swording
+	match sword_dir:
+		"r":
+			Hitbox.rotation = 0
+			$AnimatedSprite.rotation = 0
+			$AnimatedSprite.scale.x = 1
+		"l":
+			Hitbox.rotation = -PI
+			$AnimatedSprite.rotation = 0
+			$AnimatedSprite.scale.x = -1
+		"u":
+			Hitbox.rotation = -PI/2
+			$AnimatedSprite.scale.x = 1
+			$AnimatedSprite.rotation = -PI/2
+		"d":
+			Hitbox.rotation = PI/2
+			$AnimatedSprite.scale.x = 1
+			$AnimatedSprite.rotation = PI/2
+	
 	match current_state:
 		STATES.GROUND:
 			if move_left and not move_right:
-				speed.x = move_toward(speed.x, -MAX_WALK, WALK_ACCEL * delta*60)
+				if walk:
+					speed.x = move_toward(speed.x, -MAX_WALK, WALK_ACCEL * delta*60)
+				else:
+					speed.x = move_toward(speed.x, -MAX_WALK_RUN, WALK_ACCEL * delta*60)
 			elif move_right and not move_left:
-				speed.x = move_toward(speed.x, MAX_WALK, WALK_ACCEL * delta*60)
+				if walk:
+					speed.x = move_toward(speed.x, MAX_WALK, WALK_ACCEL * delta*60)
+				else:
+					speed.x = move_toward(speed.x, MAX_WALK_RUN, WALK_ACCEL * delta*60)
 			else:
 				speed.x = move_toward(speed.x, 0.0, WALK_ACCEL * delta*60)
 			
@@ -107,21 +158,45 @@ func _physics_process(delta):
 				direction = "_l"
 			
 			# Ground Animations
-			if abs(speed.x) > 0:
-				play("walk" + direction)
+			if not swording:
+				if abs(speed.x) > 0 and abs(speed.x) < 110:
+					play("walk" + direction)
+				elif abs(speed.x) >= 110:
+					play("run" + direction)
+				else:
+					play("idle" + direction)
 			else:
-				play("idle" + direction)
+				play("attack" + direction)
 			
-			if att_press and can_attack and not attack_echo:
-				current_state = STATES.ATTACK
+			if dash_press and can_dash and not dash_echo:
+				current_state = STATES.DASH
+				DashTimer.start()
+			
+			if attack_press and can_attack and not attack_echo:
+				swording = true
+				can_attack = false
 				AttackTimer.start()
-			
-		
+				$AnimatedSprite.frame = 0
+				
+			if move_up:
+				sword_dir = "u"
+			elif move_left:
+				sword_dir = "l"
+			elif move_right:
+				sword_dir = "r"
+			else:
+				sword_dir = direction.replace("_", "")
 		STATES.AIR:
 			if move_left and not move_right:
-				speed.x = move_toward(speed.x, -MAX_AIRSPEED, WALK_ACCEL * 1.1 * delta*60)
+				if walk:
+					speed.x = move_toward(speed.x, -MAX_AIRSPEED, WALK_ACCEL * 1.1 * delta*60)
+				else:
+					speed.x = move_toward(speed.x, -MAX_AIRSPEED_RUN, WALK_ACCEL * 1.1 * delta*60)
 			elif move_right and not move_left:
-				speed.x = move_toward(speed.x, MAX_AIRSPEED, WALK_ACCEL * 1.1 * delta*60)
+				if walk:
+					speed.x = move_toward(speed.x, MAX_AIRSPEED, WALK_ACCEL * 1.1 * delta*60)
+				else:
+					speed.x = move_toward(speed.x, MAX_AIRSPEED_RUN, WALK_ACCEL * 1.1 * delta*60)
 			else:
 				speed.x = move_toward(speed.x, 0.0, WALK_ACCEL * 0.8 * delta*60)
 			
@@ -135,55 +210,79 @@ func _physics_process(delta):
 			
 			speed.y += gravity
 			
-			if att_press and can_attack and not attack_echo:
-				current_state = STATES.ATTACK
+			if dash_press and can_dash and not dash_echo:
+				current_state = STATES.DASH
+				DashTimer.start()
+				
+			if attack_press and can_attack and not attack_echo:
+				swording = true
+				can_attack = false
 				AttackTimer.start()
+				$AnimatedSprite.frame = 0
+				
+			if move_up:
+				sword_dir = "u"
+			elif move_down:
+				sword_dir = "d"
+			elif move_left:
+				sword_dir = "l"
+			elif move_right:
+				sword_dir = "r"
+			else:
+				sword_dir = direction.replace("_", "")
 		
-		STATES.ATTACK:
-			can_attack = false
+		STATES.DASH:
+			can_dash = false
 			if direction == "_l":
 				if move_right or press_opposite:
-					speed.x = move_toward(speed.x, MAX_WALK*2.0, 10)
+					speed.x = move_toward(speed.x, MAX_WALK*3.0, 10)
 					speed.y = move_toward(speed.y, 0, 20)
 					press_opposite = true
 					play("spin_l")
 					attack_play(1)
 				else:
-					speed.x = move_toward(speed.x, -MAX_WALK*5.0, 30)
+					speed.x = move_toward(speed.x, -MAX_WALK*8.0, 30)
 					speed.y = move_toward(speed.y, 0, 20)
-					play("attack_l")
+					play("dash_l")
 					attack_play(0)
 			else:
 				if move_left or press_opposite:
-					speed.x = move_toward(speed.x, -MAX_WALK*2.0, 10)
+					speed.x = move_toward(speed.x, -MAX_WALK*3.0, 10)
 					speed.y = move_toward(speed.y, 0, 20)
 					press_opposite = true
 					play("spin_r")
 					attack_play(1)
 				else:
-					speed.x = move_toward(speed.x, MAX_WALK*5.0, 30)
+					speed.x = move_toward(speed.x, MAX_WALK*8.0, 30)
 					speed.y = move_toward(speed.y, 0, 20)
-					play("attack_r")
+					play("dash_r")
 					attack_play(0)
 				
 	
 	if speed.length() > MAX_SPEED:
 		speed = speed.normalized()*MAX_SPEED
 	speed = move_and_slide_with_snap(speed, Vector2.DOWN, Vector2.UP, true)
+	move_and_slide_with_snap(knockback, Vector2.DOWN, Vector2.UP, true)
+	knockback *= 0.5
 	
-	if att_press:
-		attack_echo = true
-	else:
-		attack_echo = false
+	dash_echo = dash_press
+	attack_echo = attack_press
 
 func attack_ended():
-	if Animations.animation.find("spin") == -1:
-		current_state = STATES.AIR
-		press_opposite = false
-		ReAttackTimer.start()
+	swording = false
+	ReAttackTimer.start()
 
 func attack_again():
 	can_attack = true
+
+func dash_ended():
+	if Animations.animation.find("spin") == -1:
+		current_state = STATES.AIR
+		press_opposite = false
+		ReDashTimer.start()
+
+func dash_again():
+	can_dash = true
 
 
 func play(anim:String):
@@ -193,25 +292,25 @@ func play(anim:String):
 
 func attack_play(anim:int):
 	if direction == "_l":
-		AttackParticle.scale.x = -1
+		DashParticle.scale.x = -1
 	else:
-		AttackParticle.scale.x = 1
+		DashParticle.scale.x = 1
 	if anim == 0:
-		if AttackParticle.animation != "default":
-			AttackParticle.play("default")
+		if DashParticle.animation != "default":
+			DashParticle.play("default")
 	elif anim == 1:
 		if direction == "_l":
-			if AttackParticle.animation != "spin_l":
-				AttackParticle.play("spin_l")
-		elif AttackParticle.animation != "spin":
-			AttackParticle.play("spin")
+			if DashParticle.animation != "spin_l":
+				DashParticle.play("spin_l")
+		elif DashParticle.animation != "spin":
+			DashParticle.play("spin")
 
 
 func _on_animation_finished():
 	if Animations.animation.find("spin") != -1:
 		current_state = STATES.AIR
 		press_opposite = false
-		ReAttackTimer.start()
+		ReDashTimer.start()
 	if Animations.animation == "enter_door":
 		emit_signal("door_entered")
 
@@ -219,3 +318,16 @@ func _on_animation_finished():
 func enter_door(x):
 	entering_door = true
 	door_position = x
+
+
+func _on_body_attacked(body):
+	print("a")
+	if not body.is_in_group("grass"):
+		knockback.x = (position-body.position).normalized().x*200
+		speed.y = (position-body.position).normalized().y*250
+	if body.is_in_group("attackable"): 
+		body.call("attacked", 1, position, speed)
+
+func attacked(d, p, s):
+	speed = (position-p).normalized()*200 + s*0.5
+#	health -= d

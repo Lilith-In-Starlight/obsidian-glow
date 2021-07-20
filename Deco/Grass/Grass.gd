@@ -20,5 +20,4 @@ func _process(delta):
 	trans.y = Vector2(a, yscale)
 	trans.origin = position
 	transform = trans
-	if Player.position.distance_to(position) < 20 and Player.current_state == Player.STATES.ATTACK:
-		queue_free()
+

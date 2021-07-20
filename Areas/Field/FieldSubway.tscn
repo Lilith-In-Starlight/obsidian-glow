@@ -1,33 +1,28 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Subway.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Neptune.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Sprites/Bg/FieldSubway.png" type="Texture" id=3]
 [ext_resource path="res://SceneChanger.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Enemies/LowAngel.tscn" type="PackedScene" id=5]
-
-[sub_resource type="RectangleShape2D" id=8]
-extents = Vector2( 470, 102.5 )
+[ext_resource path="res://StealTicket.tscn" type="PackedScene" id=6]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 730, 102.5 )
+extents = Vector2( 470, 102.5 )
 
 [sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 177, 28 )
+extents = Vector2( 730, 102.5 )
 
 [sub_resource type="RectangleShape2D" id=3]
-extents = Vector2( 5, 10 )
+extents = Vector2( 177, 28 )
 
 [sub_resource type="RectangleShape2D" id=4]
-extents = Vector2( 39, 4 )
-
-[sub_resource type="RectangleShape2D" id=5]
 extents = Vector2( 39, 168 )
 
-[sub_resource type="RectangleShape2D" id=6]
+[sub_resource type="RectangleShape2D" id=5]
 extents = Vector2( 272.323, 10 )
 
-[sub_resource type="Environment" id=7]
+[sub_resource type="Environment" id=6]
 background_mode = 4
 tonemap_mode = 2
 glow_enabled = true
@@ -36,6 +31,7 @@ glow_enabled = true
 
 [node name="World" type="StaticBody2D" parent="."]
 __meta__ = {
+"_edit_group_": true,
 "_edit_lock_": true
 }
 
@@ -43,47 +39,38 @@ __meta__ = {
 position = Vector2( 764, 117 )
 z_index = -10
 texture = ExtResource( 3 )
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="World"]
 position = Vector2( 818, 375 )
-shape = SubResource( 8 )
+shape = SubResource( 1 )
 
 [node name="CollisionShape2D10" type="CollisionShape2D" parent="World"]
 position = Vector2( 1941, 375 )
-shape = SubResource( 8 )
+shape = SubResource( 1 )
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="World"]
 position = Vector2( 823, -161 )
-shape = SubResource( 1 )
+shape = SubResource( 2 )
 
 [node name="CollisionShape2D3" type="CollisionShape2D" parent="World"]
 position = Vector2( 1410, 312 )
-shape = SubResource( 2 )
-
-[node name="CollisionShape2D5" type="CollisionShape2D" parent="World"]
-position = Vector2( 1293, 280 )
 shape = SubResource( 3 )
-
-[node name="CollisionShape2D6" type="CollisionShape2D" parent="World"]
-position = Vector2( 1466, 280 )
-shape = SubResource( 3 )
-
-[node name="CollisionShape2D7" type="CollisionShape2D" parent="World"]
-position = Vector2( 1381, 286 )
-shape = SubResource( 4 )
 
 [node name="CollisionShape2D4" type="CollisionShape2D" parent="World"]
 position = Vector2( -89, 23 )
-shape = SubResource( 5 )
+shape = SubResource( 4 )
 
 [node name="CollisionShape2D9" type="CollisionShape2D" parent="World"]
 position = Vector2( 1569, 142 )
-shape = SubResource( 5 )
+shape = SubResource( 4 )
 
 [node name="CollisionShape2D8" type="CollisionShape2D" parent="World"]
 position = Vector2( 199, 180 )
 rotation = 0.385842
-shape = SubResource( 6 )
+shape = SubResource( 5 )
 
 [node name="Subway" parent="." instance=ExtResource( 1 )]
 position = Vector2( 1377, 248 )
@@ -91,7 +78,10 @@ position = Vector2( 1377, 248 )
 [node name="Enemies" type="Node2D" parent="."]
 
 [node name="LowAngel" parent="Enemies" instance=ExtResource( 5 )]
-position = Vector2( 601, 162 )
+position = Vector2( 539, 200 )
+
+[node name="LowAngel2" parent="Enemies" instance=ExtResource( 5 )]
+position = Vector2( 802, 131 )
 
 [node name="Neptune" parent="." instance=ExtResource( 2 )]
 position = Vector2( 13, 82 )
@@ -120,8 +110,11 @@ __meta__ = {
 [node name="Deco" type="Node2D" parent="."]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource( 7 )
+environment = SubResource( 6 )
 
 [node name="SceneChanger" parent="." instance=ExtResource( 4 )]
 position = Vector2( -65, 43 )
 newScene = "Field/FieldOutskirts"
+
+[node name="DialogueObject" parent="." instance=ExtResource( 6 )]
+position = Vector2( 1202, 264 )

@@ -112,6 +112,7 @@ ui_end={
 2d_physics/layer_3="Fallthrough"
 2d_physics/layer_4="Enemies"
 2d_physics/layer_5="Detectors"
+2d_physics/layer_6="Hitbox"
 
 [physics]
 

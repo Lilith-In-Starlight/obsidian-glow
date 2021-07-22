@@ -1,0 +1,115 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://Subway.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Neptune.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Sprites/Bg/Outskirts/Subway.png" type="Texture" id=3]
+[ext_resource path="res://SceneChanger.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Enemies/LowAngel.tscn" type="PackedScene" id=5]
+[ext_resource path="res://HUD.tscn" type="PackedScene" id=7]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 470, 102.5 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 93, 102.5 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 730, 102.5 )
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 301, 28 )
+
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 39, 168 )
+
+[sub_resource type="Environment" id=6]
+background_mode = 4
+tonemap_mode = 2
+glow_enabled = true
+
+[node name="Node2D" type="Node2D"]
+
+[node name="World" type="StaticBody2D" parent="."]
+
+[node name="Field" type="Sprite" parent="World"]
+position = Vector2( 695, 117 )
+z_index = -10
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World"]
+position = Vector2( 381, 375 )
+shape = SubResource( 1 )
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="World"]
+position = Vector2( 1127, 375 )
+shape = SubResource( 2 )
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="World"]
+position = Vector2( 823, -161 )
+shape = SubResource( 3 )
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="World"]
+position = Vector2( 1127, 313 )
+shape = SubResource( 4 )
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="World"]
+position = Vector2( -56, 153 )
+shape = SubResource( 5 )
+
+[node name="CollisionShape2D9" type="CollisionShape2D" parent="World"]
+position = Vector2( 1433, 145 )
+shape = SubResource( 5 )
+
+[node name="Subway" parent="." instance=ExtResource( 1 )]
+position = Vector2( 940, 248 )
+destination = "Field/FieldSubway"
+area = 1
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="LowAngel" parent="Enemies" instance=ExtResource( 5 )]
+position = Vector2( 347, 158 )
+
+[node name="LowAngel2" parent="Enemies" instance=ExtResource( 5 )]
+position = Vector2( 200, 219 )
+
+[node name="LowAngel3" parent="Enemies" instance=ExtResource( 5 )]
+position = Vector2( 170, 150 )
+
+[node name="Neptune" parent="." instance=ExtResource( 2 )]
+position = Vector2( 13, 82 )
+
+[node name="Camera2D" type="Camera2D" parent="Neptune"]
+current = true
+limit_left = 0
+limit_top = -80
+limit_right = 1392
+limit_bottom = 310
+limit_smoothed = true
+smoothing_enabled = true
+editor_draw_limits = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+follow_viewport_enable = true
+
+[node name="HUD" type="Control" parent="CanvasLayer"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Deco" type="Node2D" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 6 )
+
+[node name="SceneChanger" parent="." instance=ExtResource( 4 )]
+position = Vector2( -39, 251 )
+newScene = "Outskirts/OutskirtsView"
+
+[node name="CanvasLayer2" parent="." instance=ExtResource( 7 )]

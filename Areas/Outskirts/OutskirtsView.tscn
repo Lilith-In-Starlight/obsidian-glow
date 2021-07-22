@@ -1,0 +1,122 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://Elements/Bench.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Neptune.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Sprites/Bg/Outskirts/townbgl.png" type="Texture" id=3]
+[ext_resource path="res://SceneChanger.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Sprites/Levels/Outskirts/SubwayEntrance.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/Bg/Outskirts/sky.png" type="Texture" id=6]
+[ext_resource path="res://HUD.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Sprites/Bg/Outskirts/wall.png" type="Texture" id=8]
+[ext_resource path="res://Sprites/Elements/SubwayEntrance.png" type="Texture" id=9]
+[ext_resource path="res://DialogueObject.tscn" type="PackedScene" id=10]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 224, 102.5 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 44, 13 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 39, 168 )
+
+[sub_resource type="Environment" id=4]
+background_mode = 4
+tonemap_mode = 2
+glow_enabled = true
+
+[node name="Node2D" type="Node2D"]
+
+[node name="World" type="StaticBody2D" parent="."]
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="World"]
+layer = -1
+scroll_limit_end = Vector2( 460, 225 )
+
+[node name="Field" type="Sprite" parent="World/ParallaxBackground"]
+position = Vector2( 230, 113 )
+texture = ExtResource( 6 )
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="World/ParallaxBackground"]
+motion_scale = Vector2( 0.05, 1 )
+
+[node name="townbgl" type="Sprite" parent="World/ParallaxBackground/ParallaxLayer"]
+position = Vector2( 31, 114 )
+texture = ExtResource( 3 )
+
+[node name="ParallaxLayer2" type="ParallaxLayer" parent="World/ParallaxBackground"]
+motion_scale = Vector2( 0.09, 1 )
+
+[node name="wall" type="Sprite" parent="World/ParallaxBackground/ParallaxLayer2"]
+position = Vector2( 75, 143 )
+texture = ExtResource( 8 )
+
+[node name="SubwayEntrance" type="Sprite" parent="World"]
+position = Vector2( 230, 113 )
+texture = ExtResource( 5 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World"]
+position = Vector2( 261, 283 )
+shape = SubResource( 1 )
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="World"]
+position = Vector2( -6, 188 )
+shape = SubResource( 2 )
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="World"]
+position = Vector2( -48, 135 )
+shape = SubResource( 3 )
+
+[node name="CollisionShape2D9" type="CollisionShape2D" parent="World"]
+position = Vector2( 498, 97 )
+shape = SubResource( 3 )
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="Neptune" parent="." instance=ExtResource( 2 )]
+position = Vector2( 182, 93 )
+
+[node name="Camera2D" type="Camera2D" parent="Neptune"]
+current = true
+limit_left = 0
+limit_top = 0
+limit_right = 460
+limit_bottom = 225
+limit_smoothed = true
+smoothing_enabled = true
+editor_draw_limits = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+follow_viewport_enable = true
+
+[node name="HUD" type="Control" parent="CanvasLayer"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DialogueObject" parent="." instance=ExtResource( 10 )]
+position = Vector2( 243, 167 )
+down_action = "Subway"
+up_button = 3
+up_action = "Outskirts/OutskirtsSubway"
+
+[node name="Deco" type="Node2D" parent="."]
+
+[node name="SubwayEntrance" type="Sprite" parent="Deco"]
+position = Vector2( 264, 164 )
+texture = ExtResource( 9 )
+
+[node name="Bench" parent="Deco" instance=ExtResource( 1 )]
+position = Vector2( 341, 180 )
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 4 )
+
+[node name="SceneChanger" parent="." instance=ExtResource( 4 )]
+position = Vector2( -39, 157 )
+newScene = "Field/FieldOutskirts"
+
+[node name="CanvasLayer2" parent="." instance=ExtResource( 7 )]

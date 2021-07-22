@@ -45,7 +45,7 @@ var can_dash := true
 var press_opposite := false
 var dash_echo := false
 
-var entering_door := false
+var cutscene := "no"
 var door_position := 0.0
 
 var can_attack := true
@@ -76,7 +76,7 @@ func _ready():
 
 func _process(delta):
 	# Create the inputs
-	if not entering_door:
+	if cutscene == "no":
 		move_up = Input.is_key_pressed(KEY_UP)
 		move_down = Input.is_key_pressed(KEY_DOWN)
 		move_left = Input.is_key_pressed(KEY_LEFT)
@@ -85,23 +85,35 @@ func _process(delta):
 		dash_press = Input.is_key_pressed(KEY_C)
 		attack_press = Input.is_key_pressed(KEY_X)
 	else:
-		move_up = false
-		move_down = false
-		jump_press = false
-		dash_press = false
-		attack_press = false
-		if abs(door_position - position.x) > 5:
-			if door_position < position.x:
-				move_left = true
+		match cutscene:
+			"door":
+				move_up = false
+				move_down = false
+				jump_press = false
+				dash_press = false
+				attack_press = false
+				if abs(door_position - position.x) > 5:
+					if door_position < position.x:
+						move_left = true
+						move_right = false
+					else:
+						move_right = true
+						move_left = false
+				else:
+					move_left = false
+					move_right = false
+					if abs(speed.x) < 2:
+						play("enter_door")
+			"nomove":
+				move_up = false
+				move_down = false
+				jump_press = false
+				dash_press = false
+				attack_press = false
 				move_right = false
-			else:
-				move_right = true
 				move_left = false
-		else:
-			move_left = false
-			move_right = false
-			if abs(speed.x) < 2:
-				play("enter_door")
+			"train":
+				play("close_train")
 
 
 func _physics_process(delta):
@@ -287,7 +299,7 @@ func dash_again():
 
 func play(anim:String):
 	if Animations.animation != anim or not Animations.playing:
-		if not(Animations.animation == "enter_door" and entering_door):
+		if not(Animations.animation == "enter_door" and cutscene == "door") and not(Animations.animation == "close_train" and cutscene == "train"):
 			Animations.play(anim)
 
 func attack_play(anim:int):
@@ -316,7 +328,7 @@ func _on_animation_finished():
 
 
 func enter_door(x):
-	entering_door = true
+	cutscene = "door"
 	door_position = x
 
 

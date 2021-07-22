@@ -16,9 +16,13 @@ var vischar := 0.0
 func _ready():		
 	Text.modulate.a = 0.0
 	Buttons.modulate.a = 0.0
+	if Persistent.abandoned_ticket:
+		Buttons.visible = false
 
 func _process(delta):
 	update()
+	if Persistent.abandoned_ticket:
+		ButtonUp.modulate.a = move_toward(ButtonUp.modulate.a, 0.0, 0.08)
 	if Player.position.x < position.x:
 		Buttons.rect_position = lerp(Buttons.rect_position, -(Player.position - position)*0.5 + Vector2(0,10), 0.1)
 	else:
@@ -29,7 +33,7 @@ func _process(delta):
 		vischar = move_toward(vischar, Text.text.length(), speed)
 		Text.visible_characters = int(vischar)
 		if Player.move_up:
-			pass
+			Persistent.abandoned_ticket = true
 	else:
 		Buttons.modulate.a = move_toward(Buttons.modulate.a, 0.0, 0.08)
 		Text.modulate.a = move_toward(Text.modulate.a, 0.0, 0.05)

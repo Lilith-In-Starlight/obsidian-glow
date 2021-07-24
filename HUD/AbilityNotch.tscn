@@ -1,7 +1,10 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Sprites/HUD/Abilities/emptynotch.png" type="Texture" id=1]
-[ext_resource path="res://HUD/AbilityNotch.gd" type="Script" id=2]
+[ext_resource path="res://pixelfont.ttf" type="DynamicFontData" id=2]
+
+[sub_resource type="DynamicFont" id=1]
+font_data = ExtResource( 2 )
 
 [node name="AbilityNotch" type="TextureRect"]
 margin_left = -17.0
@@ -10,7 +13,19 @@ margin_right = 17.0
 margin_bottom = 17.0
 rect_pivot_offset = Vector2( 17, 17 )
 texture = ExtResource( 1 )
-script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="KeyLabel" type="Label" parent="."]
+margin_left = -3.0
+margin_top = 34.0
+margin_right = 37.0
+margin_bottom = 50.0
+custom_fonts/font = SubResource( 1 )
+text = "A"
+align = 1
+valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }

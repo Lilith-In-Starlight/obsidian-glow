@@ -32,6 +32,8 @@ var c_menu = MENUS.NONE
 var notch_mode = NOTCH_MODES.NONE
 var selected_ability := 0
 
+func _init():
+	visible = true
 
 func _ready():
 	for i in Persistent.notches:

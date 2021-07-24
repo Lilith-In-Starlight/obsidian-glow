@@ -92,17 +92,6 @@ limit_smoothed = true
 smoothing_enabled = true
 editor_draw_limits = true
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-follow_viewport_enable = true
-
-[node name="HUD" type="Control" parent="CanvasLayer"]
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
 [node name="DialogueObject" parent="." instance=ExtResource( 10 )]
 position = Vector2( 243, 167 )
 down_action = "Subway"
@@ -122,4 +111,4 @@ environment = SubResource( 4 )
 position = Vector2( -39, 157 )
 newScene = "Field/FieldOutskirts"
 
-[node name="CanvasLayer2" parent="." instance=ExtResource( 7 )]
+[node name="HUD" parent="." instance=ExtResource( 7 )]

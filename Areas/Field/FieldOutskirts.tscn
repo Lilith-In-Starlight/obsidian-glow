@@ -5,7 +5,7 @@
 [ext_resource path="res://Sprites/Bg/FieldExit.png" type="Texture" id=3]
 [ext_resource path="res://SceneChanger.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Sprites/Elements/SubwayEntrance.png" type="Texture" id=5]
-[ext_resource path="res://HUD.tscn" type="PackedScene" id=6]
+[ext_resource path="res://HUD/HUD.tscn" type="PackedScene" id=6]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 455, 102.5 )
@@ -69,7 +69,7 @@ up_action = "Field/FieldSubway"
 environment = SubResource( 3 )
 
 [node name="SceneChanger" parent="." instance=ExtResource( 4 )]
-position = Vector2( -55, 115 )
+position = Vector2( -47, 115 )
 newScene = "Field/Field"
 
 [node name="CanvasLayer" parent="." instance=ExtResource( 6 )]

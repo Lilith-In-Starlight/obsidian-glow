@@ -6,7 +6,7 @@
 [ext_resource path="res://SceneChanger.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Sprites/Levels/Outskirts/SubwayEntrance.png" type="Texture" id=5]
 [ext_resource path="res://Sprites/Bg/Outskirts/sky.png" type="Texture" id=6]
-[ext_resource path="res://HUD.tscn" type="PackedScene" id=7]
+[ext_resource path="res://HUD/HUD.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Sprites/Bg/Outskirts/wall.png" type="Texture" id=8]
 [ext_resource path="res://Sprites/Elements/SubwayEntrance.png" type="Texture" id=9]
 [ext_resource path="res://DialogueObject.tscn" type="PackedScene" id=10]
@@ -73,6 +73,12 @@ shape = SubResource( 3 )
 
 [node name="Enemies" type="Node2D" parent="."]
 
+[node name="DecoBg" type="Node2D" parent="."]
+
+[node name="Bench" parent="DecoBg" instance=ExtResource( 1 )]
+modulate = Color( 0.803922, 0.803922, 0.803922, 1 )
+position = Vector2( 341, 180 )
+
 [node name="Neptune" parent="." instance=ExtResource( 2 )]
 position = Vector2( 182, 93 )
 
@@ -103,14 +109,11 @@ down_action = "Subway"
 up_button = 3
 up_action = "Outskirts/OutskirtsSubway"
 
-[node name="Deco" type="Node2D" parent="."]
+[node name="DecoFg" type="Node2D" parent="."]
 
-[node name="SubwayEntrance" type="Sprite" parent="Deco"]
+[node name="SubwayEntrance" type="Sprite" parent="DecoFg"]
 position = Vector2( 264, 164 )
 texture = ExtResource( 9 )
-
-[node name="Bench" parent="Deco" instance=ExtResource( 1 )]
-position = Vector2( 341, 180 )
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 4 )

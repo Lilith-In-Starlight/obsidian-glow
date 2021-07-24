@@ -4,7 +4,7 @@
 [ext_resource path="res://Neptune.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Sprites/Bg/Field.png" type="Texture" id=3]
 [ext_resource path="res://Deco/Grass/FieldGrass.tscn" type="PackedScene" id=4]
-[ext_resource path="res://HUD.tscn" type="PackedScene" id=5]
+[ext_resource path="res://HUD/HUD.tscn" type="PackedScene" id=5]
 [ext_resource path="res://SceneChanger.tscn" type="PackedScene" id=6]
 
 [sub_resource type="RectangleShape2D" id=1]
@@ -73,8 +73,9 @@ down_text = "Read"
 environment = SubResource( 4 )
 
 [node name="SceneChanger" parent="." instance=ExtResource( 6 )]
-position = Vector2( 867, 113 )
+position = Vector2( 866, 113 )
 newScene = "Field/FieldOutskirts"
+enter_dir = 1
 
 [node name="Deco" type="Node2D" parent="."]
 

@@ -10,7 +10,7 @@ enum STATES {
 
 const MAX_SPEED := 900.0 # Max speed in every direction
 const MAX_WALK := 80.0
-const MAX_AIRSPEED := 120.0
+const MAX_AIRSPEED := 160.0
 const MAX_WALK_RUN := 130.0
 const MAX_AIRSPEED_RUN := 150.0
 const WALK_ACCEL := 20.0
@@ -45,7 +45,6 @@ var can_dash := true
 var press_opposite := false
 var dash_echo := false
 
-var cutscene := "no"
 var door_position := 0.0
 
 var can_attack := true
@@ -76,44 +75,62 @@ func _ready():
 
 func _process(delta):
 	# Create the inputs
-	if cutscene == "no":
-		move_up = Input.is_key_pressed(KEY_UP)
-		move_down = Input.is_key_pressed(KEY_DOWN)
-		move_left = Input.is_key_pressed(KEY_LEFT)
-		move_right = Input.is_key_pressed(KEY_RIGHT)
-		jump_press = Input.is_key_pressed(KEY_Z)
-		dash_press = Input.is_key_pressed(KEY_C)
-		attack_press = Input.is_key_pressed(KEY_X)
-	else:
-		match cutscene:
-			"door":
-				move_up = false
-				move_down = false
-				jump_press = false
-				dash_press = false
-				attack_press = false
-				if abs(door_position - position.x) > 5:
-					if door_position < position.x:
-						move_left = true
-						move_right = false
-					else:
-						move_right = true
-						move_left = false
-				else:
-					move_left = false
+	match Persistent.player_cutscene:
+		"no":
+			move_up = Input.is_key_pressed(KEY_UP)
+			move_down = Input.is_key_pressed(KEY_DOWN)
+			move_left = Input.is_key_pressed(KEY_LEFT)
+			move_right = Input.is_key_pressed(KEY_RIGHT)
+			jump_press = Input.is_key_pressed(KEY_Z)
+			for i in Persistent.notch_fillers.size():
+				match Persistent.notch_fillers[i]:
+					"dash":
+						dash_press = Input.is_key_pressed(Persistent.notch_keys[i])
+			attack_press = Input.is_key_pressed(KEY_X)
+		"door":
+			move_up = false
+			move_down = false
+			jump_press = false
+			dash_press = false
+			attack_press = false
+			if abs(door_position - position.x) > 5:
+				if door_position < position.x:
+					move_left = true
 					move_right = false
-					if abs(speed.x) < 2:
-						play("enter_door")
-			"nomove":
-				move_up = false
-				move_down = false
-				jump_press = false
-				dash_press = false
-				attack_press = false
-				move_right = false
+				else:
+					move_right = true
+					move_left = false
+			else:
 				move_left = false
-			"train":
-				play("close_train")
+				move_right = false
+				if abs(speed.x) < 2:
+					play("enter_door")
+		"nomove":
+			move_up = false
+			move_down = false
+			jump_press = false
+			dash_press = false
+			attack_press = false
+			move_right = false
+			move_left = false
+		"train":
+			play("close_train")
+		"leave_l", "enter_l":
+			move_up = false
+			move_down = false
+			jump_press = false
+			dash_press = false
+			attack_press = false
+			move_right = false
+			move_left = true
+		"leave_r", "enter_r":
+			move_up = false
+			move_down = false
+			jump_press = false
+			dash_press = false
+			attack_press = false
+			move_right = true
+			move_left = false
 
 
 func _physics_process(delta):
@@ -220,7 +237,7 @@ func _physics_process(delta):
 			else:
 				play("fall" + direction)
 			
-			speed.y += gravity
+			speed.y += gravity * delta*60
 			
 			if dash_press and can_dash and not dash_echo:
 				current_state = STATES.DASH
@@ -299,7 +316,7 @@ func dash_again():
 
 func play(anim:String):
 	if Animations.animation != anim or not Animations.playing:
-		if not(Animations.animation == "enter_door" and cutscene == "door") and not(Animations.animation == "close_train" and cutscene == "train"):
+		if not(Animations.animation == "enter_door" and Persistent.player_cutscene == "door") and not(Animations.animation == "close_train" and Persistent.player_cutscene == "train"):
 			Animations.play(anim)
 
 func attack_play(anim:int):
@@ -328,7 +345,7 @@ func _on_animation_finished():
 
 
 func enter_door(x):
-	cutscene = "door"
+	Persistent.player_cutscene = "door"
 	door_position = x
 
 

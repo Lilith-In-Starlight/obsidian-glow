@@ -65,7 +65,7 @@ func _physics_process(delta):
 				if time_attack > 1.5:
 					time_attack = 0.0
 					state = STATES.IDLE
-		if Player.cutscene != "no":
+		if Persistent.player_cutscene != "no":
 			state = STATES.IDLE
 	else:
 		speed.y += 8

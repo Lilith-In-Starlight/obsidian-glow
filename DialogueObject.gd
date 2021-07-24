@@ -8,6 +8,11 @@ enum OPTIONS {
 	SCENE_CHANGE,
 }
 
+enum DIRS {
+	LEFT,
+	RIGHT
+}
+
 export var speed := 0.3
 
 onready var Player := $"../Neptune"
@@ -24,9 +29,11 @@ var vischar := 0.0
 export(OPTIONS) var down_button = OPTIONS.TEXT
 export var down_action := ""
 export var down_text := "READ"
+export(DIRS) var down_exit_side := DIRS.RIGHT
 export(OPTIONS) var up_button = OPTIONS.NONE
 export var up_action := ""
 export var up_text := "ENTER"
+export(DIRS) var up_exit_side := DIRS.RIGHT
 
 var scene_enter := "u"
 
@@ -47,6 +54,7 @@ func _ready():
 			up_scene = load("res://Areas/" + up_action + ".tscn")
 		if down_action == Persistent.entered_from or up_action == Persistent.entered_from:
 			Player.position = position
+			Persistent.player_cutscene = "no"
 
 
 func _process(delta):
@@ -114,6 +122,15 @@ func _draw():
 func on_door_entered():
 	match scene_enter:
 		"d":
-			get_tree().change_scene_to(down_scene)
+			Persistent.next_scene = down_scene
+			if down_exit_side == DIRS.LEFT:
+				Persistent.player_cutscene = "exit_l"
+			else:
+				Persistent.player_cutscene = "exit_r"
 		"u":
-			get_tree().change_scene_to(up_scene)
+			Persistent.next_scene = up_scene
+			if up_exit_side == DIRS.LEFT:
+				Persistent.player_cutscene = "exit_l"
+			else:
+				Persistent.player_cutscene = "exit_r"
+	Persistent.SChangeTimer.start()

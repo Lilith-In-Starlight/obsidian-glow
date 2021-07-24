@@ -39,7 +39,7 @@ func _ready():
 	SChangeTimer.connect("timeout", self, "change_time")
 	SChangeTimer.one_shot = true
 	add_child(SChangeTimer)
-	var err := Savefile.load("savefile.and")
+	var err := Savefile.load("user://savefile.and")
 	
 	if err == OK:
 		loaded_scene = Savefile.get_value("player", "current_scene") as String
@@ -63,8 +63,8 @@ func save():
 	
 	Savefile.set_value("abilities", "notches", notches)
 	Savefile.set_value("abilities", "abilities", abilities)
-	Savefile.set_value("abilities", "fillers", notch_fillers)
+	Savefile.set_value("abilities", "fil lers", notch_fillers)
 	Savefile.set_value("abilities", "keys", notch_keys)
 	
 	Savefile.set_value("subway", "abandoned", abandoned_ticket) 
-	Savefile.save("savefile.and")
+	Savefile.save("user://savefile.and")

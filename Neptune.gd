@@ -9,21 +9,22 @@ enum STATES {
 }
 
 const MAX_SPEED := 900.0 # Max speed in every direction
-const MAX_WALK := 80.0
-const MAX_AIRSPEED := 160.0
-const MAX_WALK_RUN := 130.0
-const MAX_AIRSPEED_RUN := 150.0
-const WALK_ACCEL := 20.0
+const MAX_WALK := 80.0 # Max walkable speed by normal means
+const MAX_AIRSPEED := 160.0 # Max speed in air by normal means
+const MAX_WALK_RUN := 130.0 # Max runnable speed by normal means
+const MAX_AIRSPEED_RUN := 150.0 # Max runnable speed in air by normal means
+const WALK_ACCEL := 20.0 # Accelleration
 const JUMP_FORCE := -250.0
 
-onready var Animations := $Animations
-onready var DashParticle := $DashParticle
-onready var Hitbox := $Hitbox
+onready var Animations := $Animations # The player sprite
+onready var DashParticle := $DashParticle # particles for when the player dashes
+onready var Hitbox := $Hitbox # The player's hitbox
 
 var speed := Vector2(0, 0)
 
 var gravity := 13.0
 
+# Keys
 var move_left := false
 var move_right := false
 var move_up := false
@@ -32,30 +33,33 @@ var jump_press := false
 var dash_press := false
 var attack_press := false
 
+# State machine
 var current_state = STATES.GROUND
 
+# Direction for the sppites
 var direction := "_r"
 
-var DashTimer := Timer.new()
-var ReDashTimer := Timer.new()
-var AttackTimer := Timer.new()
+var DashTimer := Timer.new() # How long the dash lasts
+var ReDashTimer := Timer.new() #  How long until the dash is back
+var AttackTimer := Timer.new() # Same two as above but for attack
 var ReAttackTimer := Timer.new()
-var can_dash := true
+var can_dash := true 
 
-var press_opposite := false
-var dash_echo := false
+var press_opposite := false # If the player is on air, have they pressed a key opposite to their direction?
+var dash_echo := false # Are they holding the dash key?
 
-var door_position := 0.0
+var door_position := 0.0 # For door cutscenes, where should the player walk?
 
-var can_attack := true
-var swording := false
-var attack_echo := false
-var sword_dir := "l"
+var can_attack := true 
+var swording := false # Is the player currently attacking
+var attack_echo := false # Is the player holding attack key
+var sword_dir := "l" # What direction  is the player attacking in?
 
-var knockback := Vector2(0,0)
-var walk := false
+var knockback := Vector2(0,0) # Knockback speed when attacked
+var walk := false # Is the player being forced to walk?
 
 func _ready():
+	# Set up the timers
 	add_child(DashTimer)
 	DashTimer.wait_time = 0.2
 	DashTimer.one_shot = true
@@ -76,18 +80,19 @@ func _ready():
 func _process(delta):
 	# Create the inputs
 	match Persistent.player_cutscene:
-		"no":
+		"no": # No cutscene
 			move_up = Input.is_key_pressed(KEY_UP)
 			move_down = Input.is_key_pressed(KEY_DOWN)
 			move_left = Input.is_key_pressed(KEY_LEFT)
 			move_right = Input.is_key_pressed(KEY_RIGHT)
 			jump_press = Input.is_key_pressed(KEY_Z)
+			# Abilities
 			for i in Persistent.notch_fillers.size():
 				match Persistent.notch_fillers[i]:
 					"dash":
 						dash_press = Input.is_key_pressed(Persistent.notch_keys[i])
 			attack_press = Input.is_key_pressed(KEY_X)
-		"door":
+		"door": # When the player enters a door
 			move_up = false
 			move_down = false
 			jump_press = false
@@ -105,7 +110,7 @@ func _process(delta):
 				move_right = false
 				if abs(speed.x) < 2:
 					play("enter_door")
-		"nomove":
+		"nomove": # The player should be frozen
 			move_up = false
 			move_down = false
 			jump_press = false
@@ -113,9 +118,9 @@ func _process(delta):
 			attack_press = false
 			move_right = false
 			move_left = false
-		"train":
+		"train": # The player entered a train
 			play("close_train")
-		"leave_l", "enter_l":
+		"leave_l", "enter_l": # For when moving to/from a screen towards the left
 			move_up = false
 			move_down = false
 			jump_press = false
@@ -123,7 +128,7 @@ func _process(delta):
 			attack_press = false
 			move_right = false
 			move_left = true
-		"leave_r", "enter_r":
+		"leave_r", "enter_r": # For when moving to/from a screen towards the right
 			move_up = false
 			move_down = false
 			jump_press = false
@@ -135,9 +140,11 @@ func _process(delta):
 
 func _physics_process(delta):
 	DashParticle.visible = current_state == STATES.DASH
+	
 	if current_state != STATES.DASH:
 		DashParticle.animation = "default"
 	
+	# The hitbox only matters if the player is attacking
 	Hitbox.monitoring = swording
 	Hitbox.monitorable = swording
 	match sword_dir:
@@ -160,6 +167,7 @@ func _physics_process(delta):
 	
 	match current_state:
 		STATES.GROUND:
+			# Controls the walking
 			if move_left and not move_right:
 				if walk:
 					speed.x = move_toward(speed.x, -MAX_WALK, WALK_ACCEL * delta*60)
@@ -173,14 +181,20 @@ func _physics_process(delta):
 			else:
 				speed.x = move_toward(speed.x, 0.0, WALK_ACCEL * delta*60)
 			
+			# If the player isn't on the ground, make the state change
 			if not is_on_floor():
 				current_state = STATES.AIR
 			else:
 				speed.y = 1
+				# This makes it so that if the player suddenly walks off
+				# The ground, the falling feels natural
+				
+			# Jump
 			if jump_press:
 				speed.y = JUMP_FORCE
 				current_state = STATES.AIR
 			
+			# Directions for the sprites
 			if speed.x > 0:
 				direction = "_r"
 			elif speed.x < 0:
@@ -197,16 +211,19 @@ func _physics_process(delta):
 			else:
 				play("attack" + direction)
 			
+			# Dashing
 			if dash_press and can_dash and not dash_echo:
 				current_state = STATES.DASH
 				DashTimer.start()
 			
+			# Attacking
 			if attack_press and can_attack and not attack_echo:
 				swording = true
 				can_attack = false
 				AttackTimer.start()
 				$AnimatedSprite.frame = 0
-				
+			
+			# Sword dirs
 			if move_up:
 				sword_dir = "u"
 			elif move_left:
@@ -215,7 +232,10 @@ func _physics_process(delta):
 				sword_dir = "r"
 			else:
 				sword_dir = direction.replace("_", "")
+				# If the player isn't pressing any direction key,
+				# they should attack to where they are looking
 		STATES.AIR:
+			# Horizontal movement
 			if move_left and not move_right:
 				if walk:
 					speed.x = move_toward(speed.x, -MAX_AIRSPEED, WALK_ACCEL * 1.1 * delta*60)
@@ -229,26 +249,32 @@ func _physics_process(delta):
 			else:
 				speed.x = move_toward(speed.x, 0.0, WALK_ACCEL * 0.8 * delta*60)
 			
+			# Change to ground state
 			if is_on_floor():
 				current_state = STATES.GROUND
 			
+			# Animations
 			if speed.y < 0:
 				play("jump" + direction)
 			else:
 				play("fall" + direction)
 			
+			# Falling
 			speed.y += gravity * delta*60
 			
+			# Dash
 			if dash_press and can_dash and not dash_echo:
 				current_state = STATES.DASH
 				DashTimer.start()
-				
+			
+			# Attack
 			if attack_press and can_attack and not attack_echo:
 				swording = true
 				can_attack = false
 				AttackTimer.start()
 				$AnimatedSprite.frame = 0
-				
+			
+			# Sword dirs
 			if move_up:
 				sword_dir = "u"
 			elif move_down:
@@ -259,9 +285,15 @@ func _physics_process(delta):
 				sword_dir = "r"
 			else:
 				sword_dir = direction.replace("_", "")
+				# If the player isn't pressing any direction key,
+				# they should attack to where they are looking
 		
 		STATES.DASH:
+			# If the player is dashing, they can't dash until dash is over
 			can_dash = false
+			# The player dashes to wherever they are looking, unless they
+			# press a key opposite to where they're loking
+			# in that case, they spin
 			if direction == "_l":
 				if move_right or press_opposite:
 					speed.x = move_toward(speed.x, MAX_WALK*3.0, 10)
@@ -287,38 +319,49 @@ func _physics_process(delta):
 					play("dash_r")
 					attack_play(0)
 				
-	
+	# Limit the speed
 	if speed.length() > MAX_SPEED:
 		speed = speed.normalized()*MAX_SPEED
+	
+	# Move the player according to speed and knockback. Must be done separately
+	# because we don't want the actual speed to be influenced by
+	# the knockback speed
 	speed = move_and_slide_with_snap(speed, Vector2.DOWN, Vector2.UP, true)
 	move_and_slide_with_snap(knockback, Vector2.DOWN, Vector2.UP, true)
-	knockback *= 0.5
+	knockback *= 0.5 # Knockback speed is reduced by half every frame
 	
+	# Used to check whether the player is holding these keys
 	dash_echo = dash_press
 	attack_echo = attack_press
 
+# When the attack has ended
 func attack_ended():
 	swording = false
-	ReAttackTimer.start()
+	ReAttackTimer.start() # Takes some time to be able to attack again
 
+# Give them their attack back
 func attack_again():
 	can_attack = true
 
+# Their dash ended
 func dash_ended():
 	if Animations.animation.find("spin") == -1:
 		current_state = STATES.AIR
 		press_opposite = false
-		ReDashTimer.start()
+		ReDashTimer.start() # Takes some time to be able to dash again
 
+# They can dash again
+# TODO: THEY CAN ONLY GET IT BACK IF THEY HAVE TOUCHED THE GROUND
 func dash_again():
 	can_dash = true
 
-
+# A custom function to play animations in the player's sprite
 func play(anim:String):
 	if Animations.animation != anim or not Animations.playing:
 		if not(Animations.animation == "enter_door" and Persistent.player_cutscene == "door") and not(Animations.animation == "close_train" and Persistent.player_cutscene == "train"):
 			Animations.play(anim)
 
+# A custom animation for the dash particles
 func attack_play(anim:int):
 	if direction == "_l":
 		DashParticle.scale.x = -1
@@ -334,7 +377,7 @@ func attack_play(anim:int):
 		elif DashParticle.animation != "spin":
 			DashParticle.play("spin")
 
-
+# When the player's animations are finished
 func _on_animation_finished():
 	if Animations.animation.find("spin") != -1:
 		current_state = STATES.AIR
@@ -343,20 +386,20 @@ func _on_animation_finished():
 	if Animations.animation == "enter_door":
 		emit_signal("door_entered")
 
-
+# When the player is commanded to enter a door
 func enter_door(x):
 	Persistent.player_cutscene = "door"
 	door_position = x
 
-
+# When the player attacks something
 func _on_body_attacked(body):
-	print("a")
 	if not body.is_in_group("grass"):
 		knockback.x = (position-body.position).normalized().x*200
 		speed.y = (position-body.position).normalized().y*250
 	if body.is_in_group("attackable"): 
 		body.call("attacked", 1, position, speed)
 
+# When the player is attacked
 func attacked(d, p, s):
 	speed = (position-p).normalized()*200 + s*0.5
 #	health -= d

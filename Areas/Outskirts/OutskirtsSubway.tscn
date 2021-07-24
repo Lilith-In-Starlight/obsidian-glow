@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Subway.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Neptune.tscn" type="PackedScene" id=2]
@@ -8,21 +8,9 @@
 [ext_resource path="res://HUD/HUD.tscn" type="PackedScene" id=7]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 470, 102.5 )
-
-[sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 93, 102.5 )
-
-[sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 730, 102.5 )
 
-[sub_resource type="RectangleShape2D" id=4]
-extents = Vector2( 301, 28 )
-
-[sub_resource type="RectangleShape2D" id=5]
-extents = Vector2( 39, 168 )
-
-[sub_resource type="Environment" id=6]
+[sub_resource type="Environment" id=2]
 background_mode = 4
 tonemap_mode = 2
 glow_enabled = true
@@ -39,29 +27,12 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="World"]
-position = Vector2( 381, 375 )
-shape = SubResource( 1 )
-
-[node name="CollisionShape2D5" type="CollisionShape2D" parent="World"]
-position = Vector2( 1127, 375 )
-shape = SubResource( 2 )
-
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="World"]
 position = Vector2( 823, -161 )
-shape = SubResource( 3 )
+shape = SubResource( 1 )
 
-[node name="CollisionShape2D3" type="CollisionShape2D" parent="World"]
-position = Vector2( 1127, 313 )
-shape = SubResource( 4 )
-
-[node name="CollisionShape2D4" type="CollisionShape2D" parent="World"]
-position = Vector2( -56, 153 )
-shape = SubResource( 5 )
-
-[node name="CollisionShape2D9" type="CollisionShape2D" parent="World"]
-position = Vector2( 1433, 145 )
-shape = SubResource( 5 )
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="World"]
+polygon = PoolVector2Array( -47, 86, -46, 271, 851, 272, 851, 284, 1034, 284, 1034, 272, 1219, 272, 1219, 284, 1394, 284, 1394, 25, 1466, 25, 1466, 386, -64, 386, -64, 86 )
 
 [node name="Subway" parent="." instance=ExtResource( 1 )]
 position = Vector2( 940, 248 )
@@ -80,7 +51,7 @@ position = Vector2( 200, 219 )
 position = Vector2( 170, 150 )
 
 [node name="Neptune" parent="." instance=ExtResource( 2 )]
-position = Vector2( 13, 82 )
+position = Vector2( 97, 168 )
 
 [node name="Camera2D" type="Camera2D" parent="Neptune"]
 current = true
@@ -106,7 +77,7 @@ __meta__ = {
 [node name="Deco" type="Node2D" parent="."]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource( 6 )
+environment = SubResource( 2 )
 
 [node name="SceneChanger" parent="." instance=ExtResource( 4 )]
 position = Vector2( -39, 251 )

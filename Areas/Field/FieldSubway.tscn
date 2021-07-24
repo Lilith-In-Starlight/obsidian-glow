@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Subway.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Neptune.tscn" type="PackedScene" id=2]
@@ -9,21 +9,9 @@
 [ext_resource path="res://HUD/HUD.tscn" type="PackedScene" id=7]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 470, 102.5 )
-
-[sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 730, 102.5 )
 
-[sub_resource type="RectangleShape2D" id=3]
-extents = Vector2( 177, 28 )
-
-[sub_resource type="RectangleShape2D" id=4]
-extents = Vector2( 39, 168 )
-
-[sub_resource type="RectangleShape2D" id=5]
-extents = Vector2( 272.323, 10 )
-
-[sub_resource type="Environment" id=6]
+[sub_resource type="Environment" id=2]
 background_mode = 4
 tonemap_mode = 2
 glow_enabled = true
@@ -32,7 +20,6 @@ glow_enabled = true
 
 [node name="World" type="StaticBody2D" parent="."]
 __meta__ = {
-"_edit_group_": true,
 "_edit_lock_": true
 }
 
@@ -44,34 +31,12 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="World"]
-position = Vector2( 818, 375 )
-shape = SubResource( 1 )
-
-[node name="CollisionShape2D10" type="CollisionShape2D" parent="World"]
-position = Vector2( 1941, 375 )
-shape = SubResource( 1 )
-
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="World"]
 position = Vector2( 823, -161 )
-shape = SubResource( 2 )
+shape = SubResource( 1 )
 
-[node name="CollisionShape2D3" type="CollisionShape2D" parent="World"]
-position = Vector2( 1410, 312 )
-shape = SubResource( 3 )
-
-[node name="CollisionShape2D4" type="CollisionShape2D" parent="World"]
-position = Vector2( -89, 23 )
-shape = SubResource( 4 )
-
-[node name="CollisionShape2D9" type="CollisionShape2D" parent="World"]
-position = Vector2( 1569, 142 )
-shape = SubResource( 4 )
-
-[node name="CollisionShape2D8" type="CollisionShape2D" parent="World"]
-position = Vector2( 199, 180 )
-rotation = 0.385842
-shape = SubResource( 5 )
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="World"]
+polygon = PoolVector2Array( 326, 73, 322, 320, 1591, 317, 1591, 54, 1535, 54, 1535, 272, 1471, 272, 1471, 284, 1288, 284, 1288, 272, 367, 272, 367, 74 )
 
 [node name="Subway" parent="." instance=ExtResource( 1 )]
 position = Vector2( 1377, 248 )
@@ -86,17 +51,20 @@ position = Vector2( 539, 200 )
 position = Vector2( 802, 131 )
 
 [node name="Neptune" parent="." instance=ExtResource( 2 )]
-position = Vector2( 13, 82 )
+position = Vector2( 440, 238 )
 
 [node name="Camera2D" type="Camera2D" parent="Neptune"]
 current = true
-limit_left = 0
+limit_left = 435
 limit_top = -80
 limit_right = 1530
 limit_bottom = 310
 limit_smoothed = true
 smoothing_enabled = true
 editor_draw_limits = true
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 follow_viewport_enable = true
@@ -112,10 +80,10 @@ __meta__ = {
 [node name="Deco" type="Node2D" parent="."]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource( 6 )
+environment = SubResource( 2 )
 
 [node name="SceneChanger" parent="." instance=ExtResource( 4 )]
-position = Vector2( -65, 43 )
+position = Vector2( 391, 236 )
 newScene = "Field/FieldOutskirts"
 
 [node name="DialogueObject" parent="." instance=ExtResource( 6 )]

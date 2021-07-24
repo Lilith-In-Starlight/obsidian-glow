@@ -59,7 +59,12 @@ var knockback := Vector2(0,0) # Knockback speed when attacked
 var walk := false # Is the player being forced to walk?
 
 func _ready():
-	# Set up the timers
+	if Persistent.first_load:
+		if Persistent.player_pos == Vector2(0, 0):
+			Persistent.player_pos = position
+		elif Persistent.loaded_scene == get_tree().current_scene.filename:
+			position = Persistent.player_pos
+	Persistent.first_load = false
 	add_child(DashTimer)
 	DashTimer.wait_time = 0.2
 	DashTimer.one_shot = true

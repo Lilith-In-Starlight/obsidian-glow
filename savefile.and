@@ -1,0 +1,15 @@
+[player]
+
+current_scene="res://Areas/Outskirts/OutskirtsView.tscn"
+position=Vector2( 240.367, 170.498 )
+
+[abilities]
+
+notches=2
+abilities=[ "", "dash" ]
+fillers=[ "dash", "" ]
+keys=[ 67, -1 ]
+
+[subway]
+
+abandoned=true

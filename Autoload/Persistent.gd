@@ -42,15 +42,15 @@ func _ready():
 	var err := Savefile.load("user://savefile.and")
 	
 	if err == OK:
-		loaded_scene = Savefile.get_value("player", "current_scene") as String
-		player_pos = Savefile.get_value("player", "position") as Vector2
-		notches = Savefile.get_value("abilities", "notches") as int
+		loaded_scene = Savefile.get_value("player", "current_scene", "") as String
+		player_pos = Savefile.get_value("player", "position", Vector2(0, 0)) as Vector2
+		notches = Savefile.get_value("abilities", "notches", 2) as int
 		
-		abilities = Savefile.get_value("abilities", "abilities") as Array
-		notch_fillers = Savefile.get_value("abilities", "fillers") as Array
-		notch_keys = Savefile.get_value("abilities", "keys") as Array
+		abilities = Savefile.get_value("abilities", "abilities", [""]) as Array
+		notch_fillers = Savefile.get_value("abilities", "fillers", []) as Array
+		notch_keys = Savefile.get_value("abilities", "keys", []) as Array
 		
-		abandoned_ticket = Savefile.get_value("subway", "abandoned") as bool
+		abandoned_ticket = Savefile.get_value("subway", "abandoned", false) as bool
 
 
 func change_time():

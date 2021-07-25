@@ -13,6 +13,8 @@ config_version=4
 config/name="Ampersandia Game"
 run/main_scene="res://Areas/Field/Field.tscn"
 config/icon="res://icon.png"
+config/macos_native_icon="res://icon.icns"
+config/windows_native_icon="res://icon.ico"
 
 [autoload]
 

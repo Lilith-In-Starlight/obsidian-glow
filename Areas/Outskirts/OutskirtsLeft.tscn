@@ -1,15 +1,12 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=9 format=2]
 
-[ext_resource path="res://Elements/Bench.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Neptune.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Sprites/Bg/Outskirts/townbgl.png" type="Texture" id=3]
 [ext_resource path="res://SceneChanger.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Sprites/Levels/Outskirts/SubwayEntrance.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/Levels/Outskirts/X-1Y0.png" type="Texture" id=5]
 [ext_resource path="res://Sprites/Bg/Outskirts/sky.png" type="Texture" id=6]
 [ext_resource path="res://HUD/HUD.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Sprites/Bg/Outskirts/wall.png" type="Texture" id=8]
-[ext_resource path="res://Sprites/Elements/SubwayEntrance.png" type="Texture" id=9]
-[ext_resource path="res://DialogueObject.tscn" type="PackedScene" id=10]
 
 [sub_resource type="Environment" id=1]
 background_mode = 4
@@ -23,24 +20,24 @@ glow_enabled = true
 [node name="ParallaxBackground" type="ParallaxBackground" parent="World"]
 layer = -1
 scroll_limit_begin = Vector2( -170, 0 )
-scroll_limit_end = Vector2( 604, 225 )
+scroll_limit_end = Vector2( 604, 295 )
 
 [node name="Field" type="Sprite" parent="World/ParallaxBackground"]
 position = Vector2( 230, 113 )
 texture = ExtResource( 6 )
 
 [node name="ParallaxLayer" type="ParallaxLayer" parent="World/ParallaxBackground"]
-motion_scale = Vector2( 0.01, 1 )
+motion_scale = Vector2( 0.01, 0.01 )
 
 [node name="townbgl" type="Sprite" parent="World/ParallaxBackground/ParallaxLayer"]
-position = Vector2( 24, 114 )
+position = Vector2( 26, 5 )
 texture = ExtResource( 3 )
 
 [node name="ParallaxLayer2" type="ParallaxLayer" parent="World/ParallaxBackground"]
-motion_scale = Vector2( 0.02, 1 )
+motion_scale = Vector2( 0.02, 0.02 )
 
 [node name="wall" type="Sprite" parent="World/ParallaxBackground/ParallaxLayer2"]
-position = Vector2( 57, 143 )
+position = Vector2( 66, 32 )
 texture = ExtResource( 8 )
 
 [node name="SubwayEntrance" type="Sprite" parent="World"]
@@ -49,46 +46,36 @@ texture = ExtResource( 5 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="World"]
 modulate = Color( 1, 1, 1, 0.294118 )
-polygon = PoolVector2Array( -208, 157, -91, 157, -91, 175, 38, 175, 38, 180, 459, 180, 459, 226, 570, 224, 570, 179, 629, 179, 629, 28, 670, 28, 667, 248, -243, 246, -243, 59, -208, 59 )
+polygon = PoolVector2Array( -209, 135, -113, 135, -94, 142, -68, 150, -56, 153, -46, 157, -27, 167, -2, 172, 23, 180, 44, 190, 69, 203, 85, 211, 97, 214, 123, 219, 142, 225, 194, 225, 194, 236, 224, 236, 224, 225, 416, 224, 416, 288, 451, 288, 451, 222, 503, 222, 503, 232, 654, 231, 653, 28, 678, 28, 679, 309, -243, 305, -243, 59, -209, 60 )
 
 [node name="Enemies" type="Node2D" parent="."]
 
 [node name="DecoBg" type="Node2D" parent="."]
 
-[node name="Bench" parent="DecoBg" instance=ExtResource( 1 )]
-modulate = Color( 0.803922, 0.803922, 0.803922, 1 )
-position = Vector2( 341, 180 )
-
 [node name="Neptune" parent="." instance=ExtResource( 2 )]
-position = Vector2( 182, 93 )
+position = Vector2( 564, 203 )
 
 [node name="Camera2D" type="Camera2D" parent="Neptune"]
 current = true
 limit_left = -170
 limit_top = 0
 limit_right = 604
-limit_bottom = 225
+limit_bottom = 295
 limit_smoothed = true
 smoothing_enabled = true
 editor_draw_limits = true
-
-[node name="DialogueObject" parent="." instance=ExtResource( 10 )]
-position = Vector2( 243, 167 )
-down_action = "Subway"
-up_button = 3
-up_action = "Outskirts/OutskirtsSubway"
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="DecoFg" type="Node2D" parent="."]
-
-[node name="SubwayEntrance" type="Sprite" parent="DecoFg"]
-position = Vector2( 264, 164 )
-texture = ExtResource( 9 )
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 1 )
 
 [node name="SceneChanger" parent="." instance=ExtResource( 4 )]
-position = Vector2( -211, 143 )
-newScene = "Outskirts/OutskirtsLeft"
+position = Vector2( 645, 191 )
+newScene = "Outskirts/OutskirtsView"
+enter_dir = 1
 
 [node name="HUD" parent="." instance=ExtResource( 7 )]

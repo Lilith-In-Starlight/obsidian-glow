@@ -4,6 +4,8 @@ enum MENUS {
 	MENU,
 	OPTIONS,
 	VIDEO,
+	CONTROLS,
+	CREDITS,
 }
 
 onready var Fadeout := $Fadeout
@@ -20,6 +22,21 @@ onready var VisualSettings := $VideoSettings
 onready var BrightnessLabel := $VideoSettings/BrightnessLabel
 onready var ContrastLabel := $VideoSettings/ContrastLabel
 onready var SaturationLabel := $VideoSettings/SaturationLabel
+
+onready var Controls := $Controls
+onready var ControlsLeft := $Controls/LeftLabel
+onready var ControlsRight := $Controls/RightLabel
+onready var ControlsUp := $Controls/UpLabel
+onready var ControlsDown := $Controls/DownLabel
+onready var ControlsJump := $Controls/JumpLabel
+onready var ControlsAttack := $Controls/AttackLabel
+onready var ControlsCancel := $Controls/CancelLabel
+
+onready var Credits := $Credits
+onready var CreditsAnimation := $Credits/CreditsAnimation
+
+var change_controls := false
+var control_change := 0
 
 
 var menu_option := 0
@@ -52,13 +69,13 @@ func _input(event):
 		match current_menu:
 			MENUS.MENU:
 				match event.scancode:
-					KEY_DOWN:
+					Inputs.down_key:
 						menu_option = (menu_option + 1) % menu_list
-					KEY_UP:
+					Inputs.up_key:
 						menu_option = (menu_option - 1)
 						if menu_option < 0:
 							menu_option = menu_list - 1
-					KEY_Z:
+					Inputs.jump_key, Inputs.attack_key:
 						match menu_option:
 							0:
 								if Persistent.loaded_scene != "":
@@ -71,36 +88,47 @@ func _input(event):
 								menu_option = 0
 								menu_list = 5
 							2:
-								pass
+								current_menu = MENUS.CREDITS
+								menu_option = 0
+								menu_list = 1
+								CreditsAnimation.play("Up")
 							3:
 								get_tree().quit()
 			MENUS.OPTIONS:
 				match event.scancode:
-					KEY_DOWN:
+					Inputs.down_key:
 						menu_option = (menu_option + 1) % menu_list
-					KEY_UP:
+					Inputs.up_key:
 						menu_option = (menu_option - 1)
 						if menu_option < 0:
 							menu_option = menu_list - 1
-					KEY_Z:
+					Inputs.jump_key, Inputs.attack_key:
 						match menu_option:
 							0:
 								current_menu = MENUS.VIDEO
 								menu_option = 0
 								menu_list = 4
+							3:
+								current_menu = MENUS.CONTROLS
+								menu_option = 0
+								menu_list = 8
 							4:
 								current_menu = MENUS.MENU
 								menu_option = 1
 								menu_list = 4
+					Inputs.cancel_key:
+						current_menu = MENUS.MENU
+						menu_option = 1
+						menu_list = 4
 			MENUS.VIDEO:
 				match event.scancode:
-					KEY_DOWN:
+					Inputs.down_key:
 						menu_option = (menu_option + 1) % menu_list
-					KEY_UP:
+					Inputs.up_key:
 						menu_option = (menu_option - 1)
 						if menu_option < 0:
 							menu_option = menu_list - 1
-					KEY_LEFT:
+					Inputs.left_key:
 						match menu_option:
 							0:
 								Persistent.Env.adjustment_brightness = max(Persistent.Env.adjustment_brightness - 0.25, 0.0)
@@ -108,7 +136,7 @@ func _input(event):
 								Persistent.Env.adjustment_contrast = max(Persistent.Env.adjustment_contrast - 0.25, 0.0)
 							2:
 								Persistent.Env.adjustment_saturation = max(Persistent.Env.adjustment_saturation - 0.25, 0.0)
-					KEY_RIGHT:
+					Inputs.right_key:
 						match menu_option:
 							0:
 								Persistent.Env.adjustment_brightness = min(Persistent.Env.adjustment_brightness + 0.25, 8.0)
@@ -116,12 +144,61 @@ func _input(event):
 								Persistent.Env.adjustment_contrast = min(Persistent.Env.adjustment_contrast + 0.25, 8.0)
 							2:
 								Persistent.Env.adjustment_saturation = min(Persistent.Env.adjustment_saturation + 0.25, 8.0)
-					KEY_Z:
+					Inputs.jump_key, Inputs.attack_key:
 						match menu_option:
 							3:
 								current_menu = MENUS.OPTIONS
 								menu_option = 0
 								menu_list = 5
+					Inputs.cancel_key:
+						current_menu = MENUS.OPTIONS
+						menu_option = 0
+						menu_list = 5
+			MENUS.CONTROLS:
+				if not change_controls:
+					match event.scancode:
+						Inputs.down_key:
+							menu_option = (menu_option + 1) % menu_list
+						Inputs.up_key:
+							menu_option = (menu_option - 1)
+							if menu_option < 0:
+								menu_option = menu_list - 1
+						Inputs.jump_key, Inputs.attack_key:
+							if menu_option != 7:
+								control_change = menu_option
+								change_controls = true
+							else:
+								current_menu = MENUS.OPTIONS
+								menu_option = 3
+								menu_list = 5
+						Inputs.cancel_key:
+							current_menu = MENUS.OPTIONS
+							menu_option = 3
+							menu_list = 5
+				else:
+					change_controls = false
+					match control_change:
+						0:
+							Inputs.left_key = event.scancode
+						1:
+							Inputs.right_key = event.scancode
+						2:
+							Inputs.up_key = event.scancode
+						3:
+							Inputs.down_key = event.scancode
+						4:
+							Inputs.jump_key = event.scancode
+						5:
+							Inputs.attack_key = event.scancode
+						6:
+							Inputs.cancel_key = event.scancode
+			MENUS.CREDITS:
+				match event.scancode:
+					Inputs.jump_key, Inputs.attack_key, Inputs.cancel_key:
+						current_menu = MENUS.MENU
+						menu_option = 2
+						menu_list = 4
+						CreditsAnimation.stop(true)
 	visual_update()
 
 
@@ -137,21 +214,48 @@ func visual_update():
 			Menu.visible = true
 			Options.visible = false
 			VisualSettings.visible = false
+			Controls.visible = false
+			Credits.visible = false
 		MENUS.OPTIONS:
 			labels_in_menu = Options.get_children()
 			Menu.visible = false
 			Options.visible = true
 			VisualSettings.visible = false
+			Controls.visible = false
+			Credits.visible = false
 		MENUS.VIDEO:
 			labels_in_menu = VisualSettings.get_children()
 			Menu.visible = false
 			Options.visible = false
 			VisualSettings.visible = true
+			Controls.visible = false
+			Credits.visible = false
 			
 			BrightnessLabel.text = "Brightness: " + str(Persistent.Env.adjustment_brightness)
 			ContrastLabel.text = "Contrast: " + str(Persistent.Env.adjustment_contrast)
 			SaturationLabel.text = "Saturation: " + str(Persistent.Env.adjustment_saturation)
-	
+		MENUS.CONTROLS:
+			labels_in_menu = Controls.get_children()
+			Menu.visible = false
+			Options.visible = false
+			VisualSettings.visible = false
+			Controls.visible = true
+			Credits.visible = false
+			
+			ControlsLeft.text = "Left: " + Inputs.custom_scancode_str(Inputs.left_key)
+			ControlsRight.text = "Right: " + Inputs.custom_scancode_str(Inputs.right_key)
+			ControlsUp.text = "Up: " + Inputs.custom_scancode_str(Inputs.up_key)
+			ControlsDown.text = "Down: " + Inputs.custom_scancode_str(Inputs.down_key)
+			ControlsJump.text = "Jump/Confirm 1: " + Inputs.custom_scancode_str(Inputs.jump_key)
+			ControlsAttack.text = "Attack/Confirm 2: " + Inputs.custom_scancode_str(Inputs.attack_key)
+			ControlsCancel.text = "Cancel: " + Inputs.custom_scancode_str(Inputs.cancel_key)
+		MENUS.CREDITS:
+			labels_in_menu = Credits.get_children()
+			Menu.visible = false
+			Options.visible = false
+			VisualSettings.visible = false
+			Controls.visible = false
+			Credits.visible = true
 	for i in menu_list:
 		if i == menu_option:
 			labels_in_menu[i].modulate = Color("#ffc070")

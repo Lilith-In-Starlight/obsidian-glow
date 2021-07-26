@@ -62,7 +62,7 @@ func _process(delta):
 			for i in Persistent.notches:
 				var NotchSprite:TextureRect = get_node_or_null("Abilities/Notch" + str(i))
 				NotchSprite.texture = NotchDict[Persistent.notch_fillers[i]]
-				NotchSprite.get_node("KeyLabel").text = custom_scancode_str(Persistent.notch_keys[i])
+				NotchSprite.get_node("KeyLabel").text = Inputs.custom_scancode_str(Persistent.notch_keys[i])
 				
 			match notch_mode:
 				NOTCH_MODES.NONE:
@@ -85,29 +85,29 @@ func _input(event):
 						match event.scancode:
 							KEY_ESCAPE:
 								c_menu = MENUS.NONE
-							KEY_LEFT:
+							Inputs.left_key:
 								selected_notch = (selected_notch + 1) % Persistent.notches
-							KEY_RIGHT:
+							Inputs.right_key:
 								selected_notch = selected_notch - 1
 								if selected_notch < 0:
 									selected_notch = Persistent.notches - 1
-							KEY_Z:
+							Inputs.jump_key:
 								if Persistent.player_cutscene == "no":
 									notch_mode = NOTCH_MODES.ABILITY
-							KEY_X:
+							Inputs.attack_key:
 								if Persistent.player_cutscene == "no":
 									notch_mode = NOTCH_MODES.KEY
 					NOTCH_MODES.ABILITY:
 						match event.scancode:
-							KEY_Z:
+							Inputs.jump_key:
 								notch_mode = NOTCH_MODES.NONE
-							KEY_LEFT:
+							Inputs.left_key:
 								selected_ability = (selected_ability + 1) % Persistent.abilities.size()
-							KEY_RIGHT:
+							Inputs.right_key:
 								selected_ability = (selected_ability - 1)
 								if selected_ability < 0:
 									selected_ability = Persistent.abilities.size() - 1
-							KEY_X:
+							Inputs.attack_key:
 								notch_mode = NOTCH_MODES.KEY
 						Persistent.notch_fillers[selected_notch] = Persistent.abilities[selected_ability]
 					NOTCH_MODES.KEY:
@@ -116,10 +116,3 @@ func _input(event):
 							key = event.scancode
 						Persistent.notch_keys[selected_notch] = key
 						notch_mode = NOTCH_MODES.NONE
-
-
-
-func custom_scancode_str(code:int):
-	if code == -1:
-		return ""
-	return OS.get_scancode_string(code)

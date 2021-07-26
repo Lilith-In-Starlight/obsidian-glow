@@ -44,6 +44,8 @@ var ReDashTimer := Timer.new() #  How long until the dash is back
 var AttackTimer := Timer.new() # Same two as above but for attack
 var ReAttackTimer := Timer.new()
 var can_dash := true 
+var air_dashes := 1
+var current_air_dash := 0
 
 var press_opposite := false # If the player is on air, have they pressed a key opposite to their direction?
 var dash_echo := false # Are they holding the dash key?
@@ -87,17 +89,17 @@ func _process(delta):
 	# Create the inputs
 	match Persistent.player_cutscene:
 		"no": # No cutscene
-			move_up = Input.is_key_pressed(KEY_UP)
-			move_down = Input.is_key_pressed(KEY_DOWN)
-			move_left = Input.is_key_pressed(KEY_LEFT)
-			move_right = Input.is_key_pressed(KEY_RIGHT)
-			jump_press = Input.is_key_pressed(KEY_Z)
+			move_up = Input.is_key_pressed(Inputs.up_key)
+			move_down = Input.is_key_pressed(Inputs.down_key)
+			move_left = Input.is_key_pressed(Inputs.left_key)
+			move_right = Input.is_key_pressed(Inputs.right_key)
+			jump_press = Input.is_key_pressed(Inputs.jump_key)
 			# Abilities
 			for i in Persistent.notch_fillers.size():
 				match Persistent.notch_fillers[i]:
 					"dash":
 						dash_press = Input.is_key_pressed(Persistent.notch_keys[i])
-			attack_press = Input.is_key_pressed(KEY_X)
+			attack_press = Input.is_key_pressed(Inputs.attack_key)
 		"door": # When the player enters a door
 			move_up = false
 			move_down = false
@@ -124,6 +126,8 @@ func _process(delta):
 			attack_press = false
 			move_right = false
 			move_left = false
+			if current_state == STATES.DASH:
+				current_state = STATES.AIR
 		"train": # The player entered a train
 			play("close_train")
 		"leave_l", "enter_l": # For when moving to/from a screen towards the left
@@ -173,6 +177,7 @@ func _physics_process(delta):
 	
 	match current_state:
 		STATES.GROUND:
+			current_air_dash = 0
 			# Controls the walking
 			if move_left and not move_right:
 				if walk:
@@ -191,7 +196,7 @@ func _physics_process(delta):
 			if not is_on_floor():
 				current_state = STATES.AIR
 			else:
-				speed.y = 1
+				speed.y = 60
 				# This makes it so that if the player suddenly walks off
 				# The ground, the falling feels natural
 				
@@ -218,8 +223,9 @@ func _physics_process(delta):
 				play("attack" + direction)
 			
 			# Dashing
-			if dash_press and can_dash and not dash_echo:
+			if dash_press and can_dash and not dash_echo and current_air_dash < air_dashes:
 				current_state = STATES.DASH
+				current_air_dash += 1
 				DashTimer.start()
 			
 			# Attacking
@@ -256,7 +262,7 @@ func _physics_process(delta):
 				speed.x = move_toward(speed.x, 0.0, WALK_ACCEL * 0.8 * delta*60)
 			
 			# Change to ground state
-			if is_on_floor():
+			if is_on_floor() and speed.y > -60:
 				current_state = STATES.GROUND
 			
 			# Animations
@@ -269,7 +275,8 @@ func _physics_process(delta):
 			speed.y += gravity * delta*60
 			
 			# Dash
-			if dash_press and can_dash and not dash_echo:
+			if dash_press and can_dash and not dash_echo and current_air_dash < air_dashes:
+				current_air_dash += 1
 				current_state = STATES.DASH
 				DashTimer.start()
 			

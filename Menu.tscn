@@ -38,6 +38,7 @@ __meta__ = {
 }
 
 [node name="Menu" type="VBoxContainer" parent="."]
+visible = false
 anchor_top = 1.0
 anchor_bottom = 1.0
 margin_left = 8.0
@@ -75,7 +76,166 @@ margin_bottom = 76.0
 custom_fonts/font = SubResource( 1 )
 text = "Exit"
 
+[node name="Options" type="VBoxContainer" parent="."]
+visible = false
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = -103.0
+margin_right = 121.0
+margin_bottom = -7.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VisualLabel" type="Label" parent="Options"]
+margin_right = 113.0
+margin_bottom = 16.0
+rect_pivot_offset = Vector2( 244, -78 )
+custom_fonts/font = SubResource( 1 )
+text = "Video"
+
+[node name="AudioLabel" type="Label" parent="Options"]
+margin_top = 20.0
+margin_right = 113.0
+margin_bottom = 36.0
+custom_fonts/font = SubResource( 1 )
+text = "Audio"
+
+[node name="GameplayLabel" type="Label" parent="Options"]
+margin_top = 40.0
+margin_right = 113.0
+margin_bottom = 56.0
+custom_fonts/font = SubResource( 1 )
+text = "Gameplay"
+
+[node name="ControlsLabel" type="Label" parent="Options"]
+margin_top = 60.0
+margin_right = 113.0
+margin_bottom = 76.0
+custom_fonts/font = SubResource( 1 )
+text = "Controls"
+
+[node name="Exit" type="Label" parent="Options"]
+margin_top = 80.0
+margin_right = 113.0
+margin_bottom = 96.0
+custom_fonts/font = SubResource( 1 )
+text = "Back"
+
+[node name="VideoSettings" type="VBoxContainer" parent="."]
+visible = false
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = -103.0
+margin_right = 121.0
+margin_bottom = -7.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BrightnessLabel" type="Label" parent="VideoSettings"]
+margin_right = 113.0
+margin_bottom = 16.0
+rect_pivot_offset = Vector2( 495, -87 )
+custom_fonts/font = SubResource( 1 )
+text = "Brightness:"
+
+[node name="ContrastLabel" type="Label" parent="VideoSettings"]
+margin_top = 20.0
+margin_right = 113.0
+margin_bottom = 36.0
+custom_fonts/font = SubResource( 1 )
+text = "Contrast:"
+
+[node name="SaturationLabel" type="Label" parent="VideoSettings"]
+margin_top = 40.0
+margin_right = 113.0
+margin_bottom = 56.0
+custom_fonts/font = SubResource( 1 )
+text = "Saturation:"
+
+[node name="Exit" type="Label" parent="VideoSettings"]
+margin_top = 60.0
+margin_right = 113.0
+margin_bottom = 76.0
+custom_fonts/font = SubResource( 1 )
+text = "Back"
+
+[node name="Controls" type="VBoxContainer" parent="."]
+visible = false
+anchor_left = 0.2
+anchor_top = 0.5
+anchor_right = 0.8
+anchor_bottom = 0.5
+margin_top = -38.0
+margin_bottom = 38.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LeftLabel" type="Label" parent="Controls"]
+margin_right = 240.0
+margin_bottom = 16.0
+rect_pivot_offset = Vector2( 495, -87 )
+custom_fonts/font = SubResource( 1 )
+text = " Left:"
+align = 1
+
+[node name="RightLabel" type="Label" parent="Controls"]
+margin_top = 20.0
+margin_right = 240.0
+margin_bottom = 36.0
+custom_fonts/font = SubResource( 1 )
+text = "Right:"
+align = 1
+
+[node name="UpLabel" type="Label" parent="Controls"]
+margin_top = 40.0
+margin_right = 240.0
+margin_bottom = 56.0
+custom_fonts/font = SubResource( 1 )
+text = "Up:"
+align = 1
+
+[node name="DownLabel" type="Label" parent="Controls"]
+margin_top = 60.0
+margin_right = 240.0
+margin_bottom = 76.0
+custom_fonts/font = SubResource( 1 )
+text = "Down:"
+align = 1
+
+[node name="JumpLabel" type="Label" parent="Controls"]
+margin_top = 80.0
+margin_right = 240.0
+margin_bottom = 96.0
+custom_fonts/font = SubResource( 1 )
+text = "Jump:"
+align = 1
+
+[node name="AttackLabel" type="Label" parent="Controls"]
+margin_top = 100.0
+margin_right = 240.0
+margin_bottom = 116.0
+custom_fonts/font = SubResource( 1 )
+text = "Attack:"
+align = 1
+
+[node name="Cancel" type="Label" parent="Controls"]
+margin_top = 120.0
+margin_right = 240.0
+margin_bottom = 136.0
+custom_fonts/font = SubResource( 1 )
+text = "Cancel:"
+align = 1
+
 [node name="Fadeout" type="Panel" parent="."]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 custom_styles/panel = SubResource( 2 )

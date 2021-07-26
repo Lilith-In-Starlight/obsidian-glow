@@ -59,6 +59,7 @@ var knockback := Vector2(0,0) # Knockback speed when attacked
 var walk := false # Is the player being forced to walk?
 
 func _ready():
+	Persistent.WEnv.environment = Persistent.Env
 	if Persistent.first_load:
 		if Persistent.player_pos == Vector2(0, 0):
 			Persistent.player_pos = position

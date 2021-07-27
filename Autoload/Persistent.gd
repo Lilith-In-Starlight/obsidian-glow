@@ -72,6 +72,7 @@ func change_time():
 
 
 func save():
+	loaded_scene = get_tree().current_scene.filename
 	Savefile.set_value("player", "current_scene", get_tree().current_scene.filename)
 	Savefile.set_value("player", "position", player_pos)
 	

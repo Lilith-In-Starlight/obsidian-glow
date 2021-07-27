@@ -48,17 +48,25 @@ func _ready():
 		new_notch.name = "Notch" + str(i)
 
 func _process(delta):
-	attacked_vignette = move_toward(attacked_vignette, 0.0, 0.01)
 	var aa = Attacked.get_material().get_shader_param("rest")
-	Attacked.get_material().set_shader_param("rest", lerp(aa, attacked_vignette, 0.1))
-	match Persistent.player_cutscene:
-		"leave_l", "leave_r":
-			CutsceneFade.modulate.a = move_toward(CutsceneFade.modulate.a, 1.0, 0.05)
-		"train":
-			CutsceneFade.modulate.a = move_toward(CutsceneFade.modulate.a, 1.0, 0.005)
-		_:
-			CutsceneFade.modulate.a = move_toward(CutsceneFade.modulate.a, 0.0, 0.05)
+	attacked_vignette = move_toward(attacked_vignette, 0.0, 0.01)
+	if Player.health > 0:
+		if Player.health > 1:
+			attacked_vignette = move_toward(attacked_vignette, 0.0, 0.01)
+		else:
+			attacked_vignette = move_toward(attacked_vignette, 0.5, 0.01)
+		match Persistent.player_cutscene:
+			"leave_l", "leave_r":
+				CutsceneFade.modulate.a = move_toward(CutsceneFade.modulate.a, 1.0, 0.05)
+			"train":
+				CutsceneFade.modulate.a = move_toward(CutsceneFade.modulate.a, 1.0, 0.005)
+			_:
+				CutsceneFade.modulate.a = move_toward(CutsceneFade.modulate.a, 0.0, 0.05)
+	else:
+		attacked_vignette = move_toward(attacked_vignette, 1.0, 0.01)
+		CutsceneFade.modulate.a = move_toward(CutsceneFade.modulate.a, 1.0, 0.005)
 	
+	Attacked.get_material().set_shader_param("rest", lerp(aa, attacked_vignette, 0.1))
 	match c_menu:
 		MENUS.NONE:
 			Abilities.visible = false
@@ -127,4 +135,4 @@ func _input(event):
 
 func health_changed(change):
 	if change < 0:
-		attacked_vignette = 0.7 + 0.2*abs(change)
+		attacked_vignette = 0.5 + 0.2*abs(change)

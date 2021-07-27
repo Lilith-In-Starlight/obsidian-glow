@@ -72,6 +72,9 @@ var trauma := 0.0
 var noise := OpenSimplexNoise.new()
 var time := 0.0
 
+var invulnerable := false
+var IvulnerableTimer := Timer.new()
+
 func _ready():
 	Persistent.WEnv.environment = Persistent.Env
 	if Persistent.first_load:
@@ -97,6 +100,10 @@ func _ready():
 	ReAttackTimer.wait_time = 0.08
 	ReAttackTimer.one_shot = true
 	ReAttackTimer.connect("timeout", self, "attack_again")
+	add_child(IvulnerableTimer)
+	IvulnerableTimer.wait_time =  0.2
+	IvulnerableTimer.one_shot = true
+	IvulnerableTimer.connect("timeout", self, "vulnerable_again")
 
 func _process(delta):
 	Cam.rotating = true
@@ -169,200 +176,206 @@ func _process(delta):
 
 
 func _physics_process(delta):
-	DashParticle.visible = current_state == STATES.DASH
 	
-	if current_state != STATES.DASH:
-		DashParticle.animation = "default"
-	
-	# The hitbox only matters if the player is attacking
-	Hitbox.monitoring = swording
-	Hitbox.monitorable = swording
-	match sword_dir:
-		"r":
-			Hitbox.rotation = 0
-			$AnimatedSprite.rotation = 0
-			$AnimatedSprite.scale.x = 1
-		"l":
-			Hitbox.rotation = -PI
-			$AnimatedSprite.rotation = 0
-			$AnimatedSprite.scale.x = -1
-		"u":
-			Hitbox.rotation = -PI/2
-			$AnimatedSprite.scale.x = 1
-			$AnimatedSprite.rotation = -PI/2
-		"d":
-			Hitbox.rotation = PI/2
-			$AnimatedSprite.scale.x = 1
-			$AnimatedSprite.rotation = PI/2
-	
-	match current_state:
-		STATES.GROUND:
-			current_air_dash = 0
-			# Controls the walking
-			if move_left and not move_right:
-				if walk:
-					speed.x = move_toward(speed.x, -MAX_WALK, WALK_ACCEL * delta*60)
-				else:
-					speed.x = move_toward(speed.x, -MAX_WALK_RUN, WALK_ACCEL * delta*60)
-			elif move_right and not move_left:
-				if walk:
-					speed.x = move_toward(speed.x, MAX_WALK, WALK_ACCEL * delta*60)
-				else:
-					speed.x = move_toward(speed.x, MAX_WALK_RUN, WALK_ACCEL * delta*60)
-			else:
-				speed.x = move_toward(speed.x, 0.0, WALK_ACCEL * delta*60)
-			
-			# If the player isn't on the ground, make the state change
-			if not is_on_floor():
-				current_state = STATES.AIR
-			else:
-				speed.y = 60
-				# This makes it so that if the player suddenly walks off
-				# The ground, the falling feels natural
-				
-			# Jump
-			if jump_press:
-				speed.y = JUMP_FORCE
-				current_state = STATES.AIR
-			
-			# Directions for the sprites
-			if speed.x > 0:
-				direction = "_r"
-			elif speed.x < 0:
-				direction = "_l"
-			
-			# Ground Animations
-			if not swording:
-				if abs(speed.x) > 0 and abs(speed.x) < 110:
-					play("walk" + direction)
-				elif abs(speed.x) >= 110:
-					play("run" + direction)
-				else:
-					play("idle" + direction)
-			else:
-				play("attack" + direction)
-			
-			# Dashing
-			if dash_press and can_dash and not dash_echo and current_air_dash < air_dashes:
-				current_state = STATES.DASH
-				current_air_dash += 1
-				DashTimer.start()
-			
-			# Attacking
-			if attack_press and can_attack and not attack_echo:
-				swording = true
-				can_attack = false
-				AttackTimer.start()
-				$AnimatedSprite.frame = 0
-			
-			# Sword dirs
-			if move_up:
-				sword_dir = "u"
-			elif move_left:
-				sword_dir = "l"
-			elif move_right:
-				sword_dir = "r"
-			else:
-				sword_dir = direction.replace("_", "")
-				# If the player isn't pressing any direction key,
-				# they should attack to where they are looking
-		STATES.AIR:
-			# Horizontal movement
-			if move_left and not move_right:
-				if walk:
-					speed.x = move_toward(speed.x, -MAX_AIRSPEED, WALK_ACCEL * 1.1 * delta*60)
-				else:
-					speed.x = move_toward(speed.x, -MAX_AIRSPEED_RUN, WALK_ACCEL * 1.1 * delta*60)
-			elif move_right and not move_left:
-				if walk:
-					speed.x = move_toward(speed.x, MAX_AIRSPEED, WALK_ACCEL * 1.1 * delta*60)
-				else:
-					speed.x = move_toward(speed.x, MAX_AIRSPEED_RUN, WALK_ACCEL * 1.1 * delta*60)
-			else:
-				speed.x = move_toward(speed.x, 0.0, WALK_ACCEL * 0.8 * delta*60)
-			
-			# Change to ground state
-			if is_on_floor() and speed.y > -60:
-				current_state = STATES.GROUND
-			
-			# Animations
-			if speed.y < 0:
-				play("jump" + direction)
-			else:
-				play("fall" + direction)
-			
-			# Falling
-			speed.y += gravity * delta*60
-			
-			# Dash
-			if dash_press and can_dash and not dash_echo and current_air_dash < air_dashes:
-				current_air_dash += 1
-				current_state = STATES.DASH
-				DashTimer.start()
-			
-			# Attack
-			if attack_press and can_attack and not attack_echo:
-				swording = true
-				can_attack = false
-				AttackTimer.start()
-				$AnimatedSprite.frame = 0
-			
-			# Sword dirs
-			if move_up:
-				sword_dir = "u"
-			elif move_down:
-				sword_dir = "d"
-			elif move_left:
-				sword_dir = "l"
-			elif move_right:
-				sword_dir = "r"
-			else:
-				sword_dir = direction.replace("_", "")
-				# If the player isn't pressing any direction key,
-				# they should attack to where they are looking
+	if health > 0:
+		$DeathParticles.emitting = false
+		DashParticle.visible = current_state == STATES.DASH
 		
-		STATES.DASH:
-			# If the player is dashing, they can't dash until dash is over
-			can_dash = false
-			# The player dashes to wherever they are looking, unless they
-			# press a key opposite to where they're loking
-			# in that case, they spin
-			if direction == "_l":
-				if move_right or press_opposite:
-					speed.x = move_toward(speed.x, MAX_WALK*3.0, 10 * delta*60)
-					speed.y = move_toward(speed.y, -20, 20 * delta*60)
-					press_opposite = true
-					play("spin_l")
-					attack_play(1)
+		if current_state != STATES.DASH:
+			DashParticle.animation = "default"
+		
+		# The hitbox only matters if the player is attacking
+		Hitbox.monitoring = swording
+		Hitbox.monitorable = swording
+		match sword_dir:
+			"r":
+				Hitbox.rotation = 0
+				$AnimatedSprite.rotation = 0
+				$AnimatedSprite.scale.x = 1
+			"l":
+				Hitbox.rotation = -PI
+				$AnimatedSprite.rotation = 0
+				$AnimatedSprite.scale.x = -1
+			"u":
+				Hitbox.rotation = -PI/2
+				$AnimatedSprite.scale.x = 1
+				$AnimatedSprite.rotation = -PI/2
+			"d":
+				Hitbox.rotation = PI/2
+				$AnimatedSprite.scale.x = 1
+				$AnimatedSprite.rotation = PI/2
+		
+		match current_state:
+			STATES.GROUND:
+				current_air_dash = 0
+				# Controls the walking
+				if move_left and not move_right:
+					if walk:
+						speed.x = move_toward(speed.x, -MAX_WALK, WALK_ACCEL * delta*60)
+					else:
+						speed.x = move_toward(speed.x, -MAX_WALK_RUN, WALK_ACCEL * delta*60)
+				elif move_right and not move_left:
+					if walk:
+						speed.x = move_toward(speed.x, MAX_WALK, WALK_ACCEL * delta*60)
+					else:
+						speed.x = move_toward(speed.x, MAX_WALK_RUN, WALK_ACCEL * delta*60)
 				else:
-					speed.x = -MAX_WALK*5.0
-					speed.y = move_toward(speed.y, 0, 20 * delta*60)
-					play("dash_l")
-					attack_play(0)
-			else:
-				if move_left or press_opposite:
-					speed.x = move_toward(speed.x, -MAX_WALK*3.0, 10 * delta*60)
-					speed.y = move_toward(speed.y, -20, 20 * delta*60)
-					press_opposite = true
-					play("spin_r")
-					attack_play(1)
-				else:
-					speed.x = MAX_WALK*5.0
-					speed.y = move_toward(speed.y, 0, 20 * delta*60)
-					play("dash_r")
-					attack_play(0)
+					speed.x = move_toward(speed.x, 0.0, WALK_ACCEL * delta*60)
 				
-	# Limit the speed
-	if speed.length() > MAX_SPEED:
-		speed = speed.normalized()*MAX_SPEED
-	
-	# Move the player according to speed and knockback. Must be done separately
-	# because we don't want the actual speed to be influenced by
-	# the knockback speed
-	speed = move_and_slide_with_snap(speed, Vector2.DOWN, Vector2.UP, true)
-	move_and_slide_with_snap(knockback, Vector2.DOWN, Vector2.UP, true)
-	knockback *= 0.5 # Knockback speed is reduced by half every frame
-	
+				# If the player isn't on the ground, make the state change
+				if not is_on_floor():
+					current_state = STATES.AIR
+				else:
+					speed.y = 60
+					# This makes it so that if the player suddenly walks off
+					# The ground, the falling feels natural
+					
+				# Jump
+				if jump_press:
+					speed.y = JUMP_FORCE
+					current_state = STATES.AIR
+				
+				# Directions for the sprites
+				if speed.x > 0:
+					direction = "_r"
+				elif speed.x < 0:
+					direction = "_l"
+				
+				# Ground Animations
+				if not swording:
+					if abs(speed.x) > 0 and abs(speed.x) < 110:
+						play("walk" + direction)
+					elif abs(speed.x) >= 110:
+						play("run" + direction)
+					else:
+						play("idle" + direction)
+				else:
+					play("attack" + direction)
+				
+				# Dashing
+				if dash_press and can_dash and not dash_echo and current_air_dash < air_dashes:
+					current_state = STATES.DASH
+					current_air_dash += 1
+					DashTimer.start()
+				
+				# Attacking
+				if attack_press and can_attack and not attack_echo:
+					swording = true
+					can_attack = false
+					AttackTimer.start()
+					$AnimatedSprite.frame = 0
+				
+				# Sword dirs
+				if move_up:
+					sword_dir = "u"
+				elif move_left:
+					sword_dir = "l"
+				elif move_right:
+					sword_dir = "r"
+				else:
+					sword_dir = direction.replace("_", "")
+					# If the player isn't pressing any direction key,
+					# they should attack to where they are looking
+			STATES.AIR:
+				# Horizontal movement
+				if move_left and not move_right:
+					if walk:
+						speed.x = move_toward(speed.x, -MAX_AIRSPEED, WALK_ACCEL * 1.1 * delta*60)
+					else:
+						speed.x = move_toward(speed.x, -MAX_AIRSPEED_RUN, WALK_ACCEL * 1.1 * delta*60)
+				elif move_right and not move_left:
+					if walk:
+						speed.x = move_toward(speed.x, MAX_AIRSPEED, WALK_ACCEL * 1.1 * delta*60)
+					else:
+						speed.x = move_toward(speed.x, MAX_AIRSPEED_RUN, WALK_ACCEL * 1.1 * delta*60)
+				else:
+					speed.x = move_toward(speed.x, 0.0, WALK_ACCEL * 0.8 * delta*60)
+				
+				# Change to ground state
+				if is_on_floor() and speed.y > -60:
+					current_state = STATES.GROUND
+				
+				# Animations
+				if speed.y < 0:
+					play("jump" + direction)
+				else:
+					play("fall" + direction)
+				
+				# Falling
+				speed.y += gravity * delta*60
+				
+				# Dash
+				if dash_press and can_dash and not dash_echo and current_air_dash < air_dashes:
+					current_air_dash += 1
+					current_state = STATES.DASH
+					DashTimer.start()
+				
+				# Attack
+				if attack_press and can_attack and not attack_echo:
+					swording = true
+					can_attack = false
+					AttackTimer.start()
+					$AnimatedSprite.frame = 0
+				
+				# Sword dirs
+				if move_up:
+					sword_dir = "u"
+				elif move_down:
+					sword_dir = "d"
+				elif move_left:
+					sword_dir = "l"
+				elif move_right:
+					sword_dir = "r"
+				else:
+					sword_dir = direction.replace("_", "")
+					# If the player isn't pressing any direction key,
+					# they should attack to where they are looking
+			
+			STATES.DASH:
+				# If the player is dashing, they can't dash until dash is over
+				can_dash = false
+				# The player dashes to wherever they are looking, unless they
+				# press a key opposite to where they're loking
+				# in that case, they spin
+				if direction == "_l":
+					if move_right or press_opposite:
+						speed.x = move_toward(speed.x, MAX_WALK*3.0, 10 * delta*60)
+						speed.y = move_toward(speed.y, -20, 20 * delta*60)
+						press_opposite = true
+						play("spin_l")
+						attack_play(1)
+					else:
+						speed.x = -MAX_WALK*5.0
+						speed.y = move_toward(speed.y, 0, 20 * delta*60)
+						play("dash_l")
+						attack_play(0)
+				else:
+					if move_left or press_opposite:
+						speed.x = move_toward(speed.x, -MAX_WALK*3.0, 10 * delta*60)
+						speed.y = move_toward(speed.y, -20, 20 * delta*60)
+						press_opposite = true
+						play("spin_r")
+						attack_play(1)
+					else:
+						speed.x = MAX_WALK*5.0
+						speed.y = move_toward(speed.y, 0, 20 * delta*60)
+						play("dash_r")
+						attack_play(0)
+					
+		# Limit the speed
+		if speed.length() > MAX_SPEED:
+			speed = speed.normalized()*MAX_SPEED
+		
+		# Move the player according to speed and knockback. Must be done separately
+		# because we don't want the actual speed to be influenced by
+		# the knockback speed
+		speed = move_and_slide_with_snap(speed, Vector2.DOWN, Vector2.UP, true)
+		move_and_slide_with_snap(knockback, Vector2.DOWN, Vector2.UP, true)
+		knockback *= 0.5 # Knockback speed is reduced by half every frame
+	else:
+		play("death")
+		Persistent.entered_from = Persistent.loaded_scene.replace("res://Areas/", "").replace(".tscn", "")
+		Persistent.next_scene = load(Persistent.loaded_scene)
 	# Used to check whether the player is holding these keys
 	dash_echo = dash_press
 	attack_echo = attack_press
@@ -419,6 +432,10 @@ func _on_animation_finished():
 		ReDashTimer.start()
 	if Animations.animation == "enter_door":
 		emit_signal("door_entered")
+	if Animations.animation == "death":
+		$DeathParticles.emitting = false
+		Persistent.SChangeTimer.start()
+		Persistent.first_load =  true
 
 # When the player is commanded to enter a door
 func enter_door(x):
@@ -435,15 +452,26 @@ func _on_body_attacked(body):
 
 # When the player is attacked
 func attacked(d, p, s):
-	speed = (position-p).normalized()*200 + s*0.5
-	health -= d
-	emit_signal("health_change", -d)
-	Engine.time_scale = 0.05
-	shake = 0.3 * d
+	if not invulnerable:
+		speed = (position-p).normalized()*200 + s*0.5
+		health -= d
+		emit_signal("health_change", -d)
+		Engine.time_scale = 0.05
+		shake = 0.3 * d
+		invulnerable = true
+		IvulnerableTimer.start()
+		$DeathParticles.emitting = true
 
 func env_hurt():
-	position = last_safe_pos
-	health -= 1
-	emit_signal("health_change", -1)
-	Engine.time_scale = 0.05
-	shake = 0.3
+	if not invulnerable:
+		position = last_safe_pos
+		health -= 1
+		emit_signal("health_change", -1)
+		Engine.time_scale = 0.05
+		shake = 0.3
+		invulnerable = true
+		IvulnerableTimer.start()
+		$DeathParticles.emitting = true
+
+func vulnerable_again():
+	invulnerable = false

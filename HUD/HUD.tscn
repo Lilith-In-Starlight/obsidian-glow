@@ -40,6 +40,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Health" type="HBoxContainer" parent="HUD"]
+anchor_left = 0.02
+anchor_top = 0.02
+anchor_right = 0.1
+anchor_bottom = 0.05
+margin_right = 8.0
+margin_bottom = 8.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Abilities" type="Panel" parent="HUD"]
 anchor_left = 0.1
 anchor_top = 0.1
@@ -96,5 +107,6 @@ texture = ExtResource( 4 )
 expand = true
 stretch_mode = 1
 __meta__ = {
+"_edit_lock_": true,
 "_edit_use_anchors_": false
 }

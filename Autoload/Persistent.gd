@@ -27,6 +27,8 @@ var first_load := true
 
 var loaded_scene := ""
 
+var health := 6
+
 
 var Env := Environment.new()
 var WEnv := WorldEnvironment.new()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Elements/Spikes.gd" type="Script" id=1]
 [ext_resource path="res://Neptune.tscn" type="PackedScene" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://Sprites/Bg/Outskirts/sky.png" type="Texture" id=6]
 [ext_resource path="res://HUD/HUD.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Sprites/Bg/Outskirts/wall.png" type="Texture" id=8]
+[ext_resource path="res://Enemies/LowAngel.tscn" type="PackedScene" id=9]
 
 [sub_resource type="Environment" id=1]
 background_mode = 4
@@ -50,6 +51,12 @@ modulate = Color( 1, 1, 1, 0.294118 )
 polygon = PoolVector2Array( -209, 135, -117, 136, -94, 143, -27, 167, -2, 175, 24, 181, 44, 190, 69, 203, 101, 214, 142, 225, 194, 225, 194, 236, 224, 236, 224, 225, 416, 224, 416, 288, 451, 288, 451, 222, 503, 222, 503, 232, 654, 231, 653, 28, 678, 28, 679, 309, -243, 305, -243, 59, -209, 60 )
 
 [node name="Enemies" type="Node2D" parent="."]
+
+[node name="LowAngel" parent="Enemies" instance=ExtResource( 9 )]
+position = Vector2( 103, 130 )
+
+[node name="LowAngel2" parent="Enemies" instance=ExtResource( 9 )]
+position = Vector2( 370, 64 )
 
 [node name="DecoBg" type="Node2D" parent="."]
 

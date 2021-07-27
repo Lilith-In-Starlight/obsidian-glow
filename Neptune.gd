@@ -65,8 +65,6 @@ var walk := false # Is the player being forced to walk?
 
 var last_safe_pos := Vector2(0, 0)
 
-var health := 6
-
 var shake := 0.0
 var trauma := 0.0
 var noise := OpenSimplexNoise.new()
@@ -76,6 +74,8 @@ var invulnerable := false
 var IvulnerableTimer := Timer.new()
 
 func _ready():
+	if Persistent.health <= 0:
+		Persistent.health = 6
 	Persistent.WEnv.environment = Persistent.Env
 	if Persistent.first_load:
 		if Persistent.player_pos == Vector2(0, 0):
@@ -177,7 +177,7 @@ func _process(delta):
 
 func _physics_process(delta):
 	
-	if health > 0:
+	if Persistent.health > 0:
 		$DeathParticles.emitting = false
 		DashParticle.visible = current_state == STATES.DASH
 		
@@ -454,7 +454,7 @@ func _on_body_attacked(body):
 func attacked(d, p, s):
 	if not invulnerable:
 		speed = (position-p).normalized()*200 + s*0.5
-		health -= d
+		Persistent.health -= d
 		emit_signal("health_change", -d)
 		Engine.time_scale = 0.05
 		shake = 0.3 * d
@@ -465,7 +465,7 @@ func attacked(d, p, s):
 func env_hurt():
 	if not invulnerable:
 		position = last_safe_pos
-		health -= 1
+		Persistent.health -= 1
 		emit_signal("health_change", -1)
 		Engine.time_scale = 0.05
 		shake = 0.3

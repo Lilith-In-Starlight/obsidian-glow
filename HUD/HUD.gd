@@ -11,6 +11,7 @@ enum NOTCH_MODES {
 	ABILITY,
 }
 
+const FLASK := preload("res://HUD/HealthFlask.tscn")
 const NOTCH := preload("res://HUD/AbilityNotch.tscn")
 const SELECT_NOTCH_TXT := preload("res://Sprites/HUD/Abilities/notchselect.png")
 const SELECTED_NOTCH_TXT := preload("res://Sprites/HUD/Abilities/notchselected.png")
@@ -48,10 +49,19 @@ func _ready():
 		new_notch.name = "Notch" + str(i)
 
 func _process(delta):
+	var HealthThere := $Health.get_children().size()
+	while HealthThere < Persistent.health:
+		var NewFlask := FLASK.instance()
+		$Health.add_child(NewFlask)
+		HealthThere += 1
+	while HealthThere > Persistent.health:
+		$Health.remove_child($Health.get_children()[0])
+		HealthThere -= 1
+		
 	var aa = Attacked.get_material().get_shader_param("rest")
 	attacked_vignette = move_toward(attacked_vignette, 0.0, 0.01)
-	if Player.health > 0:
-		if Player.health > 1:
+	if Persistent.health > 0:
+		if Persistent.health > 1:
 			attacked_vignette = move_toward(attacked_vignette, 0.0, 0.01)
 		else:
 			attacked_vignette = move_toward(attacked_vignette, 0.5, 0.01)

@@ -57,6 +57,11 @@ func _process(delta):
 
 
 func _ready():
+	var err
+	for i in 6:
+		$HTTPRequest.request("https://ampersandia.net/ampersandiaver.txt")
+		if err == OK:
+			break;
 	SceneTimer.wait_time = 0.5
 	SceneTimer.one_shot = true
 	SceneTimer.connect("timeout", self, "scene_timer_timeout")
@@ -263,3 +268,8 @@ func visual_update():
 			labels_in_menu[i].modulate = Color("#ffffff")
 	
 	Persistent.save_settings()
+
+
+func _on_HTTPRequest_request_completed(result, response_code, headers, body):
+	if body.get_string_from_ascii() != $VersionLabel.text:
+		$VersionWarning.visible = true

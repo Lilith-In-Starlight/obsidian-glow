@@ -8,6 +8,7 @@ enum MENUS {
 	CREDITS,
 }
 
+
 onready var Fadeout := $Fadeout
 
 onready var Menu := $Menu

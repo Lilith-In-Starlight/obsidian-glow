@@ -1,6 +1,8 @@
 extends KinematicBody2D
 
 signal door_entered
+signal health_change(change)
+
 
 enum STATES {
 	GROUND,
@@ -19,6 +21,7 @@ const JUMP_FORCE := -250.0
 onready var Animations := $Animations # The player sprite
 onready var DashParticle := $DashParticle # particles for when the player dashes
 onready var Hitbox := $Hitbox # The player's hitbox
+onready var Cam := $Camera2D
 
 var speed := Vector2(0, 0)
 
@@ -62,6 +65,13 @@ var walk := false # Is the player being forced to walk?
 
 var last_safe_pos := Vector2(0, 0)
 
+var health := 6
+
+var shake := 0.0
+var trauma := 0.0
+var noise := OpenSimplexNoise.new()
+var time := 0.0
+
 func _ready():
 	Persistent.WEnv.environment = Persistent.Env
 	if Persistent.first_load:
@@ -89,6 +99,13 @@ func _ready():
 	ReAttackTimer.connect("timeout", self, "attack_again")
 
 func _process(delta):
+	Cam.rotating = true
+	trauma = lerp(trauma, shake, 0.8)
+	shake = move_toward(shake, 0.0, 0.02)
+	Cam.rotation = noise.get_noise_1d(time * 10) * trauma * 0.1
+	Cam.offset = Vector2(noise.get_noise_1d(time * 10 + 100) * trauma, noise.get_noise_1d(time * 10 - 100) * trauma) * 5.0
+	time += delta*60 * 5
+	Engine.time_scale = move_toward(Engine.time_scale, 1.0, 0.025)
 	# Create the inputs
 	match Persistent.player_cutscene:
 		"no": # No cutscene
@@ -312,26 +329,26 @@ func _physics_process(delta):
 			# in that case, they spin
 			if direction == "_l":
 				if move_right or press_opposite:
-					speed.x = move_toward(speed.x, MAX_WALK*3.0, 10)
-					speed.y = move_toward(speed.y, -20, 20)
+					speed.x = move_toward(speed.x, MAX_WALK*3.0, 10 * delta*60)
+					speed.y = move_toward(speed.y, -20, 20 * delta*60)
 					press_opposite = true
 					play("spin_l")
 					attack_play(1)
 				else:
 					speed.x = -MAX_WALK*5.0
-					speed.y = move_toward(speed.y, 0, 20)
+					speed.y = move_toward(speed.y, 0, 20 * delta*60)
 					play("dash_l")
 					attack_play(0)
 			else:
 				if move_left or press_opposite:
-					speed.x = move_toward(speed.x, -MAX_WALK*3.0, 10)
-					speed.y = move_toward(speed.y, -20, 20)
+					speed.x = move_toward(speed.x, -MAX_WALK*3.0, 10 * delta*60)
+					speed.y = move_toward(speed.y, -20, 20 * delta*60)
 					press_opposite = true
 					play("spin_r")
 					attack_play(1)
 				else:
 					speed.x = MAX_WALK*5.0
-					speed.y = move_toward(speed.y, 0, 20)
+					speed.y = move_toward(speed.y, 0, 20 * delta*60)
 					play("dash_r")
 					attack_play(0)
 				
@@ -419,7 +436,14 @@ func _on_body_attacked(body):
 # When the player is attacked
 func attacked(d, p, s):
 	speed = (position-p).normalized()*200 + s*0.5
-#	health -= d
+	health -= d
+	emit_signal("health_change", -d)
+	Engine.time_scale = 0.05
+	shake = 0.3 * d
 
 func env_hurt():
 	position = last_safe_pos
+	health -= 1
+	emit_signal("health_change", -1)
+	Engine.time_scale = 0.05
+	shake = 0.3

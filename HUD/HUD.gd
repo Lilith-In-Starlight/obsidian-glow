@@ -21,6 +21,10 @@ var NotchDict := {
 	"dash" : preload("res://Sprites/HUD/Abilities/dashnotch.png")
 }
 
+onready var Player := $"../../Neptune"
+onready var Attacked := $Attacked
+var attacked_vignette := 0.0
+
 onready var CutsceneFade := $Cutscene
 
 onready var Abilities := $Abilities
@@ -36,6 +40,7 @@ func _init():
 	visible = true
 
 func _ready():
+	Player.connect("health_change", self, "health_changed")
 	for i in Persistent.notches:
 		var new_notch := NOTCH.instance()
 		new_notch.rect_position = CenterNotch.rect_position + Vector2(cos(i*TAU/Persistent.notches), sin(i*TAU/Persistent.notches)) * 60
@@ -43,6 +48,9 @@ func _ready():
 		new_notch.name = "Notch" + str(i)
 
 func _process(delta):
+	attacked_vignette = move_toward(attacked_vignette, 0.0, 0.01)
+	var aa = Attacked.get_material().get_shader_param("rest")
+	Attacked.get_material().set_shader_param("rest", lerp(aa, attacked_vignette, 0.1))
 	match Persistent.player_cutscene:
 		"leave_l", "leave_r":
 			CutsceneFade.modulate.a = move_toward(CutsceneFade.modulate.a, 1.0, 0.05)
@@ -116,3 +124,7 @@ func _input(event):
 							key = event.scancode
 						Persistent.notch_keys[selected_notch] = key
 						notch_mode = NOTCH_MODES.NONE
+
+func health_changed(change):
+	if change < 0:
+		attacked_vignette = 0.7 + 0.2*abs(change)

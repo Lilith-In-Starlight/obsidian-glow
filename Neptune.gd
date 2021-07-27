@@ -313,24 +313,24 @@ func _physics_process(delta):
 			if direction == "_l":
 				if move_right or press_opposite:
 					speed.x = move_toward(speed.x, MAX_WALK*3.0, 10)
-					speed.y = move_toward(speed.y, 0, 20)
+					speed.y = move_toward(speed.y, -20, 20)
 					press_opposite = true
 					play("spin_l")
 					attack_play(1)
 				else:
-					speed.x = move_toward(speed.x, -MAX_WALK*8.0, 30)
+					speed.x = -MAX_WALK*5.0
 					speed.y = move_toward(speed.y, 0, 20)
 					play("dash_l")
 					attack_play(0)
 			else:
 				if move_left or press_opposite:
 					speed.x = move_toward(speed.x, -MAX_WALK*3.0, 10)
-					speed.y = move_toward(speed.y, 0, 20)
+					speed.y = move_toward(speed.y, -20, 20)
 					press_opposite = true
 					play("spin_r")
 					attack_play(1)
 				else:
-					speed.x = move_toward(speed.x, MAX_WALK*8.0, 30)
+					speed.x = MAX_WALK*5.0
 					speed.y = move_toward(speed.y, 0, 20)
 					play("dash_r")
 					attack_play(0)
@@ -363,6 +363,7 @@ func attack_again():
 func dash_ended():
 	if Animations.animation.find("spin") == -1:
 		current_state = STATES.AIR
+		speed.x *= 0.5
 		press_opposite = false
 		ReDashTimer.start() # Takes some time to be able to dash again
 

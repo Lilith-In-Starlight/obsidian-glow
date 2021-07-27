@@ -60,6 +60,8 @@ var sword_dir := "l" # What direction  is the player attacking in?
 var knockback := Vector2(0,0) # Knockback speed when attacked
 var walk := false # Is the player being forced to walk?
 
+var last_safe_pos := Vector2(0, 0)
+
 func _ready():
 	Persistent.WEnv.environment = Persistent.Env
 	if Persistent.first_load:
@@ -67,6 +69,7 @@ func _ready():
 			Persistent.player_pos = position
 		elif Persistent.loaded_scene == get_tree().current_scene.filename:
 			position = Persistent.player_pos
+	last_safe_pos = position
 	Persistent.first_load = false
 	add_child(DashTimer)
 	DashTimer.wait_time = 0.2
@@ -416,3 +419,6 @@ func _on_body_attacked(body):
 func attacked(d, p, s):
 	speed = (position-p).normalized()*200 + s*0.5
 #	health -= d
+
+func env_hurt():
+	position = last_safe_pos

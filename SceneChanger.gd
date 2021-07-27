@@ -55,3 +55,4 @@ func _on_body_exited(body):
 	if body.name == "Neptune":
 		can_enter = true
 		Persistent.player_cutscene = "no"
+		body.last_safe_pos = body.position

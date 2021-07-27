@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Elements/Bench.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Neptune.tscn" type="PackedScene" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://Sprites/Bg/Outskirts/wall.png" type="Texture" id=8]
 [ext_resource path="res://Sprites/Elements/SubwayEntrance.png" type="Texture" id=9]
 [ext_resource path="res://DialogueObject.tscn" type="PackedScene" id=10]
+[ext_resource path="res://Elements/Spikes.gd" type="Script" id=11]
 
 [sub_resource type="Environment" id=1]
 background_mode = 4
@@ -88,7 +89,15 @@ texture = ExtResource( 9 )
 environment = SubResource( 1 )
 
 [node name="SceneChanger" parent="." instance=ExtResource( 4 )]
-position = Vector2( -211, 143 )
+position = Vector2( -202, 142 )
 newScene = "Outskirts/OutskirtsLeft"
 
 [node name="HUD" parent="." instance=ExtResource( 7 )]
+
+[node name="Spikes" type="Area2D" parent="."]
+script = ExtResource( 11 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Spikes"]
+polygon = PoolVector2Array( 459, 204, 473, 218, 557, 218, 570, 198, 570, 233, 458, 233 )
+
+[connection signal="body_entered" from="Spikes" to="Spikes" method="_on_body_entered"]

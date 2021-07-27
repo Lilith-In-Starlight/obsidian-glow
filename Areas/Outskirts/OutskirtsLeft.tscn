@@ -1,5 +1,6 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
+[ext_resource path="res://Elements/Spikes.gd" type="Script" id=1]
 [ext_resource path="res://Neptune.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Sprites/Bg/Outskirts/townbgl.png" type="Texture" id=3]
 [ext_resource path="res://SceneChanger.tscn" type="PackedScene" id=4]
@@ -79,3 +80,11 @@ newScene = "Outskirts/OutskirtsView"
 enter_dir = 1
 
 [node name="HUD" parent="." instance=ExtResource( 7 )]
+
+[node name="Spikes" type="Area2D" parent="."]
+script = ExtResource( 1 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Spikes"]
+polygon = PoolVector2Array( 415, 244, 420, 273, 424, 283, 433, 287, 443, 283, 448, 272, 451, 246, 453, 245, 453, 296, 411, 296, 411, 248 )
+
+[connection signal="body_entered" from="Spikes" to="Spikes" method="_on_body_entered"]

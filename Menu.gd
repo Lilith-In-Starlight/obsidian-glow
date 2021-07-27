@@ -58,10 +58,7 @@ func _process(delta):
 
 func _ready():
 	var err
-	for i in 6:
-		$HTTPRequest.request("https://ampersandia.net/ampersandiaver.txt")
-		if err == OK:
-			break;
+	$HTTPRequest.request("https://ampersandia.net/ampersandiaver.txt")
 	SceneTimer.wait_time = 0.5
 	SceneTimer.one_shot = true
 	SceneTimer.connect("timeout", self, "scene_timer_timeout")

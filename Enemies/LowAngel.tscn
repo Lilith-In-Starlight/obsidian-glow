@@ -70,19 +70,19 @@ region = Rect2( 84, 0, 12, 28 )
 
 [sub_resource type="AtlasTexture" id=17]
 atlas = ExtResource( 4 )
-region = Rect2( 74, 0, 37, 26 )
+region = Rect2( 0, 0, 37, 26 )
 
 [sub_resource type="AtlasTexture" id=18]
 atlas = ExtResource( 4 )
-region = Rect2( 0, 0, 37, 26 )
-
-[sub_resource type="AtlasTexture" id=19]
-atlas = ExtResource( 4 )
 region = Rect2( 37, 0, 37, 26 )
 
-[sub_resource type="AtlasTexture" id=20]
+[sub_resource type="AtlasTexture" id=19]
 atlas = ExtResource( 1 )
 region = Rect2( 96, 0, 12, 28 )
+
+[sub_resource type="AtlasTexture" id=20]
+atlas = ExtResource( 4 )
+region = Rect2( 74, 0, 37, 26 )
 
 [sub_resource type="SpriteFrames" id=21]
 animations = [ {
@@ -96,19 +96,19 @@ animations = [ {
 "name": "attack",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 17 ) ],
-"loop": true,
-"name": "dead",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 18 ), SubResource( 19 ) ],
+"frames": [ SubResource( 17 ), SubResource( 18 ) ],
 "loop": false,
 "name": "die",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 20 ) ],
+"frames": [ SubResource( 19 ) ],
 "loop": true,
 "name": "release",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 20 ) ],
+"loop": true,
+"name": "dead",
 "speed": 5.0
 } ]
 
@@ -123,7 +123,6 @@ shape = SubResource( 1 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 21 )
-frame = 1
 playing = true
 flip_h = true
 

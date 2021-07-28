@@ -49,12 +49,15 @@ func _ready():
 		new_notch.name = "Notch" + str(i)
 
 func _process(delta):
+	$Darkness.value = lerp($Darkness.value, Persistent.shadow, 0.2)
+	if Persistent.shadow > 12:
+		Persistent.shadow = 12
 	var HealthThere := $Health.get_children().size()
-	while HealthThere < Persistent.health:
+	while HealthThere < Persistent.health and Persistent.health >= 0:
 		var NewFlask := FLASK.instance()
 		$Health.add_child(NewFlask)
 		HealthThere += 1
-	while HealthThere > Persistent.health:
+	while HealthThere > Persistent.health and Persistent.health >= 0:
 		$Health.remove_child($Health.get_children()[0])
 		HealthThere -= 1
 		
@@ -64,9 +67,9 @@ func _process(delta):
 		if Persistent.health > 1:
 			attacked_vignette = move_toward(attacked_vignette, 0.0, 0.01)
 		else:
-			attacked_vignette = move_toward(attacked_vignette, 0.5, 0.01)
+			attacked_vignette = move_toward(attacked_vignette, 0.35, 0.01)
 		match Persistent.player_cutscene:
-			"leave_l", "leave_r":
+			"leave_l", "leave_r", "door":
 				CutsceneFade.modulate.a = move_toward(CutsceneFade.modulate.a, 1.0, 0.05)
 			"train":
 				CutsceneFade.modulate.a = move_toward(CutsceneFade.modulate.a, 1.0, 0.005)

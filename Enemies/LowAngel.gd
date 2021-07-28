@@ -77,6 +77,7 @@ func _physics_process(delta):
 	move_and_slide(speed, Vector2.UP)
 
 func attacked(d, pos, s):
+	Persistent.shadow += 1.0 + randf()*2.0
 	speed = (position-pos).normalized()*200 + s
 	health -= d
 

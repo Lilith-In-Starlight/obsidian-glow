@@ -80,8 +80,9 @@ func _process(delta):
 							show_text = true
 					OPTIONS.SCENE_CHANGE:
 						Player.call("enter_door", position.x)
-						scene_enter = "d"
-						Player.connect("door_entered", self, "on_door_entered", [], 4)
+						Persistent.entered_from = get_tree().current_scene.filename.replace("res://Areas/", "").replace(".tscn", "")
+						Persistent.next_scene = down_scene
+						Persistent.SChangeTimer.start()
 			if Player.move_up and up_button != OPTIONS.NONE:
 				match up_button:
 					OPTIONS.TEXT:
@@ -92,9 +93,9 @@ func _process(delta):
 							show_text = true
 					OPTIONS.SCENE_CHANGE:
 						Player.call("enter_door", position.x)
-						scene_enter = "u"
+						Persistent.next_scene = up_scene
 						Persistent.entered_from = get_tree().current_scene.filename.replace("res://Areas/", "").replace(".tscn", "")
-						Player.connect("door_entered", self, "on_door_entered", [], 4)
+						Persistent.SChangeTimer.start()
 		else:
 			Buttons.modulate.a = move_toward(Buttons.modulate.a, 0.0, 0.08)
 			if show_text:
@@ -118,19 +119,3 @@ func _draw():
 			draw_rect(Rect2(-3, -3, 4, 4), Color(0.9,0.5,0.1))
 		else:
 			draw_rect(Rect2(-2, -2, 2, 2), Color(0.9,0.5,0.1))
-
-func on_door_entered():
-	match scene_enter:
-		"d":
-			Persistent.next_scene = down_scene
-			if down_exit_side == DIRS.LEFT:
-				Persistent.player_cutscene = "exit_l"
-			else:
-				Persistent.player_cutscene = "exit_r"
-		"u":
-			Persistent.next_scene = up_scene
-			if up_exit_side == DIRS.LEFT:
-				Persistent.player_cutscene = "exit_l"
-			else:
-				Persistent.player_cutscene = "exit_r"
-	Persistent.SChangeTimer.start()

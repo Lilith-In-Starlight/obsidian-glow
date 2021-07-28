@@ -27,7 +27,9 @@ var first_load := true
 
 var loaded_scene := ""
 
+var max_health := 6
 var health := 6
+var shadow := 0.0
 
 
 var Env := Environment.new()

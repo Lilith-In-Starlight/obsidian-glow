@@ -73,6 +73,8 @@ var time := 0.0
 var invulnerable := false
 var IvulnerableTimer := Timer.new()
 
+var using_shadow := 0.0 # The amount of shadow that has been used for healing
+
 func _ready():
 	if Persistent.health <= 0:
 		Persistent.health = 6
@@ -106,6 +108,8 @@ func _ready():
 	IvulnerableTimer.connect("timeout", self, "vulnerable_again")
 
 func _process(delta):
+	if Persistent.health > Persistent.max_health:
+		Persistent.health = Persistent.max_health
 	Cam.rotating = true
 	trauma = lerp(trauma, shake, 0.8)
 	shake = move_toward(shake, 0.0, 0.02)
@@ -176,7 +180,6 @@ func _process(delta):
 
 
 func _physics_process(delta):
-	
 	if Persistent.health > 0:
 		$DeathParticles.emitting = false
 		DashParticle.visible = current_state == STATES.DASH
@@ -238,8 +241,17 @@ func _physics_process(delta):
 				# Directions for the sprites
 				if speed.x > 0:
 					direction = "_r"
+					using_shadow = 0
 				elif speed.x < 0:
 					direction = "_l"
+					using_shadow = 0
+				else:
+					if move_down and Persistent.shadow - 0.08 >= 0.0:
+						using_shadow += 0.08
+						Persistent.shadow -= 0.08
+						if using_shadow > 4.0:
+							using_shadow = 0.0
+							Persistent.health += 1
 				
 				# Ground Animations
 				if not swording:
@@ -372,8 +384,12 @@ func _physics_process(delta):
 		speed = move_and_slide_with_snap(speed, Vector2.DOWN, Vector2.UP, true)
 		move_and_slide_with_snap(knockback, Vector2.DOWN, Vector2.UP, true)
 		knockback *= 0.5 # Knockback speed is reduced by half every frame
+	
 	else:
 		play("death")
+		Persistent.shadow -= 0.2
+		if Persistent.loaded_scene == "":
+			Persistent.loaded_scene = "res://Areas/Field/Field.tscn"
 		Persistent.entered_from = Persistent.loaded_scene.replace("res://Areas/", "").replace(".tscn", "")
 		Persistent.next_scene = load(Persistent.loaded_scene)
 	# Used to check whether the player is holding these keys
@@ -436,6 +452,7 @@ func _on_animation_finished():
 		$DeathParticles.emitting = false
 		Persistent.SChangeTimer.start()
 		Persistent.first_load =  true
+		Persistent.shadow = 0.0
 
 # When the player is commanded to enter a door
 func enter_door(x):
@@ -467,7 +484,6 @@ func env_hurt():
 		position = last_safe_pos
 		Persistent.health -= 1
 		emit_signal("health_change", -1)
-		Engine.time_scale = 0.05
 		shake = 0.3
 		invulnerable = true
 		IvulnerableTimer.start()

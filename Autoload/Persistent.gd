@@ -24,13 +24,14 @@ var Settings := ConfigFile.new()
 var player_pos := Vector2(0, 0)
 
 var first_load := true
+var death_load := false
 
 var loaded_scene := ""
 
 var max_health := 6
 var health := 6
 var shadow := 0.0
-
+var persands := 0
 
 var Env := Environment.new()
 var WEnv := WorldEnvironment.new()
@@ -57,8 +58,11 @@ func _ready():
 	if err_save == OK:
 		loaded_scene = Savefile.get_value("player", "current_scene", "") as String
 		player_pos = Savefile.get_value("player", "position", Vector2(0, 0)) as Vector2
-		notches = Savefile.get_value("abilities", "notches", 2) as int
+		persands = Savefile.get_value("player", "persands", 0) as int
+		max_health = Savefile.get_value("player", "max_health", 6) as int
+		shadow = Savefile.get_value("player", "shadow", 0.0) as float
 		
+		notches = Savefile.get_value("abilities", "notches", 2) as int
 		abilities = Savefile.get_value("abilities", "abilities", [""]) as Array
 		notch_fillers = Savefile.get_value("abilities", "fillers", []) as Array
 		notch_keys = Savefile.get_value("abilities", "keys", []) as Array
@@ -79,6 +83,9 @@ func save():
 	loaded_scene = get_tree().current_scene.filename
 	Savefile.set_value("player", "current_scene", get_tree().current_scene.filename)
 	Savefile.set_value("player", "position", player_pos)
+	Savefile.set_value("player", "persands", persands)
+	Savefile.set_value("player", "max_health", max_health)
+	Savefile.set_value("player", "shadow", shadow)
 	
 	Savefile.set_value("abilities", "notches", notches)
 	Savefile.set_value("abilities", "abilities", abilities)

@@ -50,6 +50,7 @@ func _ready():
 
 func _process(delta):
 	$Darkness.value = lerp($Darkness.value, Persistent.shadow, 0.2)
+	$PersandAmount.text = str(Persistent.persands)
 	if Persistent.shadow > 12:
 		Persistent.shadow = 12
 	var HealthThere := $Health.get_children().size()

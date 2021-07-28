@@ -84,6 +84,9 @@ func _ready():
 			Persistent.player_pos = position
 		elif Persistent.loaded_scene == get_tree().current_scene.filename:
 			position = Persistent.player_pos
+		if Persistent.death_load:
+			Persistent.save()
+			Persistent.death_load = false
 	last_safe_pos = position
 	Persistent.first_load = false
 	add_child(DashTimer)

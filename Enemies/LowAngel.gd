@@ -79,7 +79,11 @@ func _physics_process(delta):
 func attacked(d, pos, s):
 	Persistent.shadow += 1.0 + randf()*2.0
 	speed = (position-pos).normalized()*200 + s
+	var prev_health := health
 	health -= d
+	if health <= 0 and prev_health > 0:
+		Persistent.persands += randi() % 5
+	
 
 func play(anim:String):
 	if Animations.animation != anim or not Animations.playing:

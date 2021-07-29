@@ -32,7 +32,7 @@ position = Vector2( 823, -161 )
 shape = SubResource( 1 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="World"]
-polygon = PoolVector2Array( -47, 86, -46, 271, 851, 271, 851, 284, 1034, 284, 1034, 272, 1219, 272, 1219, 284, 1394, 284, 1394, 25, 1466, 25, 1466, 386, -64, 386, -64, 86 )
+polygon = PoolVector2Array( -47, 87, -46, 272, 851, 272, 851, 284, 1034, 284, 1034, 272, 1219, 272, 1219, 284, 1394, 284, 1394, 25, 1466, 25, 1466, 386, -64, 386, -64, 86 )
 
 [node name="Subway" parent="." instance=ExtResource( 1 )]
 position = Vector2( 940, 248 )

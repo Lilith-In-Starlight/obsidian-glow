@@ -183,6 +183,7 @@ func _process(delta):
 
 
 func _physics_process(delta):
+	$HealParticles.emitting = using_shadow >= 0.08 and Persistent.shadow - 0.08 >= 0.0
 	if Persistent.health > 0:
 		$DeathParticles.emitting = false
 		DashParticle.visible = current_state == STATES.DASH
@@ -249,23 +250,29 @@ func _physics_process(delta):
 					direction = "_l"
 					using_shadow = 0
 				else:
-					if move_down and Persistent.shadow - 0.08 >= 0.0:
+					if move_down and Persistent.shadow - 0.08 >= 0.0 and Persistent.health < Persistent.max_health:
 						using_shadow += 0.08
 						Persistent.shadow -= 0.08
 						if using_shadow > 4.0:
-							using_shadow = 0.0
+							using_shadow = 0.08
 							Persistent.health += 1
+					else:
+						Persistent.shadow += using_shadow
+						using_shadow = 0
 				
 				# Ground Animations
-				if not swording:
-					if abs(speed.x) > 0 and abs(speed.x) < 110:
-						play("walk" + direction)
-					elif abs(speed.x) >= 110:
-						play("run" + direction)
+				if using_shadow == 0:
+					if not swording:
+						if abs(speed.x) > 0 and abs(speed.x) < 110:
+							play("walk" + direction)
+						elif abs(speed.x) >= 110:
+							play("run" + direction)
+						else:
+							play("idle" + direction)
 					else:
-						play("idle" + direction)
+						play("attack" + direction)
 				else:
-					play("attack" + direction)
+					play("heal" + direction)
 				
 				# Dashing
 				if dash_press and can_dash and not dash_echo and current_air_dash < air_dashes:
@@ -292,6 +299,7 @@ func _physics_process(delta):
 					# If the player isn't pressing any direction key,
 					# they should attack to where they are looking
 			STATES.AIR:
+				using_shadow = 0
 				# Horizontal movement
 				if move_left and not move_right:
 					if walk:
@@ -347,6 +355,7 @@ func _physics_process(delta):
 					# they should attack to where they are looking
 			
 			STATES.DASH:
+				using_shadow = 0
 				# If the player is dashing, they can't dash until dash is over
 				can_dash = false
 				# The player dashes to wherever they are looking, unless they
@@ -389,6 +398,7 @@ func _physics_process(delta):
 		knockback *= 0.5 # Knockback speed is reduced by half every frame
 	
 	else:
+		Persistent.death_load = true
 		play("death")
 		Persistent.shadow -= 0.2
 		if Persistent.loaded_scene == "":

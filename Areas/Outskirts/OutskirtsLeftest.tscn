@@ -1,10 +1,10 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=17 format=2]
 
-[ext_resource path="res://Elements/Spikes.gd" type="Script" id=1]
+[ext_resource path="res://Enemies/DashAngel.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Neptune.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Sprites/Bg/Outskirts/townbgl.png" type="Texture" id=3]
 [ext_resource path="res://SceneChanger.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Sprites/Levels/Outskirts/X-1Y0.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/Levels/Outskirts/X-2Y0.png" type="Texture" id=5]
 [ext_resource path="res://Sprites/Bg/Outskirts/sky.png" type="Texture" id=6]
 [ext_resource path="res://HUD/HUD.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Sprites/Bg/Outskirts/wall.png" type="Texture" id=8]
@@ -14,6 +14,24 @@
 background_mode = 4
 tonemap_mode = 2
 glow_enabled = true
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 58, 4 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 38, 4 )
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 97, 4 )
+
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 45, 4 )
+
+[sub_resource type="RectangleShape2D" id=6]
+extents = Vector2( 66, 4 )
+
+[sub_resource type="RectangleShape2D" id=7]
+extents = Vector2( 8, 4 )
 
 [node name="Node2D" type="Node2D"]
 
@@ -32,14 +50,14 @@ texture = ExtResource( 6 )
 motion_scale = Vector2( 0.01, 0.01 )
 
 [node name="townbgl" type="Sprite" parent="World/ParallaxBackground/ParallaxLayer"]
-position = Vector2( 26, 5 )
+position = Vector2( 32, 8 )
 texture = ExtResource( 3 )
 
 [node name="ParallaxLayer2" type="ParallaxLayer" parent="World/ParallaxBackground"]
 motion_scale = Vector2( 0.02, 0.02 )
 
 [node name="wall" type="Sprite" parent="World/ParallaxBackground/ParallaxLayer2"]
-position = Vector2( 66, 32 )
+position = Vector2( 74, 34 )
 texture = ExtResource( 8 )
 
 [node name="SubwayEntrance" type="Sprite" parent="World"]
@@ -48,15 +66,15 @@ texture = ExtResource( 5 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="World"]
 modulate = Color( 1, 1, 1, 0.294118 )
-polygon = PoolVector2Array( -215, 136, -117, 136, -94, 143, -27, 167, -2, 175, 24, 181, 44, 190, 69, 203, 101, 214, 142, 225, 194, 225, 194, 236, 224, 236, 224, 225, 416, 225, 416, 288, 451, 288, 451, 222, 503, 222, 503, 232, 654, 232, 653, 28, 678, 28, 679, 309, -243, 305, -243, 59, -215, 59 )
+polygon = PoolVector2Array( -23, 93, 171, 89, 311, 86, 311, 95, 301, 101, 256, 114, 256, 205, 281, 213, 403, 214, 503, 222, 575, 233, 654, 233, 653, 28, 678, 28, 679, 309, -243, 305, -243, 59, -221, -58, -221, 93 )
 
 [node name="Enemies" type="Node2D" parent="."]
 
-[node name="LowAngel" parent="Enemies" instance=ExtResource( 9 )]
-position = Vector2( 103, 130 )
-
 [node name="LowAngel2" parent="Enemies" instance=ExtResource( 9 )]
-position = Vector2( 370, 64 )
+position = Vector2( 360, 155 )
+
+[node name="DashAngel" parent="Enemies" instance=ExtResource( 1 )]
+position = Vector2( 64, 45 )
 
 [node name="DecoBg" type="Node2D" parent="."]
 
@@ -82,20 +100,46 @@ __meta__ = {
 environment = SubResource( 1 )
 
 [node name="SceneChanger" parent="." instance=ExtResource( 4 )]
-position = Vector2( 645, 191 )
-newScene = "Outskirts/OutskirtsView"
+position = Vector2( 645, 205 )
+newScene = "Outskirts/OutskirtsLeft"
 enter_dir = 1
 
 [node name="SceneChanger2" parent="." instance=ExtResource( 4 )]
-position = Vector2( -208, 109 )
-newScene = "Outskirts/OutskirtsLeftest"
+position = Vector2( -208, 63 )
+newScene = "Outskirts/OutskirtsX-3"
 
 [node name="HUD" parent="." instance=ExtResource( 7 )]
 
-[node name="Spikes" type="Area2D" parent="."]
-script = ExtResource( 1 )
+[node name="Platforms" type="StaticBody2D" parent="."]
+collision_layer = 4
+collision_mask = 2
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Spikes"]
-polygon = PoolVector2Array( 415, 244, 420, 273, 424, 283, 433, 287, 443, 283, 448, 272, 451, 246, 453, 245, 453, 296, 411, 296, 411, 248 )
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platforms"]
+position = Vector2( 366, 90 )
+shape = SubResource( 2 )
+one_way_collision = true
 
-[connection signal="body_entered" from="Spikes" to="Spikes" method="_on_body_entered"]
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Platforms"]
+position = Vector2( 383, 117 )
+shape = SubResource( 3 )
+one_way_collision = true
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Platforms"]
+position = Vector2( 324, 145 )
+shape = SubResource( 4 )
+one_way_collision = true
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="Platforms"]
+position = Vector2( 316, 166 )
+shape = SubResource( 5 )
+one_way_collision = true
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="Platforms"]
+position = Vector2( 298, 188 )
+shape = SubResource( 6 )
+one_way_collision = true
+
+[node name="CollisionShape2D6" type="CollisionShape2D" parent="Platforms"]
+position = Vector2( 412, 188 )
+shape = SubResource( 7 )
+one_way_collision = true

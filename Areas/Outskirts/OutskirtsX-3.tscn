@@ -1,22 +1,22 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://Elements/Bench.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Elements/SafePoint.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Neptune.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Sprites/Bg/Outskirts/townbgl.png" type="Texture" id=3]
 [ext_resource path="res://SceneChanger.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Sprites/Levels/Outskirts/SubwayEntrance.png" type="Texture" id=5]
+[ext_resource path="res://Sprites/Levels/Outskirts/X-3Y0.png" type="Texture" id=5]
 [ext_resource path="res://Sprites/Bg/Outskirts/sky.png" type="Texture" id=6]
 [ext_resource path="res://HUD/HUD.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Sprites/Bg/Outskirts/wall.png" type="Texture" id=8]
-[ext_resource path="res://Sprites/Elements/SubwayEntrance.png" type="Texture" id=9]
-[ext_resource path="res://DialogueObject.tscn" type="PackedScene" id=10]
-[ext_resource path="res://Elements/Spikes.gd" type="Script" id=11]
-[ext_resource path="res://Elements/SafePoint.tscn" type="PackedScene" id=12]
+[ext_resource path="res://Elements/Spikes.gd" type="Script" id=10]
 
 [sub_resource type="Environment" id=1]
 background_mode = 4
 tonemap_mode = 2
 glow_enabled = true
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 90, 4 )
 
 [node name="Node2D" type="Node2D"]
 
@@ -25,24 +25,24 @@ glow_enabled = true
 [node name="ParallaxBackground" type="ParallaxBackground" parent="World"]
 layer = -1
 scroll_limit_begin = Vector2( -170, 0 )
-scroll_limit_end = Vector2( 604, 225 )
+scroll_limit_end = Vector2( 604, 295 )
 
 [node name="Field" type="Sprite" parent="World/ParallaxBackground"]
 position = Vector2( 230, 113 )
 texture = ExtResource( 6 )
 
 [node name="ParallaxLayer" type="ParallaxLayer" parent="World/ParallaxBackground"]
-motion_scale = Vector2( 0.01, 1 )
+motion_scale = Vector2( 0.01, 0.01 )
 
 [node name="townbgl" type="Sprite" parent="World/ParallaxBackground/ParallaxLayer"]
-position = Vector2( 24, 114 )
+position = Vector2( 40, 24 )
 texture = ExtResource( 3 )
 
 [node name="ParallaxLayer2" type="ParallaxLayer" parent="World/ParallaxBackground"]
-motion_scale = Vector2( 0.02, 1 )
+motion_scale = Vector2( 0.02, 0.02 )
 
 [node name="wall" type="Sprite" parent="World/ParallaxBackground/ParallaxLayer2"]
-position = Vector2( 57, 143 )
+position = Vector2( 82, 50 )
 texture = ExtResource( 8 )
 
 [node name="SubwayEntrance" type="Sprite" parent="World"]
@@ -51,57 +51,56 @@ texture = ExtResource( 5 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="World"]
 modulate = Color( 1, 1, 1, 0.294118 )
-polygon = PoolVector2Array( -208, 157, -91, 157, -91, 175, 38, 175, 38, 180, 459, 180, 459, 226, 570, 224, 570, 179, 629, 179, 629, 28, 670, 28, 667, 248, -243, 246, -243, 59, -208, 59 )
+polygon = PoolVector2Array( 241, 257, 250, 253, 270, 234, 290, 224, 315, 220, 359, 217, 379, 209, 385, 202, 386, 172, 393, 158, 399, 152, 492, 166, 579, 169, 653, 169, 653, 28, 678, 28, 679, 309, -243, 305, -243, 93.7931, -201, 94, -202, 257 )
 
 [node name="Enemies" type="Node2D" parent="."]
 
 [node name="DecoBg" type="Node2D" parent="."]
 
-[node name="Bench" parent="DecoBg" instance=ExtResource( 1 )]
-modulate = Color( 0.803922, 0.803922, 0.803922, 1 )
-position = Vector2( 341, 180 )
-
 [node name="Neptune" parent="." instance=ExtResource( 2 )]
-position = Vector2( 182, 93 )
+position = Vector2( 564, 130 )
 
 [node name="Camera2D" type="Camera2D" parent="Neptune"]
 current = true
 limit_left = -170
 limit_top = 0
 limit_right = 604
-limit_bottom = 225
+limit_bottom = 295
 limit_smoothed = true
 smoothing_enabled = true
 editor_draw_limits = true
-
-[node name="DialogueObject" parent="." instance=ExtResource( 10 )]
-position = Vector2( 243, 167 )
-down_action = "Subway"
-up_button = 3
-up_action = "Outskirts/OutskirtsSubway"
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="DecoFg" type="Node2D" parent="."]
-
-[node name="SubwayEntrance" type="Sprite" parent="DecoFg"]
-position = Vector2( 264, 164 )
-texture = ExtResource( 9 )
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 1 )
 
 [node name="SceneChanger" parent="." instance=ExtResource( 4 )]
-position = Vector2( -202, 142 )
-newScene = "Outskirts/OutskirtsLeft"
+position = Vector2( 641, 130 )
+newScene = "Outskirts/OutskirtsLeftest"
+enter_dir = 1
 
 [node name="HUD" parent="." instance=ExtResource( 7 )]
 
+[node name="Platforms" type="StaticBody2D" parent="."]
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="Platforms"]
+position = Vector2( 304, 185 )
+shape = SubResource( 2 )
+one_way_collision = true
+
 [node name="Spikes" type="Area2D" parent="."]
-script = ExtResource( 11 )
+script = ExtResource( 10 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Spikes"]
-polygon = PoolVector2Array( 459, 204, 473, 218, 557, 218, 570, 198, 570, 233, 458, 233 )
+polygon = PoolVector2Array( 244, 233, 255, 222, 281, 223, 286, 230, 243, 256 )
 
-[node name="Area2D" parent="." instance=ExtResource( 12 )]
-position = Vector2( 422, 168 )
+[node name="SafePoint" parent="." instance=ExtResource( 1 )]
+position = Vector2( 201, 244 )
 
 [connection signal="body_entered" from="Spikes" to="Spikes" method="_on_body_entered"]

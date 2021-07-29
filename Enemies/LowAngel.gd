@@ -25,6 +25,14 @@ func _ready():
 	noise.seed = hash(name)
 
 func _physics_process(delta):
+	if position.y < Player.Cam.limit_top:
+		position.y = Player.Cam.limit_top
+	if position.x < Player.Cam.limit_left:
+		position.x = Player.Cam.limit_left
+	elif position.x > Player.Cam.limit_right:
+		position.x = Player.Cam.limit_right
+	elif position.y > Player.Cam.limit_bottom:
+		health = 0
 	if health > 0:
 		var randv := Vector2(noise.get_noise_2d(position.x, time * 60) * 100, noise.get_noise_2d(position.y, time * 60) * 100)
 		time += delta
@@ -68,16 +76,18 @@ func _physics_process(delta):
 		if Persistent.player_cutscene != "no":
 			state = STATES.IDLE
 	else:
-		speed.y += 8
 		if is_on_floor():
 			speed.x *= 0.75
+			speed.y = 60
 			play("dead")
 		else:
 			play("die")
+			speed.y += 8
 	move_and_slide(speed, Vector2.UP)
 
 func attacked(d, pos, s):
-	Persistent.shadow += 1.0 + randf()*2.0
+	if health > 0:
+		Persistent.shadow += 1.0 + randf()*2.0
 	speed = (position-pos).normalized()*200 + s
 	var prev_health := health
 	health -= d

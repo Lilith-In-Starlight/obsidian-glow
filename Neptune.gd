@@ -183,7 +183,7 @@ func _process(delta):
 
 
 func _physics_process(delta):
-	$HealParticles.emitting = using_shadow >= 0.08 and Persistent.shadow - 0.08 >= 0.0
+	$HealParticles.emitting = using_shadow >= 0.08 and Persistent.shadow + using_shadow >= 4.0
 	if Persistent.health > 0:
 		$DeathParticles.emitting = false
 		DashParticle.visible = current_state == STATES.DASH
@@ -261,7 +261,7 @@ func _physics_process(delta):
 						using_shadow = 0
 				
 				# Ground Animations
-				if using_shadow == 0:
+				if using_shadow == 0 or using_shadow + Persistent.shadow < 4.0:
 					if not swording:
 						if abs(speed.x) > 0 and abs(speed.x) < 110:
 							play("walk" + direction)

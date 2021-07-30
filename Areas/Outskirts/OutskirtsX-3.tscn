@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Elements/SafePoint.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Neptune.tscn" type="PackedScene" id=2]
@@ -8,7 +8,10 @@
 [ext_resource path="res://Sprites/Bg/Outskirts/sky.png" type="Texture" id=6]
 [ext_resource path="res://HUD/HUD.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Sprites/Bg/Outskirts/wall.png" type="Texture" id=8]
+[ext_resource path="res://Enemies/LowAngel.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Elements/Spikes.gd" type="Script" id=10]
+[ext_resource path="res://Enemies/DashAngel.tscn" type="PackedScene" id=11]
+[ext_resource path="res://DialogueObject.tscn" type="PackedScene" id=12]
 
 [sub_resource type="Environment" id=1]
 background_mode = 4
@@ -17,6 +20,12 @@ glow_enabled = true
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 90, 4 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 26, 4 )
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 123, 4 )
 
 [node name="Node2D" type="Node2D"]
 
@@ -51,9 +60,18 @@ texture = ExtResource( 5 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="World"]
 modulate = Color( 1, 1, 1, 0.294118 )
-polygon = PoolVector2Array( 241, 257, 250, 253, 270, 234, 290, 224, 315, 220, 359, 217, 379, 209, 385, 202, 386, 172, 393, 158, 399, 152, 492, 166, 579, 169, 653, 169, 653, 28, 678, 28, 679, 309, -243, 305, -243, 93.7931, -201, 94, -202, 257 )
+polygon = PoolVector2Array( 241, 257, 250, 253, 270, 234, 290, 224, 315, 220, 359, 217, 379, 209, 385, 202, 386, 172, 393, 158, 399, 152, 492, 166, 579, 169, 653, 169, 653, 28, 678, 28, 679, 309, -243, 305, -243, 93.7931, -223, 93, -216, 274, -36, 274, -13, 270, 3, 274, 38, 275, 63, 269, 92, 257 )
 
 [node name="Enemies" type="Node2D" parent="."]
+
+[node name="DashAngel" parent="Enemies" instance=ExtResource( 11 )]
+position = Vector2( 15, 190 )
+
+[node name="LowAngel" parent="Enemies" instance=ExtResource( 9 )]
+position = Vector2( 59, 46 )
+
+[node name="LowAngel2" parent="Enemies" instance=ExtResource( 9 )]
+position = Vector2( 373, 21 )
 
 [node name="DecoBg" type="Node2D" parent="."]
 
@@ -83,6 +101,10 @@ position = Vector2( 641, 130 )
 newScene = "Outskirts/OutskirtsLeftest"
 enter_dir = 1
 
+[node name="SceneChanger2" parent="." instance=ExtResource( 4 )]
+position = Vector2( -206, 260 )
+newScene = "Outskirts/Arena"
+
 [node name="HUD" parent="." instance=ExtResource( 7 )]
 
 [node name="Platforms" type="StaticBody2D" parent="."]
@@ -94,6 +116,21 @@ position = Vector2( 304, 185 )
 shape = SubResource( 2 )
 one_way_collision = true
 
+[node name="CollisionShape2D6" type="CollisionShape2D" parent="Platforms"]
+position = Vector2( 92, 159 )
+shape = SubResource( 3 )
+one_way_collision = true
+
+[node name="CollisionShape2D7" type="CollisionShape2D" parent="Platforms"]
+position = Vector2( 92, 128 )
+shape = SubResource( 3 )
+one_way_collision = true
+
+[node name="CollisionShape2D8" type="CollisionShape2D" parent="Platforms"]
+position = Vector2( 204, 101 )
+shape = SubResource( 4 )
+one_way_collision = true
+
 [node name="Spikes" type="Area2D" parent="."]
 script = ExtResource( 10 )
 
@@ -102,5 +139,11 @@ polygon = PoolVector2Array( 244, 233, 255, 222, 281, 223, 286, 230, 243, 256 )
 
 [node name="SafePoint" parent="." instance=ExtResource( 1 )]
 position = Vector2( 201, 244 )
+
+[node name="DialogueObject" parent="." instance=ExtResource( 12 )]
+position = Vector2( 244, 85 )
+down_action = "Looking for me? I'm over at the spike garden!"
+up_button = 1
+up_action = "The door seems to be locked"
 
 [connection signal="body_entered" from="Spikes" to="Spikes" method="_on_body_entered"]

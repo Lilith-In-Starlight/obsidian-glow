@@ -33,6 +33,8 @@ var health := 6
 var shadow := 0.0
 var persands := 0
 
+var outskirts_arena := false
+
 var Env := Environment.new()
 var WEnv := WorldEnvironment.new()
 
@@ -40,6 +42,8 @@ func _init():
 	for i in notches:
 		notch_fillers.append("")
 		notch_keys.append(-1)
+
+var near_bench := false
 
 
 func _ready():
@@ -68,6 +72,11 @@ func _ready():
 		notch_keys = Savefile.get_value("abilities", "keys", []) as Array
 		
 		abandoned_ticket = Savefile.get_value("subway", "abandoned", false) as bool
+		
+		outskirts_arena = Savefile.get_value("outskirts", "arena", false) as bool
+		
+		if abilities.has("dash") and not outskirts_arena:
+			abilities = [""]
 	
 	if err_settings == OK:
 		Env.adjustment_brightness = Settings.get_value("video", "brigthess", 1.0)
@@ -93,6 +102,9 @@ func save():
 	Savefile.set_value("abilities", "keys", notch_keys)
 	
 	Savefile.set_value("subway", "abandoned", abandoned_ticket)
+	
+	Savefile.set_value("outskirts", "arena", outskirts_arena)
+	
 	Savefile.save("user://savefile.and")
 	
 func save_settings():

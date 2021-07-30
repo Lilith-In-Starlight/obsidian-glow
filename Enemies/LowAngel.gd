@@ -63,7 +63,7 @@ func _physics_process(delta):
 						var nf := FIREBALL.instance()
 						nf.position = position
 						nf.direction = (Player.position-position).normalized()
-						get_parent().add_child(nf)
+						get_parent().get_parent().add_child(nf)
 						speed = (position-Player.position).normalized()*40
 						state = STATES.RELEASE
 			STATES.RELEASE:

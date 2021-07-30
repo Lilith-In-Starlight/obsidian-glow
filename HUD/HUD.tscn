@@ -10,29 +10,29 @@
 [ext_resource path="res://pixelfont.ttf" type="DynamicFontData" id=8]
 [ext_resource path="res://Sprites/HUD/Abilities/dashnotch.png" type="Texture" id=9]
 
-[sub_resource type="DynamicFont" id=1]
+[sub_resource type="DynamicFont" id=8]
 size = 12
 font_data = ExtResource( 8 )
 
-[sub_resource type="StyleBoxFlat" id=2]
+[sub_resource type="StyleBoxFlat" id=9]
 bg_color = Color( 0, 0, 0, 0.498039 )
 
-[sub_resource type="DynamicFont" id=8]
+[sub_resource type="DynamicFont" id=10]
 size = 9
 font_data = ExtResource( 8 )
 
-[sub_resource type="DynamicFont" id=6]
+[sub_resource type="DynamicFont" id=11]
 size = 23
 font_data = ExtResource( 8 )
 
-[sub_resource type="DynamicFont" id=7]
+[sub_resource type="DynamicFont" id=12]
 size = 12
 font_data = ExtResource( 8 )
 
-[sub_resource type="StyleBoxFlat" id=3]
+[sub_resource type="StyleBoxFlat" id=13]
 bg_color = Color( 0, 0, 0, 1 )
 
-[sub_resource type="Shader" id=4]
+[sub_resource type="Shader" id=7]
 code = "shader_type canvas_item;
 
 uniform float rest = 0.0;
@@ -44,8 +44,8 @@ void fragment()
 	COLOR.rgb -= vec3(dstq)*rest;
 }"
 
-[sub_resource type="ShaderMaterial" id=5]
-shader = SubResource( 4 )
+[sub_resource type="ShaderMaterial" id=14]
+shader = SubResource( 7 )
 shader_param/rest = 0.0
 
 [node name="HUD" type="CanvasLayer"]
@@ -71,6 +71,7 @@ anchor_bottom = 0.02
 margin_right = 19.0
 margin_bottom = 20.0
 max_value = 12.0
+rounded = true
 texture_under = ExtResource( 5 )
 texture_progress = ExtResource( 6 )
 fill_mode = 3
@@ -106,7 +107,7 @@ margin_left = 36.0
 margin_top = 4.0
 margin_right = 76.0
 margin_bottom = 16.0
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 8 )
 text = "0"
 
 [node name="Abilities" type="Panel" parent="HUD"]
@@ -114,7 +115,7 @@ anchor_left = 0.1
 anchor_top = 0.1
 anchor_right = 0.9
 anchor_bottom = 0.9
-custom_styles/panel = SubResource( 2 )
+custom_styles/panel = SubResource( 9 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -159,7 +160,7 @@ margin_top = 34.0
 margin_right = 17.0
 margin_bottom = 86.0
 grow_horizontal = 2
-custom_fonts/font = SubResource( 8 )
+custom_fonts/font = SubResource( 10 )
 text = "[Z] CHANGE ABILITY
 [X] CHANGE CONTROL
 [ESC][C] CLOSE"
@@ -174,7 +175,7 @@ anchor_left = 0.1
 anchor_top = 0.1
 anchor_right = 0.9
 anchor_bottom = 0.9
-custom_styles/panel = SubResource( 2 )
+custom_styles/panel = SubResource( 9 )
 __meta__ = {
 "_edit_lock_": true,
 "_edit_use_anchors_": false
@@ -206,7 +207,7 @@ margin_top = -73.0
 margin_right = 86.5
 margin_bottom = -49.0
 grow_horizontal = 2
-custom_fonts/font = SubResource( 6 )
+custom_fonts/font = SubResource( 11 )
 text = "OBTAINED THE DASH"
 align = 1
 
@@ -220,7 +221,7 @@ margin_top = 25.0
 margin_right = 120.0
 margin_bottom = 52.0
 grow_horizontal = 2
-custom_fonts/font = SubResource( 7 )
+custom_fonts/font = SubResource( 12 )
 text = "ACCELERATE FORWARD FOR A SHORT TIME  AND IGNORE  GRAVITY
 
 PRESS i NEAR A BENCH TO SET YOUR ABILITIES"
@@ -230,13 +231,13 @@ autowrap = true
 [node name="Cutscene" type="Panel" parent="HUD"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_styles/panel = SubResource( 3 )
+custom_styles/panel = SubResource( 13 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Attacked" type="TextureRect" parent="HUD"]
-material = SubResource( 5 )
+material = SubResource( 14 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 texture = ExtResource( 4 )

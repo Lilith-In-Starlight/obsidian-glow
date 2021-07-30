@@ -1,9 +1,10 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Sprites/MenuBG.png" type="Texture" id=1]
 [ext_resource path="res://Sprites/MenuBGThing.png" type="Texture" id=2]
 [ext_resource path="res://pixelfont.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://Menu.gd" type="Script" id=4]
+[ext_resource path="res://Menu/Save.tscn" type="PackedScene" id=5]
 
 [sub_resource type="DynamicFont" id=1]
 font_data = ExtResource( 3 )
@@ -104,6 +105,30 @@ margin_right = 113.0
 margin_bottom = 76.0
 custom_fonts/font = SubResource( 1 )
 text = "Exit"
+
+[node name="SaveSelect" type="VBoxContainer" parent="."]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -133.0
+margin_top = -96.0
+margin_right = 133.0
+margin_bottom = 96.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" parent="SaveSelect" instance=ExtResource( 5 )]
+
+[node name="ExitLabel" type="Label" parent="SaveSelect"]
+margin_top = 44.0
+margin_right = 266.0
+margin_bottom = 60.0
+custom_fonts/font = SubResource( 1 )
+text = "Exit"
+align = 1
 
 [node name="Options" type="VBoxContainer" parent="."]
 visible = false
@@ -348,7 +373,7 @@ margin_top = -1.0
 margin_right = 41.0
 margin_bottom = 13.0
 custom_fonts/font = SubResource( 5 )
-text = "21d210b"
+text = "21d211a"
 __meta__ = {
 "_edit_use_anchors_": false
 }

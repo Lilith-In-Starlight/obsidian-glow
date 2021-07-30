@@ -8,7 +8,7 @@ var abandoned_ticket := false
 
 # Abilities
 var notches := 2
-var abilities := ["", "dash"]
+var abilities := [""]
 var notch_fillers := []
 var notch_keys := []
 
@@ -47,6 +47,7 @@ var near_bench := false
 
 
 func _ready():
+	print("ready!")
 	Env.background_mode = Environment.BG_CANVAS
 	Env.adjustment_enabled = true
 	WEnv.environment = Env
@@ -60,23 +61,7 @@ func _ready():
 	var err_settings := Settings.load("user://settings.and")
 	
 	if err_save == OK:
-		loaded_scene = Savefile.get_value("player", "current_scene", "") as String
-		player_pos = Savefile.get_value("player", "position", Vector2(0, 0)) as Vector2
-		persands = Savefile.get_value("player", "persands", 0) as int
-		max_health = Savefile.get_value("player", "max_health", 6) as int
-		shadow = Savefile.get_value("player", "shadow", 0.0) as float
-		
-		notches = Savefile.get_value("abilities", "notches", 2) as int
-		abilities = Savefile.get_value("abilities", "abilities", [""]) as Array
-		notch_fillers = Savefile.get_value("abilities", "fillers", []) as Array
-		notch_keys = Savefile.get_value("abilities", "keys", []) as Array
-		
-		abandoned_ticket = Savefile.get_value("subway", "abandoned", false) as bool
-		
-		outskirts_arena = Savefile.get_value("outskirts", "arena", false) as bool
-		
-		if abilities.has("dash") and not outskirts_arena:
-			abilities = [""]
+		load_()
 	
 	if err_settings == OK:
 		Env.adjustment_brightness = Settings.get_value("video", "brigthess", 1.0)
@@ -87,10 +72,35 @@ func _ready():
 func change_time():
 	get_tree().change_scene_to(next_scene)
 
+func load_():
+	loaded_scene = Savefile.get_value("player", "current_scene", "") as String
+	player_pos = Savefile.get_value("player", "position", Vector2(0, 0)) as Vector2
+	persands = Savefile.get_value("player", "persands", 0) as int
+	max_health = Savefile.get_value("player", "max_health", 6) as int
+	shadow = Savefile.get_value("player", "shadow", 0.0) as float
+	
+	notches = Savefile.get_value("abilities", "notches", 2) as int
+	abilities = Savefile.get_value("abilities", "abilities", [""]) as Array
+	notch_fillers = Savefile.get_value("abilities", "fillers", []) as Array
+	notch_keys = Savefile.get_value("abilities", "keys", []) as Array
+	
+	abandoned_ticket = Savefile.get_value("subway", "abandoned", false) as bool
+	
+	outskirts_arena = Savefile.get_value("outskirts", "arena", false) as bool
+	
+	if abilities.has("dash") and not outskirts_arena:
+		abilities = [""]
+	
+	for i in notches:
+		notch_fillers.append("")
+		notch_keys.append(-1)
 
-func save():
+func save(game:bool = true):
 	loaded_scene = get_tree().current_scene.filename
-	Savefile.set_value("player", "current_scene", get_tree().current_scene.filename)
+	if game:
+		Savefile.set_value("player", "current_scene", get_tree().current_scene.filename)
+	else:
+		Savefile.set_value("player", "current_scene", "")
 	Savefile.set_value("player", "position", player_pos)
 	Savefile.set_value("player", "persands", persands)
 	Savefile.set_value("player", "max_health", max_health)

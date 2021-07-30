@@ -72,6 +72,10 @@ func _input(event):
 		match current_menu:
 			MENUS.MENU:
 				match event.scancode:
+					KEY_ESCAPE:
+						Persistent.Savefile = ConfigFile.new()
+						Persistent.Savefile.save("user://savefile.and")
+						Persistent.load_()
 					Inputs.down_key:
 						menu_option = (menu_option + 1) % menu_list
 					Inputs.up_key:

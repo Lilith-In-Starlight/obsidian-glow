@@ -42,6 +42,7 @@ func _init():
 	visible = true
 
 func _ready():
+	$Darkness.value = Persistent.shadow
 	Player.connect("health_change", self, "health_changed")
 	for i in Persistent.notches:
 		var new_notch := NOTCH.instance()
@@ -50,7 +51,7 @@ func _ready():
 		new_notch.name = "Notch" + str(i)
 
 func _process(delta):
-	$Darkness.value = lerp($Darkness.value, Persistent.shadow, 0.2)
+	$Darkness.value = move_toward($Darkness.value, Persistent.shadow, 1)
 	$PersandAmount.text = str(Persistent.persands)
 	if Persistent.shadow > 12:
 		Persistent.shadow = 12
@@ -102,7 +103,7 @@ func _process(delta):
 					NotchSelector.texture = SELECT_NOTCH_TXT
 					$Abilities/Label3.text = """[1] CHANGE ABILITY
 						[2] CHANGE CONTROL
-						[ESC] CLOSE""".replace("1", Inputs.custom_scancode_str(Inputs.attack_key)).replace("2", Inputs.custom_scancode_str(Inputs.jump_key))
+						[ESC] CLOSE""".replace("1", Inputs.custom_scancode_str(Inputs.jump_key)).replace("2", Inputs.custom_scancode_str(Inputs.attack_key))
 				NOTCH_MODES.ABILITY:
 					NotchSelector.texture = SELECTED_NOTCH_TXT
 					$Abilities/Label3.text = """[1][2] CHANGE ABILITY

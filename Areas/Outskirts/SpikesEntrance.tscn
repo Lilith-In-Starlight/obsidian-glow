@@ -1,17 +1,13 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=10 format=2]
 
-[ext_resource path="res://Elements/Bench.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Sprites/Levels/Outskirts/SpikeEntrance.png" type="Texture" id=1]
 [ext_resource path="res://Neptune.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Sprites/Bg/Outskirts/townbgl.png" type="Texture" id=3]
 [ext_resource path="res://SceneChanger.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Sprites/Levels/Outskirts/SubwayEntrance.png" type="Texture" id=5]
 [ext_resource path="res://Sprites/Bg/Outskirts/sky.png" type="Texture" id=6]
 [ext_resource path="res://HUD/HUD.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Sprites/Bg/Outskirts/wall.png" type="Texture" id=8]
-[ext_resource path="res://Sprites/Elements/SubwayEntrance.png" type="Texture" id=9]
-[ext_resource path="res://DialogueObject.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Elements/Spikes.gd" type="Script" id=11]
-[ext_resource path="res://Elements/SafePoint.tscn" type="PackedScene" id=12]
 
 [sub_resource type="Environment" id=1]
 background_mode = 4
@@ -35,68 +31,58 @@ texture = ExtResource( 6 )
 motion_scale = Vector2( 0.01, 1 )
 
 [node name="townbgl" type="Sprite" parent="World/ParallaxBackground/ParallaxLayer"]
-position = Vector2( 24, 114 )
+position = Vector2( 16, 114 )
 texture = ExtResource( 3 )
 
 [node name="ParallaxLayer2" type="ParallaxLayer" parent="World/ParallaxBackground"]
 motion_scale = Vector2( 0.02, 1 )
 
 [node name="wall" type="Sprite" parent="World/ParallaxBackground/ParallaxLayer2"]
-position = Vector2( 57, 143 )
+position = Vector2( 49, 143 )
 texture = ExtResource( 8 )
 
 [node name="SubwayEntrance" type="Sprite" parent="World"]
 position = Vector2( 217, 113 )
-texture = ExtResource( 5 )
+texture = ExtResource( 1 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="World"]
 modulate = Color( 1, 1, 1, 0.294118 )
-polygon = PoolVector2Array( -208, 157, -91, 157, -91, 175, 38, 175, 38, 180, 459, 180, 459, 226, 570, 224, 570, 179, 679, 179, 629, 28, 711, 27, 742, 255, -243, 246, -243, 59, -208, 59 )
+polygon = PoolVector2Array( -208, 182, 38, 180, 113, 177, 196.58, 177.725, 204, 181, 215, 225, 259, 225, 270, 167, 279, 142, 291, 138, 380, 136, 547, 142, 604, 142, 663, 140, 661, 27, 700, 28, 704, 247, -243, 246, -243, 59, -208, 59 )
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="World"]
+modulate = Color( 1, 1, 1, 0.294118 )
+polygon = PoolVector2Array( -31, 67, -30, 110, -24, 114, -9, 116, 133, 116, 139, 111, 139, 80, 134, 70, 103, 63, 58, 62, -18, 62 )
+
+[node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="World"]
+modulate = Color( 1, 1, 1, 0.294118 )
+position = Vector2( 393, -69 )
+polygon = PoolVector2Array( -31, 67, -30, 110, -6, 129, 20, 130, 106, 132, 135, 128, 152, 130, 210, 131, 210, 70 )
 
 [node name="Enemies" type="Node2D" parent="."]
 
 [node name="DecoBg" type="Node2D" parent="."]
 
-[node name="Bench" parent="DecoBg" instance=ExtResource( 1 )]
-modulate = Color( 0.803922, 0.803922, 0.803922, 1 )
-position = Vector2( 341, 180 )
-
 [node name="Neptune" parent="." instance=ExtResource( 2 )]
-position = Vector2( 182, 93 )
+position = Vector2( -106, 158 )
 
 [node name="Camera2D" type="Camera2D" parent="Neptune"]
 current = true
 limit_left = -170
 limit_top = 0
-limit_right = 604
+limit_right = 600
 limit_bottom = 225
 limit_smoothed = true
 smoothing_enabled = true
 editor_draw_limits = true
 
-[node name="DialogueObject" parent="." instance=ExtResource( 10 )]
-position = Vector2( 243, 167 )
-down_action = "Subway"
-up_button = 3
-up_action = "Outskirts/OutskirtsSubway"
-
 [node name="DecoFg" type="Node2D" parent="."]
-
-[node name="SubwayEntrance" type="Sprite" parent="DecoFg"]
-position = Vector2( 264, 164 )
-texture = ExtResource( 9 )
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 1 )
 
 [node name="SceneChanger" parent="." instance=ExtResource( 4 )]
-position = Vector2( -202, 142 )
-newScene = "Outskirts/OutskirtsLeft"
-
-[node name="SceneChanger2" parent="." instance=ExtResource( 4 )]
-position = Vector2( 644, 152 )
-newScene = "Outskirts/SpikesEntrance"
-enter_dir = 1
+position = Vector2( -202, 150 )
+newScene = "Outskirts/OutskirtsView"
 
 [node name="HUD" parent="." instance=ExtResource( 7 )]
 
@@ -104,9 +90,19 @@ enter_dir = 1
 script = ExtResource( 11 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Spikes"]
-polygon = PoolVector2Array( 459, 204, 473, 218, 557, 218, 570, 198, 570, 233, 458, 233 )
+position = Vector2( -255, -7 )
+polygon = PoolVector2Array( 461, 190, 478, 216, 504, 214, 521, 177, 522, 233, 470, 233 )
 
-[node name="Area2D" parent="." instance=ExtResource( 12 )]
-position = Vector2( 422, 168 )
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="Spikes"]
+position = Vector2( -42, -65 )
+polygon = PoolVector2Array( 473, 198, 507, 191, 552, 195, 510, 210 )
+
+[node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="Spikes"]
+position = Vector2( -137, -144 )
+polygon = PoolVector2Array( 486, 194, 497, 183, 523, 203, 505, 207 )
+
+[node name="CollisionPolygon2D4" type="CollisionPolygon2D" parent="Spikes"]
+position = Vector2( -535, -130 )
+polygon = PoolVector2Array( 504, 210, 490, 196, 504, 190, 512, 192 )
 
 [connection signal="body_entered" from="Spikes" to="Spikes" method="_on_body_entered"]

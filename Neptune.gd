@@ -46,6 +46,7 @@ var DashTimer := Timer.new() # How long the dash lasts
 var ReDashTimer := Timer.new() #  How long until the dash is back
 var AttackTimer := Timer.new() # Same two as above but for attack
 var ReAttackTimer := Timer.new()
+var NoMoveTimer := Timer.new() # Takes away control for a short time
 var can_dash := true 
 var air_dashes := 1
 var current_air_dash := 0
@@ -74,6 +75,8 @@ var invulnerable := false
 var IvulnerableTimer := Timer.new()
 
 var using_shadow := 0.0 # The amount of shadow that has been used for healing
+
+var unpressed_jump_on_air = false # Controls the length of jumps
 
 func _ready():
 	if Persistent.health <= 0:
@@ -109,6 +112,10 @@ func _ready():
 	IvulnerableTimer.wait_time =  0.2
 	IvulnerableTimer.one_shot = true
 	IvulnerableTimer.connect("timeout", self, "vulnerable_again")
+	add_child(NoMoveTimer)
+	NoMoveTimer.wait_time = 0.3
+	NoMoveTimer.one_shot = true
+	NoMoveTimer.connect("timeout", self, "move_again")
 
 func _process(delta):
 	if Persistent.health > Persistent.max_health:
@@ -152,7 +159,7 @@ func _process(delta):
 				move_right = false
 				if abs(speed.x) < 2:
 					play("enter_door")
-		"nomove": # The player should be frozen
+		"nomove", "nomovetemp": # The player should be frozen
 			move_up = false
 			move_down = false
 			jump_press = false
@@ -214,6 +221,7 @@ func _physics_process(delta):
 		
 		match current_state:
 			STATES.GROUND:
+				unpressed_jump_on_air = false
 				current_air_dash = 0
 				# Controls the walking
 				if move_left and not move_right:
@@ -325,7 +333,7 @@ func _physics_process(delta):
 					play("fall" + direction)
 				
 				# Falling
-				speed.y += gravity * delta*60
+				speed.y = move_toward(speed.y, 250, gravity * delta*60)
 				
 				# Dash
 				if dash_press and can_dash and not dash_echo and current_air_dash < air_dashes:
@@ -353,8 +361,13 @@ func _physics_process(delta):
 					sword_dir = direction.replace("_", "")
 					# If the player isn't pressing any direction key,
 					# they should attack to where they are looking
+					
+				if not jump_press and speed.y < -20 and not unpressed_jump_on_air:
+					unpressed_jump_on_air = true
+					speed.y *= 0.5
 			
 			STATES.DASH:
+				unpressed_jump_on_air = false
 				using_shadow = 0
 				# If the player is dashing, they can't dash until dash is over
 				can_dash = false
@@ -501,6 +514,11 @@ func env_hurt():
 		invulnerable = true
 		IvulnerableTimer.start()
 		$DeathParticles.emitting = true
+		Persistent.player_cutscene = "nomove"
+		NoMoveTimer.start()
 
 func vulnerable_again():
 	invulnerable = false
+
+func move_again():
+	Persistent.player_cutscene = "no"

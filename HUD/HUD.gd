@@ -4,6 +4,8 @@ enum MENUS {
 	NONE,
 	ABILITIES,
 	DASH,
+	DIARY,
+	OPEN_DIARY,
 }
 
 enum NOTCH_MODES {
@@ -23,6 +25,9 @@ var NotchDict := {
 	"dash" : preload("res://Sprites/HUD/Abilities/dashnotch.png")
 }
 
+onready var DialogueNode := $Dialogue
+onready var DialogueText := $Dialogue/Text
+
 onready var Player := $"../../Neptune"
 onready var Attacked := $Attacked
 var attacked_vignette := 0.0
@@ -37,6 +42,8 @@ var selected_notch := 0
 var c_menu = MENUS.NONE
 var notch_mode = NOTCH_MODES.NONE
 var selected_ability := 0
+
+var dialogue := []
 
 func _init():
 	visible = true
@@ -88,10 +95,20 @@ func _process(delta):
 			Abilities.visible = false
 			get_tree().paused = false
 			$ObtainedDash.modulate.a = move_toward($ObtainedDash.modulate.a, 0.0, 0.05)
+			$ObtainedDiary.modulate.a = move_toward($ObtainedDiary.modulate.a, 0.0, 0.05)
+			
+			if not dialogue.empty():
+				Persistent.player_cutscene = "nomove"
+				DialogueNode.modulate.a = move_toward(DialogueNode.modulate.a, 1.0, 0.08)
+				DialogueText.text = dialogue[0]
+				DialogueText.visible_characters = move_toward(DialogueText.visible_characters, DialogueText.text.length(), 1)
+			else:
+				DialogueNode.modulate.a = move_toward(DialogueNode.modulate.a, 0.0, 0.08)
 		MENUS.ABILITIES:
 			get_tree().paused = true
 			Abilities.visible = true
 			$ObtainedDash.modulate.a = move_toward($ObtainedDash.modulate.a, 0.0, 0.05)
+			$ObtainedDiary.modulate.a = move_toward($ObtainedDiary.modulate.a, 0.0, 0.05)
 			NotchSelector.rect_position = CenterNotch.rect_position + Vector2(cos(selected_notch*TAU/Persistent.notches), sin(selected_notch*TAU/Persistent.notches)) * 60 - Vector2(3,3)
 			for i in Persistent.notches:
 				var NotchSprite:TextureRect = get_node_or_null("Abilities/Notch" + str(i))
@@ -117,6 +134,11 @@ func _process(delta):
 		MENUS.DASH:
 			get_tree().paused = true
 			$ObtainedDash.modulate.a = move_toward($ObtainedDash.modulate.a, 1.0, 0.01)
+			$ObtainedDiary.modulate.a = move_toward($ObtainedDiary.modulate.a, 0.0, 0.05)
+		MENUS.DIARY:
+			get_tree().paused = true
+			$ObtainedDash.modulate.a = move_toward($ObtainedDash.modulate.a, 0.0, 0.05)
+			$ObtainedDiary.modulate.a = move_toward($ObtainedDiary.modulate.a, 1.0, 0.01)
 			
 
 func _input(event):
@@ -126,6 +148,13 @@ func _input(event):
 				match event.scancode:
 					KEY_I:
 						c_menu = MENUS.ABILITIES
+					KEY_Z:
+						if !dialogue.empty():
+							dialogue.pop_front()
+							DialogueText.visible_characters = 0
+							
+						if dialogue.empty():
+							Player.NoMoveTimer.start()
 			MENUS.ABILITIES:
 				match notch_mode:
 					NOTCH_MODES.NONE:
@@ -164,9 +193,10 @@ func _input(event):
 						Persistent.notch_keys[selected_notch] = key
 						notch_mode = NOTCH_MODES.NONE
 						
-			MENUS.DASH:
+			MENUS.DASH, MENUS.DIARY:
 				if event.scancode == Inputs.attack_key or event.scancode == Inputs.jump_key:
 					c_menu = MENUS.NONE
+					Player.NoMoveTimer.start()
 
 func health_changed(change):
 	if change < 0:

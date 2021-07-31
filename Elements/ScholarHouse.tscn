@@ -52,7 +52,7 @@ texture = ExtResource( 1 )
 offset = Vector2( 25, -80 )
 
 [node name="librarian" type="AnimatedSprite" parent="."]
-position = Vector2( 58, 5 )
+position = Vector2( 75, 5 )
 z_index = -1
 frames = SubResource( 1 )
 
@@ -95,6 +95,28 @@ margin_bottom = 36.0
 custom_styles/normal = SubResource( 2 )
 custom_fonts/font = SubResource( 3 )
 text = "[UP] LEAVE"
+autowrap = true
+uppercase = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Buttons2" type="VBoxContainer" parent="."]
+margin_left = 75.0
+margin_top = 5.0
+margin_right = 136.0
+margin_bottom = 41.0
+custom_constants/separation = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Enter" type="Label" parent="Buttons2"]
+margin_right = 61.0
+margin_bottom = 17.0
+custom_styles/normal = SubResource( 2 )
+custom_fonts/font = SubResource( 3 )
+text = "[UP] TALK"
 autowrap = true
 uppercase = true
 __meta__ = {

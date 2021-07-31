@@ -38,6 +38,8 @@ var outskirts_arena := false
 var Env := Environment.new()
 var WEnv := WorldEnvironment.new()
 
+var got_diary := false
+
 func _init():
 	for i in notches:
 		notch_fillers.append("")
@@ -88,6 +90,8 @@ func load_():
 	
 	outskirts_arena = Savefile.get_value("outskirts", "arena", false) as bool
 	
+	got_diary = Savefile.get_value("items", "diary", false) as bool
+	
 	if abilities.has("dash") and not outskirts_arena:
 		abilities = [""]
 	
@@ -114,6 +118,8 @@ func save(game:bool = true):
 	Savefile.set_value("subway", "abandoned", abandoned_ticket)
 	
 	Savefile.set_value("outskirts", "arena", outskirts_arena)
+	
+	Savefile.set_value("items", "diary", got_diary)
 	
 	Savefile.save("user://savefile.and")
 	

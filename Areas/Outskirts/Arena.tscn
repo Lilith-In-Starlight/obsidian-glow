@@ -11,10 +11,10 @@
 [ext_resource path="res://HUD/HUD.tscn" type="PackedScene" id=9]
 [ext_resource path="res://SceneChanger.tscn" type="PackedScene" id=10]
 
-[sub_resource type="RectangleShape2D" id=2]
+[sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 10, 103 )
 
-[sub_resource type="Environment" id=1]
+[sub_resource type="Environment" id=2]
 background_mode = 4
 tonemap_mode = 2
 glow_enabled = true
@@ -73,11 +73,11 @@ position = Vector2( -44, 49 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Enemies/Barriers"]
 position = Vector2( -105, 71 )
-shape = SubResource( 2 )
+shape = SubResource( 1 )
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="Enemies/Barriers"]
 position = Vector2( 220, 71 )
-shape = SubResource( 2 )
+shape = SubResource( 1 )
 
 [node name="EnemyBarrier" type="Sprite" parent="Enemies/Barriers"]
 position = Vector2( -111, 69 )
@@ -108,7 +108,7 @@ __meta__ = {
 [node name="DecoFg" type="Node2D" parent="."]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource( 1 )
+environment = SubResource( 2 )
 
 [node name="SceneChanger" parent="." instance=ExtResource( 10 )]
 position = Vector2( 641, 176 )

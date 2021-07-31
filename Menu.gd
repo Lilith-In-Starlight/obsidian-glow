@@ -59,7 +59,7 @@ func _process(delta):
 
 func _ready():
 	var err
-	$HTTPRequest.request("https://ampersandia.net/ampersandiaver.txt")
+	$HTTPRequest.request("https://itch.io/api/1/x/wharf/latest?target=sadblockgames/ampersandia&channel_name=win")
 	SceneTimer.wait_time = 0.5
 	SceneTimer.one_shot = true
 	SceneTimer.connect("timeout", self, "scene_timer_timeout")
@@ -273,5 +273,6 @@ func visual_update():
 
 
 func _on_HTTPRequest_request_completed(result, response_code, headers, body):
-	if body.get_string_from_ascii() != $VersionLabel.text:
+	print(body.get_string_from_ascii(), " ", $VersionLabel.text)
+	if body.get_string_from_ascii().find($VersionLabel.text) == -1:
 		$VersionWarning.visible = true

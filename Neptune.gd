@@ -515,6 +515,7 @@ func env_hurt():
 		IvulnerableTimer.start()
 		$DeathParticles.emitting = true
 		Persistent.player_cutscene = "nomove"
+		speed.x = 0
 		NoMoveTimer.start()
 
 func vulnerable_again():

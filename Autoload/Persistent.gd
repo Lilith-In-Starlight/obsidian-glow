@@ -40,6 +40,8 @@ var WEnv := WorldEnvironment.new()
 
 var got_diary := false
 
+var ident := 0
+
 func _init():
 	for i in notches:
 		notch_fillers.append("")

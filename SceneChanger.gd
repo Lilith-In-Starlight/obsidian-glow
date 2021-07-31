@@ -8,6 +8,7 @@ enum DIRS {
 export var newScene:String # Where this changer will take the player
 export(DIRS) var enter_dir = DIRS.LEFT # The direction this player should move when they enter it
 onready var Player := $"../Neptune" # The player
+export var identifier := 0
 
 var scene # Stores the PackedScene that is loaded in _ready()
 var can_enter := true # The player can't enter this if hey come from it
@@ -20,7 +21,7 @@ func _ready():
 	# If the scene they'd go to from here happens to be the one they
 	# come from, they can't enter this until they've gone out of it
 	# (this is detected with a signal)
-	if newScene == Persistent.entered_from:
+	if newScene == Persistent.entered_from and Persistent.ident == identifier:
 		can_enter = false
 		Player.position = position
 		
@@ -56,3 +57,4 @@ func _on_body_exited(body):
 		can_enter = true
 		Persistent.player_cutscene = "no"
 		body.last_safe_pos = body.position
+		Persistent.ident = identifier

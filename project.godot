@@ -10,7 +10,7 @@ config_version=4
 
 [application]
 
-config/name="Ampersandia Game"
+config/name="Obsidian Glow"
 run/main_scene="res://Menu.tscn"
 config/icon="res://icon.png"
 config/macos_native_icon="res://icon.icns"

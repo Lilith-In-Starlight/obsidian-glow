@@ -80,6 +80,8 @@ var using_shadow := 0.0 # The amount of shadow that has been used for healing
 
 var unpressed_jump_on_air = false # Controls the length of jumps
 
+var smoothing_reset := false # To make sure the camera isn't weird
+
 func _ready():
 	# If the player spawns with no health, reset it
 	if Persistent.health <= 0:
@@ -108,7 +110,6 @@ func _ready():
 	# Make sure the next scene load isn't treated as the first time
 	# loading the game
 	Persistent.first_load = false
-	
 	# Set up the timers
 	add_child(DashTimer)
 	DashTimer.wait_time = 0.2
@@ -139,6 +140,9 @@ func _ready():
 	Cam.rotating = true
 
 func _process(delta):
+	if not smoothing_reset:
+		Cam.reset_smoothing()
+		smoothing_reset = true
 	# Make sure the player never has more than the maximum health
 	if Persistent.health > Persistent.max_health:
 		Persistent.health = Persistent.max_health

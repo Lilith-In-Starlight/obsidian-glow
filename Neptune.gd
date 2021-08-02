@@ -10,7 +10,7 @@ enum STATES {
 	DASH,
 }
 
-const MAX_SPEED := 900.0 # Max speed in every direction
+const MAX_SPEED := 800.0 # Max speed in every direction
 const MAX_WALK := 80.0 # Max walkable speed by normal means
 const MAX_AIRSPEED := 160.0 # Max speed in air by normal means
 const MAX_WALK_RUN := 130.0 # Max runnable speed by normal means
@@ -286,6 +286,7 @@ func _physics_process(delta):
 				if dash_press and can_dash and not dash_echo and current_air_dash < air_dashes:
 					current_state = STATES.DASH
 					current_air_dash += 1
+					speed.y *= 0.001
 					DashTimer.start()
 				
 				# Attacking
@@ -310,11 +311,13 @@ func _physics_process(delta):
 				using_shadow = 0
 				# Horizontal movement
 				if move_left and not move_right:
+					direction = "_l"
 					if walk:
 						speed.x = move_toward(speed.x, -MAX_AIRSPEED, WALK_ACCEL * 1.1 * delta*60)
 					else:
 						speed.x = move_toward(speed.x, -MAX_AIRSPEED_RUN, WALK_ACCEL * 1.1 * delta*60)
 				elif move_right and not move_left:
+					direction = "_r"
 					if walk:
 						speed.x = move_toward(speed.x, MAX_AIRSPEED, WALK_ACCEL * 1.1 * delta*60)
 					else:
@@ -333,7 +336,7 @@ func _physics_process(delta):
 					play("fall" + direction)
 				
 				# Falling
-				speed.y = move_toward(speed.y, 250, gravity * delta*60)
+				speed.y = move_toward(speed.y, 500, gravity * delta*60)
 				
 				# Dash
 				if dash_press and can_dash and not dash_echo and current_air_dash < air_dashes:
@@ -383,19 +386,19 @@ func _physics_process(delta):
 						attack_play(1)
 					else:
 						speed.x = -MAX_WALK*5.0
-						speed.y = move_toward(speed.y, 0, 20 * delta*60)
+						speed.y = move_toward(speed.y, 0, 200 * delta*60)
 						play("dash_l")
 						attack_play(0)
 				else:
 					if move_left or press_opposite:
 						speed.x = move_toward(speed.x, -MAX_WALK*3.0, 10 * delta*60)
-						speed.y = move_toward(speed.y, -20, 20 * delta*60)
+						speed.y = move_toward(speed.y, -20, 200 * delta*60)
 						press_opposite = true
 						play("spin_r")
 						attack_play(1)
 					else:
 						speed.x = MAX_WALK*5.0
-						speed.y = move_toward(speed.y, 0, 20 * delta*60)
+						speed.y = move_toward(speed.y, 0, 200 * delta*60)
 						play("dash_r")
 						attack_play(0)
 					

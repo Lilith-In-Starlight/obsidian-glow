@@ -6,6 +6,8 @@ enum MENUS {
 	DASH,
 	DIARY,
 	OPEN_DIARY,
+	PAUSE,
+	QUIT,
 }
 
 enum NOTCH_MODES {
@@ -45,6 +47,10 @@ var selected_ability := 0
 
 var dialogue := []
 
+var pause_menu_value := 0
+
+var quitting := false
+
 func _init():
 	visible = true
 
@@ -73,22 +79,24 @@ func _process(delta):
 		
 	var aa = Attacked.get_material().get_shader_param("rest")
 	attacked_vignette = move_toward(attacked_vignette, 0.0, 0.01)
-	if Persistent.health > 0:
-		if Persistent.health > 1:
-			attacked_vignette = move_toward(attacked_vignette, 0.0, 0.01)
+	if not quitting:
+		if Persistent.health > 0:
+			if Persistent.health > 1:
+				attacked_vignette = move_toward(attacked_vignette, 0.0, 0.01)
+			else:
+				attacked_vignette = move_toward(attacked_vignette, 0.35, 0.01)
+			match Persistent.player_cutscene:
+				"leave_l", "leave_r", "door":
+					CutsceneFade.modulate.a = move_toward(CutsceneFade.modulate.a, 1.0, 0.05)
+				"train":
+					CutsceneFade.modulate.a = move_toward(CutsceneFade.modulate.a, 1.0, 0.005)
+				_:
+					CutsceneFade.modulate.a = move_toward(CutsceneFade.modulate.a, 0.0, 0.05)
 		else:
-			attacked_vignette = move_toward(attacked_vignette, 0.35, 0.01)
-		match Persistent.player_cutscene:
-			"leave_l", "leave_r", "door":
-				CutsceneFade.modulate.a = move_toward(CutsceneFade.modulate.a, 1.0, 0.05)
-			"train":
-				CutsceneFade.modulate.a = move_toward(CutsceneFade.modulate.a, 1.0, 0.005)
-			_:
-				CutsceneFade.modulate.a = move_toward(CutsceneFade.modulate.a, 0.0, 0.05)
+			attacked_vignette = move_toward(attacked_vignette, 1.0, 0.01)
+			CutsceneFade.modulate.a = move_toward(CutsceneFade.modulate.a, 1.0, 0.005)
 	else:
-		attacked_vignette = move_toward(attacked_vignette, 1.0, 0.01)
-		CutsceneFade.modulate.a = move_toward(CutsceneFade.modulate.a, 1.0, 0.005)
-	
+		CutsceneFade.modulate.a = move_toward(CutsceneFade.modulate.a, 1.0, 0.05)
 	Attacked.get_material().set_shader_param("rest", lerp(aa, attacked_vignette, 0.1))
 	match c_menu:
 		MENUS.NONE:
@@ -96,7 +104,7 @@ func _process(delta):
 			get_tree().paused = false
 			$ObtainedDash.modulate.a = move_toward($ObtainedDash.modulate.a, 0.0, 0.05)
 			$ObtainedDiary.modulate.a = move_toward($ObtainedDiary.modulate.a, 0.0, 0.05)
-			
+			$Pause.visible = false
 			if not dialogue.empty():
 				Persistent.player_cutscene = "nomove"
 				DialogueNode.modulate.a = move_toward(DialogueNode.modulate.a, 1.0, 0.08)
@@ -107,6 +115,7 @@ func _process(delta):
 		MENUS.ABILITIES:
 			get_tree().paused = true
 			Abilities.visible = true
+			$Pause.visible = false
 			$ObtainedDash.modulate.a = move_toward($ObtainedDash.modulate.a, 0.0, 0.05)
 			$ObtainedDiary.modulate.a = move_toward($ObtainedDiary.modulate.a, 0.0, 0.05)
 			NotchSelector.rect_position = CenterNotch.rect_position + Vector2(cos(selected_notch*TAU/Persistent.notches), sin(selected_notch*TAU/Persistent.notches)) * 60 - Vector2(3,3)
@@ -132,72 +141,175 @@ func _process(delta):
 					$Abilities/Label3.text = """PRESS ANY KEY
 					[ESC] NO KEY"""
 		MENUS.DASH:
+			$Pause.visible = false
 			get_tree().paused = true
 			$ObtainedDash.modulate.a = move_toward($ObtainedDash.modulate.a, 1.0, 0.01)
 			$ObtainedDiary.modulate.a = move_toward($ObtainedDiary.modulate.a, 0.0, 0.05)
 		MENUS.DIARY:
+			$Pause.visible = false
 			get_tree().paused = true
 			$ObtainedDash.modulate.a = move_toward($ObtainedDash.modulate.a, 0.0, 0.05)
 			$ObtainedDiary.modulate.a = move_toward($ObtainedDiary.modulate.a, 1.0, 0.01)
+		MENUS.PAUSE, MENUS.QUIT:
+			get_tree().paused = true
+			var children
+			$Pause.visible = true
+			if c_menu == MENUS.PAUSE:
+				$Pause/Pause.visible = true
+				$Pause/Quit.visible = false
+				children = $Pause/Pause.get_children()
+			else:
+				$Pause/Pause.visible = false
+				$Pause/Quit.visible = true
+				children = $Pause/Quit/Options.get_children()
 			
+			for i in range(children.size()):
+				if i == pause_menu_value:
+					children[i].modulate = Color("#ffc070")
+				else:
+					children[i].modulate = Color("#ffffff")
 
 func _input(event):
-	if event is InputEventKey and not event.is_echo() and event.is_pressed():
+	# Player can only interact with the HUD if they're not quitting the game
+	if event is InputEventKey and not event.is_echo() and event.is_pressed() and not quitting:
 		match c_menu:
-			MENUS.NONE:
+			MENUS.NONE: # No menu
 				match event.scancode:
 					KEY_I:
+						# Open the abilities menu
 						c_menu = MENUS.ABILITIES
-					KEY_Z:
+					Inputs.jump_key:
+						# Advance the dialogue
+						var changed := false # Only start the nomovetimer
+						# if the dialogue has been started
 						if !dialogue.empty():
+							changed = true
 							dialogue.pop_front()
 							DialogueText.visible_characters = 0
 							
-						if dialogue.empty():
+						if changed and dialogue.empty():
 							Player.NoMoveTimer.start()
+					KEY_ESCAPE:
+						# Pause the game
+						c_menu = MENUS.PAUSE
 			MENUS.ABILITIES:
 				match notch_mode:
 					NOTCH_MODES.NONE:
 						match event.scancode:
+							# Close menu
 							KEY_ESCAPE:
 								c_menu = MENUS.NONE
+							
+							# Navigate menu
 							Inputs.left_key:
 								selected_notch = (selected_notch + 1) % Persistent.notches
 							Inputs.right_key:
 								selected_notch = selected_notch - 1
 								if selected_notch < 0:
 									selected_notch = Persistent.notches - 1
+							
+							# Change ability
 							Inputs.jump_key:
 								if Persistent.player_cutscene == "no" and Persistent.near_bench:
 									notch_mode = NOTCH_MODES.ABILITY
+							
+							# Rebind notch
 							Inputs.attack_key:
 								if Persistent.player_cutscene == "no":
 									notch_mode = NOTCH_MODES.KEY
+					
 					NOTCH_MODES.ABILITY:
 						match event.scancode:
+							# Ability has been selected
 							Inputs.jump_key:
 								notch_mode = NOTCH_MODES.NONE
+							
+							# Menu navigation
 							Inputs.left_key:
 								selected_ability = (selected_ability + 1) % Persistent.abilities.size()
 							Inputs.right_key:
 								selected_ability = (selected_ability - 1)
 								if selected_ability < 0:
 									selected_ability = Persistent.abilities.size() - 1
+							
+							# Rebind notch
 							Inputs.attack_key:
 								notch_mode = NOTCH_MODES.KEY
+						
+						# Update the current notch's ability
 						Persistent.notch_fillers[selected_notch] = Persistent.abilities[selected_ability]
+					
 					NOTCH_MODES.KEY:
+						# -1 means no key
 						var key := -1
+						# You can press escape to remove the key
 						if event.scancode != KEY_ESCAPE:
 							key = event.scancode
+							
+						# Update notch key
 						Persistent.notch_keys[selected_notch] = key
+						
+						# Exit the rebind mode
 						notch_mode = NOTCH_MODES.NONE
 						
 			MENUS.DASH, MENUS.DIARY:
+				# Both of these are just screens you can exit by pressing a key
 				if event.scancode == Inputs.attack_key or event.scancode == Inputs.jump_key:
 					c_menu = MENUS.NONE
 					Player.NoMoveTimer.start()
+			
+			MENUS.PAUSE:
+				match event.scancode:
+					# Unpause
+					KEY_ESCAPE, Inputs.cancel_key:
+						c_menu = MENUS.NONE
+					
+					# Menu navigation
+					Inputs.down_key:
+						pause_menu_value = (pause_menu_value + 1) % 2
+					Inputs.up_key:
+						pause_menu_value = pause_menu_value - 1 
+						if pause_menu_value < 0:
+							pause_menu_value = 1
+					
+					# Select an option
+					Inputs.jump_key, Inputs.attack_key:
+						match pause_menu_value:
+							0: # Resume, unpause
+								c_menu = MENUS.NONE
+							1: # Quit
+								c_menu = MENUS.QUIT
+								pause_menu_value = 1
+			MENUS.QUIT:
+				match event.scancode:
+					# Back to pause menu
+					KEY_ESCAPE, Inputs.cancel_key:
+						c_menu = MENUS.PAUSE
+						pause_menu_value = 1
+					
+					# Menu navigation (this one's horizontal)
+					Inputs.right_key:
+						pause_menu_value = (pause_menu_value + 1) % 2
+					Inputs.left_key:
+						pause_menu_value = pause_menu_value - 1 
+						if pause_menu_value < 0:
+							pause_menu_value = 1
+					
+					# Select an option
+					Inputs.jump_key, Inputs.attack_key:
+						match pause_menu_value:
+							0: # Go to menu
+								Persistent.next_scene = load("res://Menu.tscn")
+								Persistent.SChangeTimer.start()
+								quitting = true
+								# Reload the file
+								Persistent.load_()
+							1:
+								# Back to pause menu
+								c_menu = MENUS.PAUSE
+								pause_menu_value = 1
 
+# If the player's health lowers, make the attack vignette appear
 func health_changed(change):
 	if change < 0:
 		attacked_vignette = 0.5 + 0.2*abs(change)

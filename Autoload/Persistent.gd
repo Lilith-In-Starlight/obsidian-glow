@@ -51,6 +51,7 @@ var near_bench := false
 
 
 func _ready():
+	pause_mode = Node.PAUSE_MODE_PROCESS
 	print("ready!")
 	Env.background_mode = Environment.BG_CANVAS
 	Env.adjustment_enabled = true
@@ -61,6 +62,8 @@ func _ready():
 	SChangeTimer.connect("timeout", self, "change_time")
 	SChangeTimer.one_shot = true
 	add_child(SChangeTimer)
+	
+	# Load the settings and the save
 	var err_save := Savefile.load("user://savefile.and")
 	var err_settings := Settings.load("user://settings.and")
 	
@@ -73,10 +76,14 @@ func _ready():
 		Env.adjustment_contrast =  Settings.get_value("video", "contrast", 1.0)
 
 
+#  When the scene is ready to change
 func change_time():
 	get_tree().change_scene_to(next_scene)
 
+
+# Load the files
 func load_():
+	entered_from = "Field/Feld.tscn"
 	loaded_scene = Savefile.get_value("player", "current_scene", "") as String
 	player_pos = Savefile.get_value("player", "position", Vector2(0, 0)) as Vector2
 	persands = Savefile.get_value("player", "persands", 0) as int

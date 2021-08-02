@@ -1,5 +1,6 @@
 extends Node
 
+# This node handles the custom keys
 
 var up_key := KEY_UP
 var down_key := KEY_DOWN

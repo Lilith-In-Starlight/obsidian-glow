@@ -1,7 +1,7 @@
 extends TextureRect
 
-
 var frame := 0
+
 
 func _ready():
 	material = material.duplicate()

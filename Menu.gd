@@ -41,100 +41,127 @@ var control_change := 0
 
 
 var menu_option := 0
-var menu_list := 4
+var menu_list := 4 # Amount of elements in the current menu, starts at 1
+# used in modulo operations
 
-var current_menu = MENUS.MENU
+var current_menu = MENUS.MENU # State machine
 
-var SceneTimer := Timer.new()
+var SceneTimer := Timer.new() # Adds some delay to the scene change
 
-var go_to
+var go_to # Tells the game what scene it should go to when the game starts
+
+
+func _ready():
+	# Every time the player starts from the menu, it should be treated as
+	# the first time loading the game
+	Persistent.first_load = true
+	get_tree().paused = false # If the player comes from the game pause menu
+	# the tree will be paused, unpause it
+	var err
+	$HTTPRequest.request("https://itch.io/api/1/x/wharf/latest?target=sadblockgames/ampersandia&channel_name=win")
+	# Request to see the current version of the game on the itch.io page
+	
+	# Setup the timer that does the scene change delay
+	SceneTimer.wait_time = 0.5
+	SceneTimer.one_shot = true
+	SceneTimer.connect("timeout", self, "scene_timer_timeout")
+	add_child(SceneTimer)
+	
+	# Update how the menu looks like to make it look less buggy
+	visual_update()
 
 
 func _process(delta):
+	# If the player won't be going to any scene, the fadeout must be transparent
 	if go_to == null:
 		Fadeout.modulate.a = move_toward(Fadeout.modulate.a, 0.0, 0.05)
 	else:
 		Fadeout.modulate.a = move_toward(Fadeout.modulate.a, 1.0, 0.05)
 
 
-func _ready():
-	var err
-	$HTTPRequest.request("https://itch.io/api/1/x/wharf/latest?target=sadblockgames/ampersandia&channel_name=win")
-	SceneTimer.wait_time = 0.5
-	SceneTimer.one_shot = true
-	SceneTimer.connect("timeout", self, "scene_timer_timeout")
-	add_child(SceneTimer)
-	visual_update()
-
-
 func _input(event):
 	if event is InputEventKey and event.is_pressed() and not event.is_echo() and go_to == null:
-		match current_menu:
+		match current_menu: # State machine
 			MENUS.MENU:
 				match event.scancode:
-					KEY_ESCAPE:
+					KEY_ESCAPE: # Resets the savefile and the game variables
 						Persistent.Savefile = ConfigFile.new()
 						Persistent.Savefile.save("user://savefile.and")
 						Persistent.load_()
+					# Navigate the menu
 					Inputs.down_key:
 						menu_option = (menu_option + 1) % menu_list
 					Inputs.up_key:
 						menu_option = (menu_option - 1)
 						if menu_option < 0:
 							menu_option = menu_list - 1
+					# Selection
 					Inputs.jump_key, Inputs.attack_key:
 						match menu_option:
-							0:
+							0: # Start game
+								# If there's a scene in the save file,
+								# go to that one
 								if Persistent.loaded_scene != "":
 									go_to = load(Persistent.loaded_scene)
 								else:
+									# if not, go to the start of the game
 									go_to = load("res://Areas/Field/Field.tscn")
 								SceneTimer.start()
+								# Start the timer that changes the scene
 							1:
+								# Take the player to the options
 								current_menu = MENUS.OPTIONS
 								menu_option = 0
 								menu_list = 5
 							2:
+								# Take the player to the credits
 								current_menu = MENUS.CREDITS
 								menu_option = 0
 								menu_list = 1
 								CreditsAnimation.play("Up")
-							3:
+								# Restart the credits animation
+							3: # Quit the game
 								get_tree().quit()
+			
 			MENUS.OPTIONS:
 				match event.scancode:
+					# Menu navigation
 					Inputs.down_key:
 						menu_option = (menu_option + 1) % menu_list
 					Inputs.up_key:
 						menu_option = (menu_option - 1)
 						if menu_option < 0:
 							menu_option = menu_list - 1
+					# Select an option
 					Inputs.jump_key, Inputs.attack_key:
 						match menu_option:
-							0:
+							0: # Video settings
 								current_menu = MENUS.VIDEO
 								menu_option = 0
 								menu_list = 4
-							3:
+							3: # Control settings
 								current_menu = MENUS.CONTROLS
 								menu_option = 0
 								menu_list = 8
-							4:
+							4: # Back to the menu
 								current_menu = MENUS.MENU
 								menu_option = 1
 								menu_list = 4
+					# Take the player one level back
 					Inputs.cancel_key:
 						current_menu = MENUS.MENU
 						menu_option = 1
 						menu_list = 4
-			MENUS.VIDEO:
+			MENUS.VIDEO: # Video settings
 				match event.scancode:
+					# Menu navigation
 					Inputs.down_key:
 						menu_option = (menu_option + 1) % menu_list
 					Inputs.up_key:
 						menu_option = (menu_option - 1)
 						if menu_option < 0:
 							menu_option = menu_list - 1
+					# Settings are controlled with the left and right keys
 					Inputs.left_key:
 						match menu_option:
 							0:
@@ -151,26 +178,33 @@ func _input(event):
 								Persistent.Env.adjustment_contrast = min(Persistent.Env.adjustment_contrast + 0.25, 8.0)
 							2:
 								Persistent.Env.adjustment_saturation = min(Persistent.Env.adjustment_saturation + 0.25, 8.0)
+					# Select an option
 					Inputs.jump_key, Inputs.attack_key:
 						match menu_option:
 							3:
 								current_menu = MENUS.OPTIONS
 								menu_option = 0
 								menu_list = 5
+					# Go one level back
 					Inputs.cancel_key:
 						current_menu = MENUS.OPTIONS
 						menu_option = 0
 						menu_list = 5
-			MENUS.CONTROLS:
-				if not change_controls:
+			MENUS.CONTROLS: # Control settings
+				if not change_controls: # If the player isn't currently
+					# rebinding a key
 					match event.scancode:
+						# Menu navigation
 						Inputs.down_key:
 							menu_option = (menu_option + 1) % menu_list
 						Inputs.up_key:
 							menu_option = (menu_option - 1)
 							if menu_option < 0:
 								menu_option = menu_list - 1
+						# Select an option
 						Inputs.jump_key, Inputs.attack_key:
+							# The only option that doesn't make you
+							# rebind keys is the Back option
 							if menu_option != 7:
 								control_change = menu_option
 								change_controls = true
@@ -178,13 +212,17 @@ func _input(event):
 								current_menu = MENUS.OPTIONS
 								menu_option = 3
 								menu_list = 5
+						# Go one level back
 						Inputs.cancel_key:
 							current_menu = MENUS.OPTIONS
 							menu_option = 3
 							menu_list = 5
-				else:
+				else: # If the player is rebinding a key
 					change_controls = false
-					match control_change:
+					# _input() is called whenever a key is pressed,
+					# so if they press a key and are rebinding it,
+					# they won't be rebinding it anymore
+					match control_change: # What control is being changed?
 						0:
 							Inputs.left_key = event.scancode
 						1:
@@ -201,21 +239,27 @@ func _input(event):
 							Inputs.cancel_key = event.scancode
 			MENUS.CREDITS:
 				match event.scancode:
+					# Credits only has one option, and it just takes you
+					# One level back
 					Inputs.jump_key, Inputs.attack_key, Inputs.cancel_key:
 						current_menu = MENUS.MENU
 						menu_option = 2
 						menu_list = 4
 						CreditsAnimation.stop(true)
-	visual_update()
+	
+	visual_update() # Update how the menu looks like
 
 
 func scene_timer_timeout():
+	# Called when the scene change timer goes off
 	get_tree().change_scene_to(go_to)
 
 
 func visual_update():
-	var labels_in_menu
-	match current_menu:
+	# Called to update the GUI
+	var labels_in_menu # Variable that contains all the options of the
+	# current menu
+	match current_menu: # State machine
 		MENUS.MENU:
 			labels_in_menu = Menu.get_children()
 			Menu.visible = true
@@ -238,6 +282,7 @@ func visual_update():
 			Controls.visible = false
 			Credits.visible = false
 			
+			# Only update these with their values when the player can see them
 			BrightnessLabel.text = "Brightness: " + str(Persistent.Env.adjustment_brightness)
 			ContrastLabel.text = "Contrast: " + str(Persistent.Env.adjustment_contrast)
 			SaturationLabel.text = "Saturation: " + str(Persistent.Env.adjustment_saturation)
@@ -249,6 +294,7 @@ func visual_update():
 			Controls.visible = true
 			Credits.visible = false
 			
+			# Only update these with their values when the player can see them
 			ControlsLeft.text = "Left: " + Inputs.custom_scancode_str(Inputs.left_key)
 			ControlsRight.text = "Right: " + Inputs.custom_scancode_str(Inputs.right_key)
 			ControlsUp.text = "Up: " + Inputs.custom_scancode_str(Inputs.up_key)
@@ -256,6 +302,7 @@ func visual_update():
 			ControlsJump.text = "Jump/Confirm 1: " + Inputs.custom_scancode_str(Inputs.jump_key)
 			ControlsAttack.text = "Attack/Confirm 2: " + Inputs.custom_scancode_str(Inputs.attack_key)
 			ControlsCancel.text = "Cancel: " + Inputs.custom_scancode_str(Inputs.cancel_key)
+		
 		MENUS.CREDITS:
 			labels_in_menu = Credits.get_children()
 			Menu.visible = false
@@ -263,12 +310,16 @@ func visual_update():
 			VisualSettings.visible = false
 			Controls.visible = false
 			Credits.visible = true
+	
+	# Go through all of the options in the GUI
 	for i in menu_list:
+		# If one of them matches the current option in the menu, color it
 		if i == menu_option:
 			labels_in_menu[i].modulate = Color("#ffc070")
 		else:
 			labels_in_menu[i].modulate = Color("#ffffff")
 	
+	# Constantly save the settings
 	Persistent.save_settings()
 
 

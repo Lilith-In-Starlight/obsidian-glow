@@ -31,6 +31,7 @@ texture = ExtResource( 6 )
 motion_scale = Vector2( 0.01, 1 )
 
 [node name="townbgl" type="Sprite" parent="World/ParallaxBackground/ParallaxLayer"]
+modulate = Color( 0.823529, 0.964706, 0.890196, 1 )
 position = Vector2( 16, 114 )
 texture = ExtResource( 3 )
 
@@ -38,6 +39,7 @@ texture = ExtResource( 3 )
 motion_scale = Vector2( 0.02, 1 )
 
 [node name="wall" type="Sprite" parent="World/ParallaxBackground/ParallaxLayer2"]
+modulate = Color( 0.878431, 1, 0.929412, 1 )
 position = Vector2( 49, 143 )
 texture = ExtResource( 8 )
 
@@ -51,7 +53,7 @@ polygon = PoolVector2Array( -208, 182, 38, 180, 113, 177, 196.58, 177.725, 204, 
 
 [node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="World"]
 modulate = Color( 1, 1, 1, 0.294118 )
-polygon = PoolVector2Array( -31, 67, -30, 110, -24, 114, -9, 116, 133, 116, 139, 111, 139, 80, 134, 70, 103, 63, 58, 62, -18, 62 )
+polygon = PoolVector2Array( -29, 65, -29, 118, 138, 115, 137, 64 )
 
 [node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="World"]
 modulate = Color( 1, 1, 1, 0.294118 )

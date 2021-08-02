@@ -31,6 +31,7 @@ texture = ExtResource( 6 )
 motion_scale = Vector2( 0.01, 1 )
 
 [node name="townbgl" type="Sprite" parent="World/ParallaxBackground/ParallaxLayer"]
+modulate = Color( 0.768627, 1, 0.941176, 1 )
 position = Vector2( 8, 114 )
 texture = ExtResource( 3 )
 
@@ -38,6 +39,7 @@ texture = ExtResource( 3 )
 motion_scale = Vector2( 0.02, 1 )
 
 [node name="wall" type="Sprite" parent="World/ParallaxBackground/ParallaxLayer2"]
+modulate = Color( 0.768627, 1, 0.941176, 1 )
 position = Vector2( 43, 143 )
 texture = ExtResource( 8 )
 

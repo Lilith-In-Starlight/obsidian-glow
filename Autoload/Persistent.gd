@@ -46,6 +46,10 @@ var diary_page := 0
 var diary := ["diary_opening"]
 var recently_collected := []
 
+var current_save := "savefile.and"
+var save_name := ""
+
+
 func _init():
 	for i in notches:
 		notch_fillers.append("")
@@ -68,7 +72,7 @@ func _ready():
 	add_child(SChangeTimer)
 	
 	# Load the settings and the save
-	var err_save := Savefile.load("user://savefile.and")
+	var err_save := Savefile.load(current_save)
 	var err_settings := Settings.load("user://settings.and")
 	
 	if err_save == OK:
@@ -140,10 +144,10 @@ func save(game:bool = true):
 	Savefile.set_value("diary", "diary", diary)
 	Savefile.set_value("diary", "current_page", diary_page)
 	
-	Savefile.save("user://savefile.and")
+	Savefile.save(current_save)
 	
 func save_settings():
 	Settings.set_value("video", "brigthess", Env.adjustment_brightness)
 	Settings.set_value("video", "saturation", Env.adjustment_saturation)
 	Settings.set_value("video", "contrast", Env.adjustment_contrast)
-	Settings.save("user://settings.and")
+	Settings.save(current_save)

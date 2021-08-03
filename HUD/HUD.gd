@@ -55,6 +55,7 @@ var pause_menu_value := 0
 
 var quitting := false
 
+
 func _init():
 	visible = true
 

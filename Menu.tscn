@@ -120,12 +120,28 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Panel" parent="SaveSelect" instance=ExtResource( 5 )]
+[node name="Save" parent="SaveSelect" instance=ExtResource( 5 )]
+save_name = "savefile1.and"
+
+[node name="Save2" parent="SaveSelect" instance=ExtResource( 5 )]
+margin_top = 44.0
+margin_bottom = 84.0
+save_name = "savefile2.and"
+
+[node name="Save3" parent="SaveSelect" instance=ExtResource( 5 )]
+margin_top = 88.0
+margin_bottom = 128.0
+save_name = "savefile3.and"
+
+[node name="Save4" parent="SaveSelect" instance=ExtResource( 5 )]
+margin_top = 132.0
+margin_bottom = 172.0
+save_name = "savefile4.and"
 
 [node name="ExitLabel" type="Label" parent="SaveSelect"]
-margin_top = 44.0
+margin_top = 176.0
 margin_right = 266.0
-margin_bottom = 60.0
+margin_bottom = 192.0
 custom_fonts/font = SubResource( 1 )
 text = "Exit"
 align = 1

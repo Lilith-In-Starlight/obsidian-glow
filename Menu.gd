@@ -6,6 +6,7 @@ enum MENUS {
 	VIDEO,
 	CONTROLS,
 	CREDITS,
+	SELECT_SAVE,
 }
 
 
@@ -102,6 +103,10 @@ func _input(event):
 					Inputs.jump_key, Inputs.attack_key:
 						match menu_option:
 							0: # Start game
+#								current_menu = MENUS.SELECT_SAVE
+#								menu_option = 0
+#								menu_list = 5
+								
 								# If there's a scene in the save file,
 								# go to that one
 								if Persistent.loaded_scene != "":
@@ -249,6 +254,17 @@ func _input(event):
 						menu_option = 2
 						menu_list = 4
 						CreditsAnimation.stop(true)
+			MENUS.SELECT_SAVE:
+				match event.scancode:
+				# Menu navigation
+					Inputs.down_key:
+						menu_option = (menu_option + 1) % menu_list
+					Inputs.up_key:
+						menu_option = (menu_option - 1)
+						if menu_option < 0:
+							menu_option = menu_list - 1
+					Inputs.jump_key, Inputs.attack_key:
+						pass
 	
 	visual_update() # Update how the menu looks like
 

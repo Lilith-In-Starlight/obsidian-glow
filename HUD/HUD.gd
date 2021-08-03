@@ -179,7 +179,6 @@ func _process(delta):
 			Abilities.visible = false
 			get_tree().paused = true
 			
-			print(Persistent.diary.size(), " ", Persistent.diary_page * 2)
 			if Persistent.diary.size() > Persistent.diary_page * 2:
 				DiaryOdd.text = Language.line(Persistent.diary[Persistent.diary_page * 2])
 			else:
@@ -190,7 +189,6 @@ func _process(delta):
 				DiaryEven.text = ""
 
 func _input(event):
-	print(Persistent.recently_collected)
 	# Player can only interact with the HUD if they're not quitting the game
 	if event is InputEventKey and not event.is_echo() and event.is_pressed() and not quitting:
 		match c_menu:
@@ -217,6 +215,7 @@ func _input(event):
 						# Open the diary
 						if Persistent.got_diary:
 							c_menu = MENUS.OPEN_DIARY
+			
 			MENUS.ABILITIES:
 				match notch_mode:
 					NOTCH_MODES.NONE:
@@ -305,6 +304,7 @@ func _input(event):
 							1: # Quit
 								c_menu = MENUS.QUIT
 								pause_menu_value = 1
+			
 			MENUS.QUIT:
 				match event.scancode:
 					# Back to pause menu
@@ -333,6 +333,7 @@ func _input(event):
 								# Back to pause menu
 								c_menu = MENUS.PAUSE
 								pause_menu_value = 1
+			
 			MENUS.OPEN_DIARY:
 				match event.scancode:
 					# Diary navigation

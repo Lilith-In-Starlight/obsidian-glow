@@ -67,6 +67,9 @@ func _ready():
 	SceneTimer.connect("timeout", self, "scene_timer_timeout")
 	add_child(SceneTimer)
 	
+	# The collected entries should only be kept during the game
+	Persistent.recently_collected = []
+	
 	# Update how the menu looks like to make it look less buggy
 	visual_update()
 

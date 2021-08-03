@@ -41,6 +41,10 @@ onready var CenterNotch := $Abilities/Center
 onready var NotchSelector := $Abilities/Selector
 var selected_notch := 0
 
+onready var Diary := $Diary
+onready var DiaryOdd := $Diary/Pages/Oddpage
+onready var DiaryEven := $Diary/Pages/Evenpage
+
 var c_menu = MENUS.NONE
 var notch_mode = NOTCH_MODES.NONE
 var selected_ability := 0
@@ -100,6 +104,7 @@ func _process(delta):
 	Attacked.get_material().set_shader_param("rest", lerp(aa, attacked_vignette, 0.1))
 	match c_menu:
 		MENUS.NONE:
+			Diary.visible = false
 			Abilities.visible = false
 			get_tree().paused = false
 			$ObtainedDash.modulate.a = move_toward($ObtainedDash.modulate.a, 0.0, 0.05)
@@ -168,8 +173,24 @@ func _process(delta):
 					children[i].modulate = Color("#ffc070")
 				else:
 					children[i].modulate = Color("#ffffff")
+					
+		MENUS.OPEN_DIARY:
+			Diary.visible = true
+			Abilities.visible = false
+			get_tree().paused = true
+			
+			print(Persistent.diary.size(), " ", Persistent.diary_page * 2)
+			if Persistent.diary.size() > Persistent.diary_page * 2:
+				DiaryOdd.text = Language.line(Persistent.diary[Persistent.diary_page * 2])
+			else:
+				DiaryOdd.text = ""
+			if Persistent.diary.size() > Persistent.diary_page * 2 + 1:
+				DiaryEven.text = Language.line(Persistent.diary[Persistent.diary_page * 2 + 1])
+			else:
+				DiaryEven.text = ""
 
 func _input(event):
+	print(Persistent.recently_collected)
 	# Player can only interact with the HUD if they're not quitting the game
 	if event is InputEventKey and not event.is_echo() and event.is_pressed() and not quitting:
 		match c_menu:
@@ -192,6 +213,10 @@ func _input(event):
 					KEY_ESCAPE:
 						# Pause the game
 						c_menu = MENUS.PAUSE
+					KEY_TAB:
+						# Open the diary
+						if Persistent.got_diary:
+							c_menu = MENUS.OPEN_DIARY
 			MENUS.ABILITIES:
 				match notch_mode:
 					NOTCH_MODES.NONE:
@@ -308,8 +333,20 @@ func _input(event):
 								# Back to pause menu
 								c_menu = MENUS.PAUSE
 								pause_menu_value = 1
+			MENUS.OPEN_DIARY:
+				match event.scancode:
+					# Diary navigation
+					Inputs.left_key:
+						Persistent.diary_page = max(Persistent.diary_page - 1, 0)
+					Inputs.right_key:
+						Persistent.diary_page = min(Persistent.diary_page + 1, Persistent.diary.size() - 1)
+					KEY_TAB, KEY_ESCAPE, Inputs.cancel_key:
+						c_menu = MENUS.NONE
 
 # If the player's health lowers, make the attack vignette appear
 func health_changed(change):
 	if change < 0:
 		attacked_vignette = 0.5 + 0.2*abs(change)
+
+func diary_updated():
+	$DiaryUpdated/Animation.play("Update")

@@ -41,6 +41,10 @@ var WEnv := WorldEnvironment.new()
 var got_diary := false
 
 var ident := 0
+var diary_page := 0
+
+var diary := ["diary_opening"]
+var recently_collected := []
 
 func _init():
 	for i in notches:
@@ -101,6 +105,9 @@ func load_():
 	
 	got_diary = Savefile.get_value("items", "diary", false) as bool
 	
+	diary = Savefile.get_value("diary", "diary", ["diary_opening"]) as Array
+	diary_page = Savefile.get_value("diary", "current_page", 0) as int
+	
 	if abilities.has("dash") and not outskirts_arena:
 		abilities = [""]
 	
@@ -129,6 +136,9 @@ func save(game:bool = true):
 	Savefile.set_value("outskirts", "arena", outskirts_arena)
 	
 	Savefile.set_value("items", "diary", got_diary)
+	
+	Savefile.set_value("diary", "diary", diary)
+	Savefile.set_value("diary", "current_page", diary_page)
 	
 	Savefile.save("user://savefile.and")
 	

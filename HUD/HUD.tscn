@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://HUD/HUD.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/HUD/Abilities/notchselect.png" type="Texture" id=2]
@@ -26,25 +26,35 @@ corner_radius_bottom_left = 10
 size = 12
 font_data = ExtResource( 8 )
 
-[sub_resource type="StyleBoxFlat" id=4]
-bg_color = Color( 0, 0, 0, 0.498039 )
+[sub_resource type="StyleBoxFlat" id=12]
+bg_color = Color( 1, 0.917647, 0.737255, 1 )
 
-[sub_resource type="DynamicFont" id=5]
+[sub_resource type="DynamicFont" id=15]
 size = 9
 font_data = ExtResource( 8 )
 
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 0, 0, 0, 0.654902 )
+
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 0, 0, 0, 0.498039 )
+
 [sub_resource type="DynamicFont" id=6]
-size = 23
+size = 9
 font_data = ExtResource( 8 )
 
 [sub_resource type="DynamicFont" id=7]
+size = 23
+font_data = ExtResource( 8 )
+
+[sub_resource type="DynamicFont" id=8]
 size = 12
 font_data = ExtResource( 8 )
 
-[sub_resource type="StyleBoxFlat" id=8]
+[sub_resource type="StyleBoxFlat" id=9]
 bg_color = Color( 0, 0, 0, 1 )
 
-[sub_resource type="Shader" id=9]
+[sub_resource type="Shader" id=10]
 code = "shader_type canvas_item;
 
 uniform float rest = 0.0;
@@ -56,12 +66,29 @@ void fragment()
 	COLOR.rgb -= vec3(dstq)*rest;
 }"
 
-[sub_resource type="ShaderMaterial" id=10]
-shader = SubResource( 9 )
+[sub_resource type="ShaderMaterial" id=11]
+shader = SubResource( 10 )
 shader_param/rest = 0.0
 
-[sub_resource type="StyleBoxFlat" id=11]
-bg_color = Color( 0, 0, 0, 0.654902 )
+[sub_resource type="DynamicFont" id=13]
+size = 14
+font_data = ExtResource( 8 )
+
+[sub_resource type="Animation" id=14]
+resource_name = "Update"
+length = 2.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 2, 2.5 ),
+"transitions": PoolRealArray( 0.210224, 1, 0.366021, 2.63902 ),
+"update": 0,
+"values": [ Vector2( -100, 195 ), Vector2( 6, 195 ), Vector2( 6, 195 ), Vector2( -100, 195 ) ]
+}
 
 [node name="HUD" type="CanvasLayer"]
 pause_mode = 2
@@ -70,6 +97,7 @@ layer = 4
 [node name="HUD" type="Control" parent="." groups=[
 "hud",
 ]]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
@@ -149,213 +177,53 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Abilities" type="Panel" parent="HUD"]
-anchor_left = 0.1
-anchor_top = 0.1
-anchor_right = 0.9
-anchor_bottom = 0.9
-custom_styles/panel = SubResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Selector" type="TextureRect" parent="HUD/Abilities"]
+[node name="Diary" type="Panel" parent="HUD"]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -20.0
-margin_top = -20.0
-margin_right = 20.0
-margin_bottom = 20.0
-rect_pivot_offset = Vector2( 20, 20 )
-texture = ExtResource( 2 )
+margin_left = -130.0
+margin_top = -80.0
+margin_right = 130.0
+margin_bottom = 80.0
+custom_styles/panel = SubResource( 12 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Center" type="TextureRect" parent="HUD/Abilities"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -17.0
-margin_top = -17.0
-margin_right = 17.0
-margin_bottom = 17.0
-rect_pivot_offset = Vector2( 17, 17 )
-texture = ExtResource( 3 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label3" type="Label" parent="HUD/Abilities"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -156.0
-margin_top = 34.0
-margin_right = 17.0
-margin_bottom = 86.0
-grow_horizontal = 2
-custom_fonts/font = SubResource( 5 )
-text = "[Z] CHANGE ABILITY
-[X] CHANGE CONTROL
-[ESC][C] CLOSE"
-valign = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ObtainedDash" type="Panel" parent="HUD"]
-modulate = Color( 1, 1, 1, 0 )
-anchor_left = 0.1
-anchor_top = 0.1
-anchor_right = 0.9
-anchor_bottom = 0.9
-custom_styles/panel = SubResource( 4 )
-__meta__ = {
-"_edit_lock_": true,
-"_edit_use_anchors_": false
-}
-
-[node name="Image" type="TextureRect" parent="HUD/ObtainedDash"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -17.0
-margin_top = -33.0
-margin_right = 17.0
-margin_bottom = 1.0
-rect_scale = Vector2( 2, 2 )
-rect_pivot_offset = Vector2( 17, 17 )
-texture = ExtResource( 9 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="HUD/ObtainedDash"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -86.5
-margin_top = -73.0
-margin_right = 86.5
-margin_bottom = -49.0
-grow_horizontal = 2
-custom_fonts/font = SubResource( 6 )
-text = "OBTAINED THE DASH"
-align = 1
-
-[node name="Label2" type="Label" parent="HUD/ObtainedDash"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -118.0
-margin_top = 25.0
-margin_right = 120.0
-margin_bottom = 52.0
-grow_horizontal = 2
-custom_fonts/font = SubResource( 7 )
-text = "ACCELERATE FORWARD FOR A SHORT TIME  AND IGNORE  GRAVITY
-
-PRESS i NEAR A BENCH TO SET YOUR ABILITIES"
-align = 1
-autowrap = true
-
-[node name="ObtainedDiary" type="Panel" parent="HUD"]
-modulate = Color( 1, 1, 1, 0 )
-anchor_left = 0.1
-anchor_top = 0.1
-anchor_right = 0.9
-anchor_bottom = 0.9
-custom_styles/panel = SubResource( 4 )
-__meta__ = {
-"_edit_lock_": true,
-"_edit_use_anchors_": false
-}
-
-[node name="Image" type="TextureRect" parent="HUD/ObtainedDiary"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -17.0
-margin_top = -33.0
-margin_right = 17.0
-margin_bottom = 1.0
-rect_scale = Vector2( 2, 2 )
-rect_pivot_offset = Vector2( 17, 17 )
-texture = ExtResource( 10 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="HUD/ObtainedDiary"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -86.5
-margin_top = -73.0
-margin_right = 86.5
-margin_bottom = -49.0
-grow_horizontal = 2
-custom_fonts/font = SubResource( 6 )
-text = "OBTAINED THE DIARY"
-align = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label2" type="Label" parent="HUD/ObtainedDiary"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -118.0
-margin_top = 25.0
-margin_right = 120.0
-margin_bottom = 52.0
-grow_horizontal = 2
-custom_fonts/font = SubResource( 7 )
-text = "COLLECT YOUR THOUGHTS AND INFORMATION ABOUT CREATURES, PLACES AND PEOPLE
-
-PRESS TAB TO READ IT"
-align = 1
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Cutscene" type="Panel" parent="HUD"]
+[node name="Pages" type="HSplitContainer" parent="HUD/Diary"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_styles/panel = SubResource( 8 )
+margin_left = 10.0
+margin_top = 10.0
+margin_right = -10.0
+margin_bottom = -10.0
+split_offset = 120
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Attacked" type="TextureRect" parent="HUD"]
-material = SubResource( 10 )
-anchor_right = 1.0
-anchor_bottom = 1.0
-texture = ExtResource( 4 )
-expand = true
-stretch_mode = 1
-__meta__ = {
-"_edit_lock_": true,
-"_edit_use_anchors_": false
-}
+[node name="Oddpage" type="Label" parent="HUD/Diary/Pages"]
+margin_right = 121.0
+margin_bottom = 140.0
+size_flags_vertical = 5
+custom_fonts/font = SubResource( 15 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+autowrap = true
+
+[node name="Evenpage" type="Label" parent="HUD/Diary/Pages"]
+margin_left = 133.0
+margin_right = 240.0
+margin_bottom = 140.0
+size_flags_vertical = 5
+custom_fonts/font = SubResource( 15 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+autowrap = true
 
 [node name="Pause" type="Panel" parent="HUD"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_styles/panel = SubResource( 11 )
+custom_styles/panel = SubResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -453,3 +321,236 @@ autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Abilities" type="Panel" parent="HUD"]
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+custom_styles/panel = SubResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Selector" type="TextureRect" parent="HUD/Abilities"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -20.0
+margin_top = -20.0
+margin_right = 20.0
+margin_bottom = 20.0
+rect_pivot_offset = Vector2( 20, 20 )
+texture = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Center" type="TextureRect" parent="HUD/Abilities"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -17.0
+margin_top = -17.0
+margin_right = 17.0
+margin_bottom = 17.0
+rect_pivot_offset = Vector2( 17, 17 )
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label3" type="Label" parent="HUD/Abilities"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -156.0
+margin_top = 34.0
+margin_right = 17.0
+margin_bottom = 86.0
+grow_horizontal = 2
+custom_fonts/font = SubResource( 6 )
+text = "[Z] CHANGE ABILITY
+[X] CHANGE CONTROL
+[ESC][C] CLOSE"
+valign = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ObtainedDash" type="Panel" parent="HUD"]
+modulate = Color( 1, 1, 1, 0 )
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+custom_styles/panel = SubResource( 5 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Image" type="TextureRect" parent="HUD/ObtainedDash"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -17.0
+margin_top = -33.0
+margin_right = 17.0
+margin_bottom = 1.0
+rect_scale = Vector2( 2, 2 )
+rect_pivot_offset = Vector2( 17, 17 )
+texture = ExtResource( 9 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="HUD/ObtainedDash"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -86.5
+margin_top = -73.0
+margin_right = 86.5
+margin_bottom = -49.0
+grow_horizontal = 2
+custom_fonts/font = SubResource( 7 )
+text = "OBTAINED THE DASH"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="HUD/ObtainedDash"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -118.0
+margin_top = 25.0
+margin_right = 120.0
+margin_bottom = 52.0
+grow_horizontal = 2
+custom_fonts/font = SubResource( 8 )
+text = "ACCELERATE FORWARD FOR A SHORT TIME  AND IGNORE  GRAVITY
+
+PRESS i NEAR A BENCH TO SET YOUR ABILITIES"
+align = 1
+autowrap = true
+
+[node name="ObtainedDiary" type="Panel" parent="HUD"]
+modulate = Color( 1, 1, 1, 0 )
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+custom_styles/panel = SubResource( 5 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Image" type="TextureRect" parent="HUD/ObtainedDiary"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -17.0
+margin_top = -33.0
+margin_right = 17.0
+margin_bottom = 1.0
+rect_scale = Vector2( 2, 2 )
+rect_pivot_offset = Vector2( 17, 17 )
+texture = ExtResource( 10 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="HUD/ObtainedDiary"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -86.5
+margin_top = -73.0
+margin_right = 86.5
+margin_bottom = -49.0
+grow_horizontal = 2
+custom_fonts/font = SubResource( 7 )
+text = "OBTAINED THE DIARY"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="HUD/ObtainedDiary"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -118.0
+margin_top = 25.0
+margin_right = 120.0
+margin_bottom = 52.0
+grow_horizontal = 2
+custom_fonts/font = SubResource( 8 )
+text = "COLLECT YOUR THOUGHTS AND INFORMATION ABOUT CREATURES, PLACES AND PEOPLE
+
+PRESS TAB TO READ IT"
+align = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Cutscene" type="Panel" parent="HUD"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_styles/panel = SubResource( 9 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Attacked" type="TextureRect" parent="HUD"]
+material = SubResource( 11 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 1
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="DiaryUpdated" type="TextureRect" parent="HUD"]
+margin_left = -100.0
+margin_top = 195.0
+margin_right = -66.0
+margin_bottom = 229.0
+rect_scale = Vector2( 0.7, 0.7 )
+texture = ExtResource( 10 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="HUD/DiaryUpdated"]
+margin_left = 35.7143
+margin_top = 8.57144
+margin_right = 122.714
+margin_bottom = 23.5714
+custom_fonts/font = SubResource( 13 )
+text = "Diary Updated!"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Animation" type="AnimationPlayer" parent="HUD/DiaryUpdated"]
+anims/Update = SubResource( 14 )

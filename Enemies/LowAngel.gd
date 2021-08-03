@@ -92,6 +92,9 @@ func attacked(d, pos, s):
 	var prev_health := health
 	health -= d
 	if health <= 0 and prev_health > 0:
+		if not Persistent.diary.has("diary_angel") and not Persistent.recently_collected.has("diary_angel"):
+			Persistent.recently_collected.append("diary_angel")
+			print(Persistent.recently_collected)
 		Persistent.persands += randi() % 5
 	
 

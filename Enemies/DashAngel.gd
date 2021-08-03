@@ -68,6 +68,8 @@ func attacked(d, pos, s):
 	health -= d
 	if health <= 0 and prev_health > 0:
 		Persistent.persands += randi() % 5
+		if not Persistent.diary.has("diary_angel_ball") and not Persistent.recently_collected.has("diary_angel_ball"):
+			Persistent.recently_collected.append("diary_angel_ball")
 		
 func _on_body_entered(body):
 	if body.name == "Neptune":

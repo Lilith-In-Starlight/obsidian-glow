@@ -46,7 +46,7 @@ var diary_page := 0
 var diary := ["diary_opening"]
 var recently_collected := []
 
-var current_save := "savefile.and"
+var current_save := "user://savefile.and"
 var save_name := ""
 
 

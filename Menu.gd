@@ -90,7 +90,7 @@ func _input(event):
 				match event.scancode:
 					KEY_ESCAPE: # Resets the savefile and the game variables
 						Persistent.Savefile = ConfigFile.new()
-						Persistent.Savefile.save("user://savefile.and")
+						Persistent.Savefile.save(Persistent.save_name)
 						Persistent.load_()
 					# Navigate the menu
 					Inputs.down_key:

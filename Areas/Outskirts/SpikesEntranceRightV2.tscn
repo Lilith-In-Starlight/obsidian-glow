@@ -86,6 +86,11 @@ position = Vector2( -122, 363 )
 newScene = "Outskirts/SpikesEntranceRightV"
 identifier = 1
 
+[node name="SceneChanger4" parent="." instance=ExtResource( 4 )]
+position = Vector2( 550, 94 )
+newScene = "SpikeGarden/room3"
+enter_dir = 1
+
 [node name="HUD" parent="." instance=ExtResource( 7 )]
 
 [node name="Spikes" type="Area2D" parent="."]

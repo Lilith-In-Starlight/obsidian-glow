@@ -22,6 +22,8 @@ var time_attack := 0.0
 var health := 5
 
 func _ready():
+	if Persistent.killed.has([get_tree().current_scene.filename, name]):
+		queue_free()
 	noise.seed = hash(name)
 
 func _physics_process(delta):
@@ -92,6 +94,7 @@ func attacked(d, pos, s):
 	var prev_health := health
 	health -= d
 	if health <= 0 and prev_health > 0:
+		Persistent.killed.append([get_tree().current_scene.filename, name])
 		if not Persistent.diary.has("diary_angel") and not Persistent.recently_collected.has("diary_angel"):
 			Persistent.recently_collected.append("diary_angel")
 			print(Persistent.recently_collected)

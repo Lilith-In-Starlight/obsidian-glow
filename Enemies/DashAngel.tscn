@@ -35,28 +35,28 @@ region = Rect2( 50, 0, 10, 22 )
 atlas = ExtResource( 1 )
 region = Rect2( 60, 0, 10, 22 )
 
-[sub_resource type="AtlasTexture" id=11]
+[sub_resource type="AtlasTexture" id=9]
 atlas = ExtResource( 3 )
 region = Rect2( 0, 0, 11, 22 )
 
-[sub_resource type="AtlasTexture" id=12]
+[sub_resource type="AtlasTexture" id=10]
 atlas = ExtResource( 3 )
 region = Rect2( 11, 0, 11, 22 )
 
-[sub_resource type="SpriteFrames" id=9]
+[sub_resource type="SpriteFrames" id=11]
 animations = [ {
 "frames": [ SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ), SubResource( 7 ), SubResource( 8 ) ],
 "loop": true,
 "name": "default",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 11 ), SubResource( 12 ) ],
+"frames": [ SubResource( 9 ), SubResource( 10 ) ],
 "loop": true,
 "name": "dash",
 "speed": 10.0
 } ]
 
-[sub_resource type="CircleShape2D" id=10]
+[sub_resource type="CircleShape2D" id=12]
 
 [node name="DashAngel" type="KinematicBody2D" groups=[
 "attackable",
@@ -69,8 +69,8 @@ script = ExtResource( 2 )
 shape = SubResource( 1 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-frames = SubResource( 9 )
-frame = 5
+frames = SubResource( 11 )
+frame = 4
 playing = true
 
 [node name="Area2D" type="Area2D" parent="."]
@@ -78,7 +78,7 @@ collision_layer = 16
 collision_mask = 2
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="Area2D"]
-shape = SubResource( 10 )
+shape = SubResource( 12 )
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
 enabled = true

@@ -59,6 +59,8 @@ func _init():
 
 var near_bench := false
 
+var killed := []
+
 
 func _ready():
 	pause_mode = Node.PAUSE_MODE_PROCESS

@@ -69,6 +69,7 @@ func _ready():
 	add_child(SceneTimer)
 	
 	# The collected entries should only be kept during the game
+	Persistent.killed = []
 	Persistent.recently_collected = []
 	
 	# Update how the menu looks like to make it look less buggy

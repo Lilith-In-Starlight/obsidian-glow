@@ -18,6 +18,7 @@ func _process(delta):
 			Persistent.health = 6
 			Persistent.player_pos = Player.position
 			Persistent.save()
+			Persistent.killed = []
 			if Persistent.got_diary and not Persistent.recently_collected.empty():
 				Persistent.diary.append_array(Persistent.recently_collected)
 				print(Persistent.recently_collected, " ", Persistent.diary)

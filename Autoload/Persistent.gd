@@ -155,4 +155,4 @@ func save_settings():
 	Settings.set_value("video", "brigthess", Env.adjustment_brightness)
 	Settings.set_value("video", "saturation", Env.adjustment_saturation)
 	Settings.set_value("video", "contrast", Env.adjustment_contrast)
-	Settings.save(current_save)
+	Settings.save("user://settings.and")

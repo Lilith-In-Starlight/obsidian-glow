@@ -92,7 +92,6 @@ func _input(event):
 						Persistent.Savefile = ConfigFile.new()
 						Persistent.Savefile.save(Persistent.save_name)
 						Persistent.load_()
-						print("??")
 					# Navigate the menu
 					Inputs.down_key:
 						menu_option = (menu_option + 1) % menu_list

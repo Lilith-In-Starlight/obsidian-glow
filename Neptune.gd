@@ -66,6 +66,8 @@ var walk := false # Is the player being forced to walk?
 
 var last_safe_pos := Vector2(0, 0)
 
+var HUD
+
 # Camera shake variables
 var shake := 0.0
 var trauma := 0.0
@@ -83,6 +85,7 @@ var unpressed_jump_on_air = false # Controls the length of jumps
 var smoothing_reset := false # To make sure the camera isn't weird
 
 func _ready():
+	HUD = get_tree().get_nodes_in_group("hud")[0]
 	# If the player spawns with no health, reset it
 	if Persistent.health <= 0:
 		Persistent.health = 6
@@ -103,6 +106,11 @@ func _ready():
 		if Persistent.death_load:
 			Persistent.save()
 			Persistent.death_load = false
+			if Persistent.got_diary and not Persistent.recently_collected.empty():
+				Persistent.diary.append_array(Persistent.recently_collected)
+				print(Persistent.recently_collected, " ", Persistent.diary)
+				Persistent.recently_collected = []
+				HUD.call("diary_updated")
 	
 	# The player will respawn in the place it entered the scene from
 	# in the case of receiving environmental damage
@@ -632,3 +640,10 @@ func vulnerable_again():
 # End the temporal non-movement
 func move_again():
 	Persistent.player_cutscene = "no"
+
+
+func _on_area_entered(area):
+	if area.is_in_group("sword_hurtbox"):
+		knockback = (position-area.position).normalized()*200
+		shake = 0.4
+		Engine.time_scale = 0.04

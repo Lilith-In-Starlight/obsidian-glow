@@ -52,8 +52,10 @@ var save_name := ""
 
 func _init():
 	for i in notches:
-		notch_fillers.append("")
-		notch_keys.append(-1)
+		if notch_fillers.size() < notches:
+			notch_fillers.append("")
+		if notch_keys.size() < notches:
+			notch_keys.append(-1)
 
 var near_bench := false
 
@@ -115,9 +117,12 @@ func load_():
 	if abilities.has("dash") and not outskirts_arena:
 		abilities = [""]
 	
+	
 	for i in notches:
-		notch_fillers.append("")
-		notch_keys.append(-1)
+		if notch_fillers.size() < notches:
+			notch_fillers.append("")
+		if notch_keys.size() < notches:
+			notch_keys.append(-1)
 
 func save(game:bool = true):
 	loaded_scene = get_tree().current_scene.filename
@@ -132,7 +137,7 @@ func save(game:bool = true):
 	
 	Savefile.set_value("abilities", "notches", notches)
 	Savefile.set_value("abilities", "abilities", abilities)
-	Savefile.set_value("abilities", "fil lers", notch_fillers)
+	Savefile.set_value("abilities", "fillers", notch_fillers)
 	Savefile.set_value("abilities", "keys", notch_keys)
 	
 	Savefile.set_value("subway", "abandoned", abandoned_ticket)

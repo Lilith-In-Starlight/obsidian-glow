@@ -1,6 +1,11 @@
 extends Node
 
 
+var mask_textures := {
+	"survivor": preload("res://Sprites/HUD/Masks/Survivor.png"),
+}
+
+
 var entered_from := "Field/Feld.tscn" # Where the player came from in a scene transition
 
 # Subway tickets
@@ -49,6 +54,7 @@ var recently_collected := []
 var current_save := "user://savefile.and"
 var save_name := ""
 
+var masks := []
 
 func _init():
 	for i in notches:
@@ -101,6 +107,7 @@ func load_():
 	persands = Savefile.get_value("player", "persands", 0) as int
 	max_health = Savefile.get_value("player", "max_health", 6) as int
 	shadow = Savefile.get_value("player", "shadow", 0.0) as float
+	masks = Savefile.get_value("player", "masks", []) as Array
 	
 	notches = Savefile.get_value("abilities", "notches", 2) as int
 	abilities = Savefile.get_value("abilities", "abilities", [""]) as Array
@@ -136,6 +143,7 @@ func save(game:bool = true):
 	Savefile.set_value("player", "persands", persands)
 	Savefile.set_value("player", "max_health", max_health)
 	Savefile.set_value("player", "shadow", shadow)
+	Savefile.set_value("player", "masks", masks)
 	
 	Savefile.set_value("abilities", "notches", notches)
 	Savefile.set_value("abilities", "abilities", abilities)
@@ -150,6 +158,7 @@ func save(game:bool = true):
 	
 	Savefile.set_value("diary", "diary", diary)
 	Savefile.set_value("diary", "current_page", diary_page)
+	
 	
 	Savefile.save(current_save)
 	

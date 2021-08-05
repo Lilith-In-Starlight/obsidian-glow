@@ -45,6 +45,8 @@ onready var Diary := $Diary
 onready var DiaryOdd := $Diary/Pages/Oddpage
 onready var DiaryEven := $Diary/Pages/Evenpage
 
+onready var MaskNotificationImage := $MaskCollected
+
 var c_menu = MENUS.NONE
 var notch_mode = NOTCH_MODES.NONE
 var selected_ability := 0
@@ -352,3 +354,6 @@ func health_changed(change):
 
 func diary_updated():
 	$DiaryUpdated/Animation.play("Update")
+
+func mask_collected():
+	$MaskCollected/Animation.play("Update")

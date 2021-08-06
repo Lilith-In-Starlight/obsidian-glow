@@ -8,6 +8,7 @@ enum MENUS {
 	OPEN_DIARY,
 	PAUSE,
 	QUIT,
+	MASKS,
 }
 
 enum NOTCH_MODES {
@@ -51,11 +52,16 @@ var c_menu = MENUS.NONE
 var notch_mode = NOTCH_MODES.NONE
 var selected_ability := 0
 
+var center_notch := false # Is the center notch selected
+
 var dialogue := []
 
 var pause_menu_value := 0
 
 var quitting := false
+
+var top_row := false # In the notches screen, is the top row selected?
+var selected_mask := 0 # What mask is selected?
 
 
 func _init():
@@ -110,6 +116,7 @@ func _process(delta):
 			Diary.visible = false
 			Abilities.visible = false
 			get_tree().paused = false
+			$Masks.visible = false
 			$ObtainedDash.modulate.a = move_toward($ObtainedDash.modulate.a, 0.0, 0.05)
 			$ObtainedDiary.modulate.a = move_toward($ObtainedDiary.modulate.a, 0.0, 0.05)
 			$Pause.visible = false
@@ -124,9 +131,13 @@ func _process(delta):
 			get_tree().paused = true
 			Abilities.visible = true
 			$Pause.visible = false
+			$Masks.visible = false
 			$ObtainedDash.modulate.a = move_toward($ObtainedDash.modulate.a, 0.0, 0.05)
 			$ObtainedDiary.modulate.a = move_toward($ObtainedDiary.modulate.a, 0.0, 0.05)
-			NotchSelector.rect_position = CenterNotch.rect_position + Vector2(cos(selected_notch*TAU/Persistent.notches), sin(selected_notch*TAU/Persistent.notches)) * 60 - Vector2(3,3)
+			if not center_notch:
+				NotchSelector.rect_position = CenterNotch.rect_position + Vector2(cos(selected_notch*TAU/Persistent.notches), sin(selected_notch*TAU/Persistent.notches)) * 60 - Vector2(3,3)
+			else:
+				NotchSelector.rect_position = CenterNotch.rect_position - Vector2(3,3)
 			for i in Persistent.notches:
 				var NotchSprite:TextureRect = get_node_or_null("Abilities/Notch" + str(i))
 				NotchSprite.texture = NotchDict[Persistent.notch_fillers[i]]
@@ -135,9 +146,15 @@ func _process(delta):
 			match notch_mode:
 				NOTCH_MODES.NONE:
 					NotchSelector.texture = SELECT_NOTCH_TXT
-					$Abilities/Label3.text = """[1] CHANGE ABILITY
-						[2] CHANGE CONTROL
-						[ESC] CLOSE""".replace("1", Inputs.custom_scancode_str(Inputs.jump_key)).replace("2", Inputs.custom_scancode_str(Inputs.attack_key))
+					if not center_notch:
+						$Abilities/Label3.text = """[1] CHANGE ABILITY
+							[2] CHANGE CONTROL
+							[3] CENTER NOTCH
+							[ESC] CLOSE""".replace("1", Inputs.custom_scancode_str(Inputs.jump_key)).replace("2", Inputs.custom_scancode_str(Inputs.attack_key)).replace("3", Inputs.custom_scancode_str(Inputs.up_key))
+					else:
+						$Abilities/Label3.text = """[1/2] INVENTORY
+							[3] ABILITIES
+							[ESC] CLOSE""".replace("1", Inputs.custom_scancode_str(Inputs.jump_key)).replace("2", Inputs.custom_scancode_str(Inputs.attack_key)).replace("3", Inputs.custom_scancode_str(Inputs.up_key))
 				NOTCH_MODES.ABILITY:
 					NotchSelector.texture = SELECTED_NOTCH_TXT
 					$Abilities/Label3.text = """[1][2] CHANGE ABILITY
@@ -190,6 +207,23 @@ func _process(delta):
 				DiaryEven.text = Language.line(Persistent.diary[Persistent.diary_page * 2 + 1])
 			else:
 				DiaryEven.text = ""
+		MENUS.MASKS:
+			Abilities.visible = false
+			$Masks.visible = true
+			print(Persistent.masks_wearing)
+			for i in $Masks/Using.get_child_count():
+				$Masks/Using.get_children()[i].mask_hud = Persistent.masks_wearing[i]
+				
+				if top_row and selected_mask == i:
+					$Masks/Using.get_children()[i].modulate = Color("#ff8c8c")
+				else:
+					$Masks/Using.get_children()[i].modulate = Color("#ffffff")
+			
+			for i in $Masks/Collected.get_child_count():
+				if not top_row and selected_mask == i:
+					$Masks/Collected.get_children()[i].modulate = Color("#ff8c8c")
+				else:
+					$Masks/Collected.get_children()[i].modulate = Color("#ffffff")
 
 func _input(event):
 	# Player can only interact with the HUD if they're not quitting the game
@@ -237,13 +271,22 @@ func _input(event):
 							
 							# Change ability
 							Inputs.jump_key:
-								if Persistent.player_cutscene == "no" and Persistent.near_bench:
-									notch_mode = NOTCH_MODES.ABILITY
+								if not center_notch:
+									if Persistent.player_cutscene == "no" and Persistent.near_bench:
+										notch_mode = NOTCH_MODES.ABILITY
+								else:
+									c_menu = MENUS.MASKS
 							
 							# Rebind notch
 							Inputs.attack_key:
-								if Persistent.player_cutscene == "no":
-									notch_mode = NOTCH_MODES.KEY
+								if not center_notch:
+									if Persistent.player_cutscene == "no":
+										notch_mode = NOTCH_MODES.KEY
+								else:
+									c_menu = MENUS.MASKS
+							
+							Inputs.up_key, Inputs.down_key:
+								center_notch = !center_notch
 					
 					NOTCH_MODES.ABILITY:
 						match event.scancode:
@@ -346,6 +389,73 @@ func _input(event):
 						Persistent.diary_page = min(Persistent.diary_page + 1, Persistent.diary.size() - 1)
 					KEY_TAB, KEY_ESCAPE, Inputs.cancel_key:
 						c_menu = MENUS.NONE
+			
+			MENUS.MASKS:
+				match event.scancode:
+					Inputs.up_key:
+						if not top_row:
+							if selected_mask < 9:
+								top_row = true
+								selected_mask = min($Masks/Using.get_child_count()-1, selected_mask)
+							else:
+								selected_mask -= 9
+						
+						selected_mask = min($Masks/Collected.get_child_count()-1, selected_mask)
+						
+					Inputs.down_key:
+						if not top_row:
+							selected_mask += 9
+						else:
+							top_row = false
+						selected_mask = min($Masks/Collected.get_child_count()-1, selected_mask)
+						
+					Inputs.left_key:
+						var limit_min := int(selected_mask / 9.0) * 9
+						selected_mask -= 1
+						if selected_mask < limit_min:
+							selected_mask = limit_min
+						elif selected_mask > limit_min + 9:
+							selected_mask = limit_min + 9
+						
+						if top_row:
+							selected_mask = min($Masks/Using.get_child_count()-1, selected_mask)
+						else:
+							selected_mask = min($Masks/Collected.get_child_count()-1, selected_mask)
+						
+						
+						
+					Inputs.right_key:
+						var limit_min := int(selected_mask / 9.0) * 9
+						selected_mask += 1
+						if selected_mask < limit_min:
+							selected_mask = limit_min
+						elif selected_mask > limit_min + 9:
+							selected_mask = limit_min + 9
+						
+						if selected_mask > $Masks/Using.get_child_count():
+							selected_mask = $Masks/Using.get_child_count()
+						
+						if top_row:
+							selected_mask = min($Masks/Using.get_child_count()-1, selected_mask)
+						else:
+							selected_mask = min($Masks/Collected.get_child_count()-1, selected_mask)
+						
+					Inputs.attack_key, Inputs.jump_key:
+						if top_row:
+							Persistent.masks_wearing[selected_mask] = "none"
+						else:
+							var c_mask = $Masks/Collected.get_children()[selected_mask]
+							print(c_mask.mask_hud)
+							var find = Persistent.masks_wearing.find(c_mask.mask_hud)
+							if find != -1:
+								Persistent.masks_wearing[find] = "none"
+							else:
+								find = Persistent.masks_wearing.find("none")
+								if find != -1:
+									Persistent.masks_wearing[find] = c_mask.mask_hud
+					
+					Inputs.cancel_key, KEY_ESCAPE:
+						c_menu = MENUS.ABILITIES
 
 # If the player's health lowers, make the attack vignette appear
 func health_changed(change):

@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://HUD/MaskHUD.gd" type="Script" id=1]
+[ext_resource path="res://Sprites/HUD/Masks/Place.png" type="Texture" id=2]
+
+[node name="MaskHUD" type="TextureRect"]
+margin_left = -17.0
+margin_top = -17.0
+margin_right = 17.0
+margin_bottom = 17.0
+rect_pivot_offset = Vector2( 17, 17 )
+texture = ExtResource( 2 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

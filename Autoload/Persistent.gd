@@ -2,6 +2,7 @@ extends Node
 
 
 var mask_textures := {
+	"none": preload("res://Sprites/HUD/Masks/Place.png"),
 	"survivor": preload("res://Sprites/HUD/Masks/Survivor.png"),
 }
 
@@ -55,6 +56,8 @@ var current_save := "user://savefile.and"
 var save_name := ""
 
 var masks := []
+var masks_wearing := []
+var faces := 2
 
 func _init():
 	for i in notches:
@@ -62,6 +65,10 @@ func _init():
 			notch_fillers.append("")
 		if notch_keys.size() < notches:
 			notch_keys.append(-1)
+	
+	for i in faces:
+		if masks_wearing.size() < faces:
+			masks_wearing.append("none")
 
 var near_bench := false
 
@@ -89,7 +96,7 @@ func _ready():
 		load_()
 	
 	if err_settings == OK:
-		Env.adjustment_brightness = Settings.get_value("video", "brigthess", 1.0)
+		Env.adjustment_brightness = Settings.get_value("video", "brightness", 1.0)
 		Env.adjustment_saturation = Settings.get_value("video", "saturation", 1.0)
 		Env.adjustment_contrast =  Settings.get_value("video", "contrast", 1.0)
 
@@ -108,6 +115,8 @@ func load_():
 	max_health = Savefile.get_value("player", "max_health", 6) as int
 	shadow = Savefile.get_value("player", "shadow", 0.0) as float
 	masks = Savefile.get_value("player", "masks", []) as Array
+	faces = Savefile.get_value("player", "faces", 2) as int
+	masks_wearing = Savefile.get_value("player", "masks_wearing", ["none", "none"]) as Array
 	
 	notches = Savefile.get_value("abilities", "notches", 2) as int
 	abilities = Savefile.get_value("abilities", "abilities", [""]) as Array
@@ -132,6 +141,10 @@ func load_():
 			notch_fillers.append("")
 		if notch_keys.size() < notches:
 			notch_keys.append(-1)
+	
+	for i in faces:
+		if masks_wearing.size() < faces:
+			masks_wearing.append("none")
 
 func save(game:bool = true):
 	loaded_scene = get_tree().current_scene.filename
@@ -144,6 +157,8 @@ func save(game:bool = true):
 	Savefile.set_value("player", "max_health", max_health)
 	Savefile.set_value("player", "shadow", shadow)
 	Savefile.set_value("player", "masks", masks)
+	Savefile.set_value("player", "masks_wearing", masks_wearing)
+	Savefile.set_value("player", "faces", faces)
 	
 	Savefile.set_value("abilities", "notches", notches)
 	Savefile.set_value("abilities", "abilities", abilities)
@@ -160,10 +175,11 @@ func save(game:bool = true):
 	Savefile.set_value("diary", "current_page", diary_page)
 	
 	
+	
 	Savefile.save(current_save)
 	
 func save_settings():
-	Settings.set_value("video", "brigthess", Env.adjustment_brightness)
+	Settings.set_value("video", "brightness", Env.adjustment_brightness)
 	Settings.set_value("video", "saturation", Env.adjustment_saturation)
 	Settings.set_value("video", "contrast", Env.adjustment_contrast)
 	Settings.save("user://settings.and")

@@ -593,7 +593,10 @@ func _on_body_attacked(body):
 		knockback.x = (position-body.position).normalized().x*200
 		speed.y = (position-body.position).normalized().y*250
 	if body.is_in_group("attackable"): 
-		body.call("attacked", 1, position, speed)
+		if not (Persistent.masks_wearing.has("survivor") and Persistent.health == 1):
+			body.call("attacked", 1, position, speed)
+		else:
+			body.call("attacked", 2, position, speed*1.5)
 
 func attacked(d, p, s):
 	# When the player is attacked

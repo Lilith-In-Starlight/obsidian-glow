@@ -91,7 +91,9 @@ func _process(delta):
 		HealthThere -= 1
 		
 	var aa = Attacked.get_material().get_shader_param("rest")
-	attacked_vignette = move_toward(attacked_vignette, 0.0, 0.01)
+	
+	Attacked.get_material().set_shader_param("angry", Persistent.health == 1 and Persistent.masks_wearing.has("survivor"))
+	
 	if not quitting:
 		if Persistent.health > 0:
 			if Persistent.health > 1:
@@ -210,10 +212,14 @@ func _process(delta):
 		MENUS.MASKS:
 			Abilities.visible = false
 			$Masks.visible = true
-			print(Persistent.masks_wearing)
+			var c_mask
+			if top_row:
+				c_mask = $Masks/Using.get_children()[selected_mask]
+			else:
+				c_mask = $Masks/Collected.get_children()[selected_mask]
+			
 			for i in $Masks/Using.get_child_count():
 				$Masks/Using.get_children()[i].mask_hud = Persistent.masks_wearing[i]
-				
 				if top_row and selected_mask == i:
 					$Masks/Using.get_children()[i].modulate = Color("#ff8c8c")
 				else:
@@ -224,7 +230,8 @@ func _process(delta):
 					$Masks/Collected.get_children()[i].modulate = Color("#ff8c8c")
 				else:
 					$Masks/Collected.get_children()[i].modulate = Color("#ffffff")
-
+			
+			$Masks/Text.text = Language.line("desc_mask_%s" % c_mask.mask_hud)
 func _input(event):
 	# Player can only interact with the HUD if they're not quitting the game
 	if event is InputEventKey and not event.is_echo() and event.is_pressed() and not quitting:
@@ -394,28 +401,28 @@ func _input(event):
 				match event.scancode:
 					Inputs.up_key:
 						if not top_row:
-							if selected_mask < 9:
+							if selected_mask < 6:
 								top_row = true
 								selected_mask = min($Masks/Using.get_child_count()-1, selected_mask)
 							else:
-								selected_mask -= 9
+								selected_mask -= 6
 						
 						selected_mask = min($Masks/Collected.get_child_count()-1, selected_mask)
 						
 					Inputs.down_key:
 						if not top_row:
-							selected_mask += 9
+							selected_mask += 6
 						else:
 							top_row = false
 						selected_mask = min($Masks/Collected.get_child_count()-1, selected_mask)
 						
 					Inputs.left_key:
-						var limit_min := int(selected_mask / 9.0) * 9
+						var limit_min := int(selected_mask / 6.0) * 6
 						selected_mask -= 1
 						if selected_mask < limit_min:
 							selected_mask = limit_min
-						elif selected_mask > limit_min + 9:
-							selected_mask = limit_min + 9
+						elif selected_mask > limit_min + 6:
+							selected_mask = limit_min + 6
 						
 						if top_row:
 							selected_mask = min($Masks/Using.get_child_count()-1, selected_mask)
@@ -425,12 +432,12 @@ func _input(event):
 						
 						
 					Inputs.right_key:
-						var limit_min := int(selected_mask / 9.0) * 9
+						var limit_min := int(selected_mask / 6.0) * 6
 						selected_mask += 1
 						if selected_mask < limit_min:
 							selected_mask = limit_min
-						elif selected_mask > limit_min + 9:
-							selected_mask = limit_min + 9
+						elif selected_mask > limit_min + 6:
+							selected_mask = limit_min + 6
 						
 						if selected_mask > $Masks/Using.get_child_count():
 							selected_mask = $Masks/Using.get_child_count()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://HUD/HUD.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/HUD/Abilities/notchselect.png" type="Texture" id=2]
@@ -37,6 +37,13 @@ font_data = ExtResource( 8 )
 [sub_resource type="StyleBoxFlat" id=6]
 bg_color = Color( 0, 0, 0, 0.654902 )
 
+[sub_resource type="StyleBoxFlat" id=17]
+bg_color = Color( 0, 0, 0, 0.596078 )
+
+[sub_resource type="DynamicFont" id=18]
+size = 10
+font_data = ExtResource( 8 )
+
 [sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 0, 0, 0, 0.498039 )
 
@@ -59,17 +66,23 @@ bg_color = Color( 0, 0, 0, 1 )
 code = "shader_type canvas_item;
 
 uniform float rest = 0.0;
+uniform bool angry = false;
 
 void fragment()
 {
 	COLOR = textureLod(SCREEN_TEXTURE, SCREEN_UV, 0.0);
 	float dstq = distance(UV, vec2(0.5));
-	COLOR.rgb -= vec3(dstq)*rest;
+	if (!angry) {
+		COLOR.rgb -= vec3(dstq)*rest;
+	} else {
+		COLOR.gb -= vec2(dstq)*rest;
+	}
 }"
 
 [sub_resource type="ShaderMaterial" id=13]
 shader = SubResource( 12 )
 shader_param/rest = 0.0
+shader_param/angry = false
 
 [sub_resource type="DynamicFont" id=14]
 size = 14
@@ -106,9 +119,6 @@ tracks/0/keys = {
 "values": [ Vector2( -100, 165 ), Vector2( 6, 165 ), Vector2( 6, 165 ), Vector2( -100, 165 ) ]
 }
 
-[sub_resource type="StyleBoxFlat" id=17]
-bg_color = Color( 0, 0, 0, 0.596078 )
-
 [node name="HUD" type="CanvasLayer"]
 pause_mode = 2
 layer = 4
@@ -116,6 +126,7 @@ layer = 4
 [node name="HUD" type="Control" parent="." groups=[
 "hud",
 ]]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
@@ -335,6 +346,93 @@ custom_fonts/font = SubResource( 3 )
 text = "No"
 align = 1
 valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Masks" type="Panel" parent="HUD"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_styles/panel = SubResource( 17 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Using" type="HBoxContainer" parent="HUD/Masks"]
+margin_left = 29.0
+margin_top = 45.0
+margin_right = 273.0
+margin_bottom = 79.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MaskHUD" parent="HUD/Masks/Using" instance=ExtResource( 11 )]
+margin_left = 0.0
+margin_top = 0.0
+margin_right = 34.0
+margin_bottom = 34.0
+
+[node name="MaskHUD2" parent="HUD/Masks/Using" instance=ExtResource( 11 )]
+margin_left = 38.0
+margin_top = 0.0
+margin_right = 72.0
+margin_bottom = 34.0
+
+[node name="Collected" type="GridContainer" parent="HUD/Masks"]
+margin_left = 27.0
+margin_top = 92.0
+margin_right = 251.0
+margin_bottom = 171.0
+columns = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MaskHUD" parent="HUD/Masks/Collected" instance=ExtResource( 11 )]
+margin_left = 0.0
+margin_top = 0.0
+margin_right = 34.0
+margin_bottom = 34.0
+mask_hud = "survivor"
+
+[node name="MaskHUD2" parent="HUD/Masks/Collected" instance=ExtResource( 11 )]
+margin_left = 38.0
+margin_top = 0.0
+margin_right = 72.0
+margin_bottom = 34.0
+
+[node name="MaskHUD3" parent="HUD/Masks/Collected" instance=ExtResource( 11 )]
+margin_left = 76.0
+margin_top = 0.0
+margin_right = 110.0
+margin_bottom = 34.0
+
+[node name="MaskHUD4" parent="HUD/Masks/Collected" instance=ExtResource( 11 )]
+margin_left = 114.0
+margin_top = 0.0
+margin_right = 148.0
+margin_bottom = 34.0
+
+[node name="MaskHUD5" parent="HUD/Masks/Collected" instance=ExtResource( 11 )]
+margin_left = 152.0
+margin_top = 0.0
+margin_right = 186.0
+margin_bottom = 34.0
+
+[node name="MaskHUD6" parent="HUD/Masks/Collected" instance=ExtResource( 11 )]
+margin_left = 190.0
+margin_top = 0.0
+margin_right = 224.0
+margin_bottom = 34.0
+
+[node name="Text" type="Label" parent="HUD/Masks"]
+margin_left = 257.0
+margin_top = 31.0
+margin_right = 364.0
+margin_bottom = 202.0
+custom_fonts/font = SubResource( 18 )
 autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -599,61 +697,3 @@ __meta__ = {
 
 [node name="Animation" type="AnimationPlayer" parent="HUD/MaskCollected"]
 anims/Update = SubResource( 16 )
-
-[node name="Masks" type="Panel" parent="HUD"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-custom_styles/panel = SubResource( 17 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Using" type="HBoxContainer" parent="HUD/Masks"]
-margin_left = 29.0
-margin_top = 45.0
-margin_right = 273.0
-margin_bottom = 79.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="MaskHUD" parent="HUD/Masks/Using" instance=ExtResource( 11 )]
-margin_left = 0.0
-margin_top = 0.0
-margin_right = 34.0
-margin_bottom = 34.0
-
-[node name="MaskHUD2" parent="HUD/Masks/Using" instance=ExtResource( 11 )]
-margin_left = 38.0
-margin_top = 0.0
-margin_right = 72.0
-margin_bottom = 34.0
-
-[node name="Collected" type="GridContainer" parent="HUD/Masks"]
-margin_left = 27.0
-margin_top = 92.0
-margin_right = 365.0
-margin_bottom = 171.0
-columns = 9
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="MaskHUD" parent="HUD/Masks/Collected" instance=ExtResource( 11 )]
-margin_left = 0.0
-margin_top = 0.0
-margin_right = 34.0
-margin_bottom = 34.0
-mask_hud = "survivor"
-
-[node name="MaskHUD2" parent="HUD/Masks/Collected" instance=ExtResource( 11 )]
-margin_left = 38.0
-margin_top = 0.0
-margin_right = 72.0
-margin_bottom = 34.0
-
-[node name="MaskHUD3" parent="HUD/Masks/Collected" instance=ExtResource( 11 )]
-margin_left = 76.0
-margin_top = 0.0
-margin_right = 110.0
-margin_bottom = 34.0

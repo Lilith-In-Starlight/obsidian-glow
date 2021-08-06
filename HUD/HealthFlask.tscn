@@ -1,23 +1,39 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Sprites/HUD/Health/Health.png" type="Texture" id=1]
 [ext_resource path="res://Sprites/HUD/Health/HealthBase.png" type="Texture" id=2]
 [ext_resource path="res://HUD/HealthFlask.gd" type="Script" id=3]
+[ext_resource path="res://Sprites/HUD/Health/HealthAngry.png" type="Texture" id=4]
 
 [sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;
 
 uniform sampler2D anim;
+uniform sampler2D anim_angry;
 uniform float frame = 2.0;
+uniform bool angry = false;
+
+void vertex(){
+	if (angry){
+		VERTEX.x += cos(TIME*50.0);
+		VERTEX.y += cos(TIME*62.0);
+	}
+}
 
 void fragment(){
-	COLOR = textureLod(anim, vec2((UV.x/20.0) + frame/20.0, UV.y), 0.0);
+	if (!angry){
+		COLOR = textureLod(anim, vec2((UV.x/20.0) + frame/20.0, UV.y), 0.0);
+	} else {
+		COLOR = textureLod(anim_angry, vec2((UV.x/20.0) + frame/20.0, UV.y), 0.0);
+	}
 }"
 
 [sub_resource type="ShaderMaterial" id=2]
 shader = SubResource( 1 )
 shader_param/frame = 0.0
+shader_param/angry = false
 shader_param/anim = ExtResource( 1 )
+shader_param/anim_angry = ExtResource( 4 )
 
 [node name="HealthFlask" type="TextureRect"]
 material = SubResource( 2 )

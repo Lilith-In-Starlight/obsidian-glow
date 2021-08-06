@@ -50,15 +50,19 @@ texture = ExtResource( 1 )
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="World"]
 modulate = Color( 1, 1, 1, 0.294118 )
 position = Vector2( -23, 0 )
-polygon = PoolVector2Array( -92, 277, -92, 0, 393, 0, 393, 42, -28, 42, -28, 88, 49, 88, 62, 94, 62, 197, 293, 197, 293, 186, 357, 186, 357, 199, 485, 199, 485, 163, 368, 163, 368, 149, 396, 149, 395, 76, 395, 43, 500, 43, 499, 267 )
+polygon = PoolVector2Array( -92, 277, -92, 0, 393, 0, 393, 42, -28, 42, -28, 88, 49, 88, 62, 94, 62, 197, 293, 197, 293, 186, 356, 186, 356, 198, 485, 199, 485, 163, 368, 163, 368, 149, 396, 149, 395, 76, 395, 43, 500, 43, 499, 267 )
 
 [node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="World"]
-polygon = PoolVector2Array( 77, 115, 304, 115, 304, 156, 77, 156 )
+polygon = PoolVector2Array( 269, 122, 318, 122, 318, 136, 269, 136 )
+
+[node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="World"]
+position = Vector2( -175, -30 )
+polygon = PoolVector2Array( 269, 122, 433, 122, 433, 136, 269, 136 )
 
 [node name="Enemies" type="Node2D" parent="."]
 
 [node name="SpikeGuardian" parent="Enemies" instance=ExtResource( 5 )]
-position = Vector2( 260, 99 )
+position = Vector2( 240, 182 )
 
 [node name="DecoBg" type="Node2D" parent="."]
 

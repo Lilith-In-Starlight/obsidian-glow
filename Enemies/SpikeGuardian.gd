@@ -30,6 +30,7 @@ func _ready():
 
 func _physics_process(delta):
 	Cast.cast_to = Player.position - position
+	$CheesePreventer.cast_to.x = -30 * Animations.scale.x
 	if health <= 0:
 		current_state = STATES.DEAD
 	time_since_last_damage += delta
@@ -37,10 +38,14 @@ func _physics_process(delta):
 		STATES.IDLE:
 			$Hurtbox/CollisionShape2D2.disabled = true
 			$SpikeAttack.modulate.a -= 0.1
-			speed.x *= 0.75
 			Animations.play("default")
-			if Cast.is_colliding() and Cast.get_collider() == Player and Player.position.distance_to(position) < 100:
-				current_state = STATES.SLASHING
+			if not $CheesePreventer.is_colliding():
+				if Cast.is_colliding() and Cast.get_collider() == Player and Player.position.distance_to(position) < 100:
+					current_state = STATES.SLASHING
+				
+				speed.x *= 0.75
+			else:
+				speed.x = move_toward(speed.x, 200 * Animations.scale.x, 50)
 			
 			if Player.position.x > position.x:
 				Animations.scale.x = -1
@@ -84,7 +89,14 @@ func _physics_process(delta):
 			
 				
 		STATES.BREATHING:
-			pass
+			Animations.play("breath")
+			$Hurtbox/CollisionShape2D.disabled = true
+			
+			if not $CheesePreventer.is_colliding():
+				speed.x *= 0.75
+			else:
+				speed.x = move_toward(speed.x, 200 * Animations.scale.x, 50)
+			
 		STATES.DEAD:
 			$Hurtbox/CollisionShape2D2.disabled = true
 			$SpikeAttack.modulate.a -= 0.1
@@ -100,7 +112,7 @@ func _physics_process(delta):
 	match Animations.animation:
 		"default":
 			Animations.position = Vector2(0, 0)
-		"slashing":
+		"slashing", "breath":
 			Animations.position = Vector2(-7 * Animations.scale.x, 0)
 		"dead":
 			Animations.position = Vector2(-2 * Animations.scale.x, 0)
@@ -116,6 +128,12 @@ func _on_animation_finished():
 	match Animations.animation:
 		"slashing":
 			if current_state != STATES.DEAD:
+				if randi()%5 != 1:
+					current_state = STATES.IDLE
+				else:
+					current_state = STATES.BREATHING
+		"breath":
+			if current_state != STATES.DEAD:
 				current_state = STATES.IDLE
 
 
@@ -123,14 +141,17 @@ func _on_frame_changed():
 	match Animations.animation:
 		"slashing":
 			match Animations.frame:
-				2, 3:
+				3, 4:
 					$Hurtbox/CollisionShape2D.disabled = false
 					$Hurtbox/CollisionShape2D.position.x = -8 * Animations.scale.x
 					speed.x = -400 * Animations.scale.x
 					speed.y = 0
-				4:
+				5:
 					$Hurtbox/CollisionShape2D.disabled = false
 					speed.x = 0
+				_:
+					$Hurtbox/CollisionShape2D.disabled = false
+					speed.x *= 0.75
 
 
 func attacked(d, pos, s):

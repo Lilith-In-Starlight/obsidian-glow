@@ -40,7 +40,7 @@ motion_scale = Vector2( 0.02, 1 )
 
 [node name="wall" type="Sprite" parent="World/ParallaxBackground/ParallaxLayer2"]
 modulate = Color( 0.878431, 1, 0.929412, 1 )
-position = Vector2( 49, 143 )
+position = Vector2( 45, 143 )
 texture = ExtResource( 8 )
 
 [node name="SubwayEntrance" type="Sprite" parent="World"]

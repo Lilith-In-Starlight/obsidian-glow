@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Sprites/Bg/Outskirts/sky.png" type="Texture" id=1]
 [ext_resource path="res://Sprites/Bg/Outskirts/townbgl.png" type="Texture" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://Sprites/Bg/SpikeGarden/hub_spikes_top_2.png" type="Texture" id=9]
 [ext_resource path="res://Sprites/Bg/SpikeGarden/hub_spikes_top_1.png" type="Texture" id=10]
 [ext_resource path="res://Sprites/Bg/SpikeGarden/hub_spikes_bottom.png" type="Texture" id=11]
+[ext_resource path="res://Elements/Bench.tscn" type="PackedScene" id=12]
 
 [sub_resource type="Environment" id=1]
 background_mode = 4
@@ -43,7 +44,7 @@ motion_scale = Vector2( 0.02, 1 )
 
 [node name="wall" type="Sprite" parent="World/ParallaxBackground/ParallaxLayer2"]
 modulate = Color( 0.666667, 0.933333, 0.858824, 1 )
-position = Vector2( 43, 143 )
+position = Vector2( 35, 151 )
 texture = ExtResource( 3 )
 
 [node name="SubwayEntrance" type="Sprite" parent="World"]
@@ -65,6 +66,10 @@ position = Vector2( 201, 114 )
 texture = ExtResource( 11 )
 script = ExtResource( 7 )
 depth = 1.0
+
+[node name="Bench" parent="DecoBg" instance=ExtResource( 12 )]
+position = Vector2( 172, 155 )
+z_index = 1
 
 [node name="Neptune" parent="." instance=ExtResource( 5 )]
 position = Vector2( 448, 131 )

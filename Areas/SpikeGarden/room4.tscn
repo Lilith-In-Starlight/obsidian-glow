@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Sprites/Bg/Outskirts/sky.png" type="Texture" id=1]
 [ext_resource path="res://Sprites/Bg/Outskirts/townbgl.png" type="Texture" id=2]
 [ext_resource path="res://Sprites/Bg/Outskirts/wall.png" type="Texture" id=3]
+[ext_resource path="res://Elements/Spikes.gd" type="Script" id=4]
 [ext_resource path="res://Neptune.tscn" type="PackedScene" id=5]
 [ext_resource path="res://SceneChanger.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Sprites/Levels/SpikeGarden/room4.png" type="Texture" id=7]
@@ -39,7 +40,7 @@ motion_scale = Vector2( 0.02, 1 )
 
 [node name="wall" type="Sprite" parent="World/ParallaxBackground/ParallaxLayer2"]
 modulate = Color( 0.666667, 0.933333, 0.858824, 1 )
-position = Vector2( 43, 143 )
+position = Vector2( 13, 143 )
 texture = ExtResource( 3 )
 
 [node name="SubwayEntrance" type="Sprite" parent="World"]
@@ -90,3 +91,12 @@ newScene = "SpikeGarden/room5"
 enter_dir = 3
 
 [node name="HUD" parent="." instance=ExtResource( 8 )]
+
+[node name="Spikes" type="Area2D" parent="."]
+script = ExtResource( 4 )
+
+[node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="Spikes"]
+position = Vector2( -146, 92 )
+polygon = PoolVector2Array( 439, 122, 761, 123, 761, 137, 439, 139 )
+
+[connection signal="body_entered" from="Spikes" to="Spikes" method="_on_body_entered"]

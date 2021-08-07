@@ -91,4 +91,9 @@ environment = SubResource( 1 )
 position = Vector2( -41, 71 )
 newScene = "Outskirts/SpikesEntranceRightV2"
 
+[node name="SceneChanger3" parent="." instance=ExtResource( 4 )]
+position = Vector2( 439, 183 )
+newScene = "SpikeGarden/room4"
+enter_dir = 1
+
 [node name="HUD" parent="." instance=ExtResource( 7 )]

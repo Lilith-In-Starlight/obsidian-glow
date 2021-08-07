@@ -233,7 +233,10 @@ func _process(delta):
 				else:
 					$Masks/Collected.get_children()[i].modulate = Color("#ffffff")
 			
-			$Masks/Text.text = Language.line("desc_mask_%s" % c_mask.mask_hud)
+			if Persistent.masks.has(c_mask.mask_hud):
+				$Masks/Text.text = Language.line("desc_mask_%s" % c_mask.mask_hud)
+			else:
+				$Masks/Text.text = ""
 func _input(event):
 	# Player can only interact with the HUD if they're not quitting the game
 	if event is InputEventKey and not event.is_echo() and event.is_pressed() and not quitting:
@@ -450,18 +453,19 @@ func _input(event):
 							selected_mask = min($Masks/Collected.get_child_count()-1, selected_mask)
 						
 					Inputs.attack_key, Inputs.jump_key:
-						if top_row:
-							Persistent.masks_wearing[selected_mask] = "none"
-						else:
-							var c_mask = $Masks/Collected.get_children()[selected_mask]
-							print(c_mask.mask_hud)
-							var find = Persistent.masks_wearing.find(c_mask.mask_hud)
-							if find != -1:
-								Persistent.masks_wearing[find] = "none"
+						if Persistent.near_bench:
+							if top_row:
+								Persistent.masks_wearing[selected_mask] = "none"
 							else:
-								find = Persistent.masks_wearing.find("none")
+								var c_mask = $Masks/Collected.get_children()[selected_mask]
+								print(c_mask.mask_hud)
+								var find = Persistent.masks_wearing.find(c_mask.mask_hud)
 								if find != -1:
-									Persistent.masks_wearing[find] = c_mask.mask_hud
+									Persistent.masks_wearing[find] = "none"
+								else:
+									find = Persistent.masks_wearing.find("none")
+									if find != -1:
+										Persistent.masks_wearing[find] = c_mask.mask_hud
 					
 					Inputs.cancel_key, KEY_ESCAPE:
 						c_menu = MENUS.ABILITIES

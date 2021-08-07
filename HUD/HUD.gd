@@ -75,6 +75,8 @@ func _ready():
 		new_notch.rect_position = CenterNotch.rect_position + Vector2(cos(i*TAU/Persistent.notches), sin(i*TAU/Persistent.notches)) * 60
 		Abilities.add_child(new_notch)
 		new_notch.name = "Notch" + str(i)
+	if Persistent.health == 1:
+		attacked_vignette = 0.35
 
 func _process(delta):
 	$Darkness.value = move_toward($Darkness.value, Persistent.shadow, 1)
@@ -101,7 +103,7 @@ func _process(delta):
 			else:
 				attacked_vignette = move_toward(attacked_vignette, 0.35, 0.01)
 			match Persistent.player_cutscene:
-				"leave_l", "leave_r", "door":
+				"leave_l", "leave_r", "door", "leave_v":
 					CutsceneFade.modulate.a = move_toward(CutsceneFade.modulate.a, 1.0, 0.05)
 				"train":
 					CutsceneFade.modulate.a = move_toward(CutsceneFade.modulate.a, 1.0, 0.005)

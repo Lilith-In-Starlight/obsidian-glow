@@ -3,6 +3,8 @@ extends Area2D
 enum DIRS {
 	LEFT,
 	RIGHT,
+	UP,
+	DOWN
 }
 
 export var newScene:String # Where this changer will take the player
@@ -14,7 +16,9 @@ var scene # Stores the PackedScene that is loaded in _ready()
 var can_enter := true # The player can't enter this if hey come from it
 
 
+
 func _ready():
+	
 	# Load the scene that the player will go to if they enter
 	scene = load("res://Areas/" + newScene + ".tscn")
 	
@@ -31,6 +35,13 @@ func _ready():
 				Persistent.player_cutscene = "enter_r"
 			DIRS.RIGHT:
 				Persistent.player_cutscene = "enter_l"
+			DIRS.DOWN:
+				Player.position.y -= 50
+				Player.position.x -= 50
+				can_enter = true
+				Persistent.player_cutscene = "no"
+				Player.last_safe_pos = Player.position
+				Persistent.ident = identifier
 
 
 func _on_body_entered(body):
@@ -48,6 +59,11 @@ func _on_body_entered(body):
 				Persistent.player_cutscene = "leave_l"
 			DIRS.RIGHT:
 				Persistent.player_cutscene = "leave_r"
+			DIRS.UP:
+				Persistent.player_cutscene = "leave_v"
+				Player.speed.y = -200
+			DIRS.DOWN:
+				Persistent.player_cutscene = "leave_v"
 
 
 func _on_body_exited(body):

@@ -16,7 +16,7 @@ const MAX_AIRSPEED := 160.0 # Max speed in air by normal means
 const MAX_WALK_RUN := 130.0 # Max runnable speed by normal means
 const MAX_AIRSPEED_RUN := 150.0 # Max runnable speed in air by normal means
 const WALK_ACCEL := 20.0 # Accelleration
-const JUMP_FORCE := -250.0
+const JUMP_FORCE := -270.0
 
 onready var Animations := $Animations # The player sprite
 onready var DashParticle := $DashParticle # particles for when the player dashes

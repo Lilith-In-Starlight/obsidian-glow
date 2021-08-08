@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Sprites/Grass/FieldGrass.png" type="Texture" id=1]
+[ext_resource path="res://Deco/Grass/Grass.gd" type="Script" id=2]
+[ext_resource path="res://Deco/Grass/Area.gd" type="Script" id=3]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 14.0
+
+[node name="FieldGrass" type="Sprite"]
+texture = ExtResource( 1 )
+offset = Vector2( 0, -10 )
+script = ExtResource( 2 )
+
+[node name="Area2D" type="StaticBody2D" parent="." groups=[
+"attackable",
+"grass",
+]]
+collision_layer = 8
+collision_mask = 32
+script = ExtResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2( 0, -10 )
+shape = SubResource( 1 )

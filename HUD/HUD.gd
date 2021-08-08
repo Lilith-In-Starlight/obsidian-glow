@@ -458,13 +458,12 @@ func _input(event):
 								Persistent.masks_wearing[selected_mask] = "none"
 							else:
 								var c_mask = $Masks/Collected.get_children()[selected_mask]
-								print(c_mask.mask_hud)
 								var find = Persistent.masks_wearing.find(c_mask.mask_hud)
 								if find != -1:
 									Persistent.masks_wearing[find] = "none"
 								else:
 									find = Persistent.masks_wearing.find("none")
-									if find != -1:
+									if find != -1 and Persistent.masks.has(c_mask.mask_hud):
 										Persistent.masks_wearing[find] = c_mask.mask_hud
 					
 					Inputs.cancel_key, KEY_ESCAPE:

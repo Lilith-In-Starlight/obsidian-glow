@@ -4,6 +4,9 @@ extends Node
 var mask_textures := {
 	"none": preload("res://Sprites/HUD/Masks/Place.png"),
 	"survivor": preload("res://Sprites/HUD/Masks/Survivor.png"),
+	"beauty": preload("res://Sprites/HUD/Masks/Beauty.png"),
+	"maskmaker": preload("res://Sprites/HUD/Masks/Maskmaker.png"),
+	"brittle": preload("res://Sprites/HUD/Masks/Brittle.png"),
 }
 
 
@@ -114,13 +117,13 @@ func load_():
 	persands = Savefile.get_value("player", "persands", 0) as int
 	max_health = Savefile.get_value("player", "max_health", 6) as int
 	shadow = Savefile.get_value("player", "shadow", 0.0) as float
-	masks = Savefile.get_value("player", "masks", []) as Array
+	masks = Savefile.get_value("player", "masks", []) as PoolStringArray
 	faces = Savefile.get_value("player", "faces", 2) as int
 	masks_wearing = Savefile.get_value("player", "masks_wearing", ["none", "none"]) as Array
 	
 	notches = Savefile.get_value("abilities", "notches", 2) as int
-	abilities = Savefile.get_value("abilities", "abilities", [""]) as Array
-	notch_fillers = Savefile.get_value("abilities", "fillers", []) as Array
+	abilities = Savefile.get_value("abilities", "abilities", [""]) as PoolStringArray
+	notch_fillers = Savefile.get_value("abilities", "fillers", []) as PoolStringArray
 	notch_keys = Savefile.get_value("abilities", "keys", []) as Array
 	
 	abandoned_ticket = Savefile.get_value("subway", "abandoned", false) as bool

@@ -13,6 +13,9 @@ var lines := {
 		"diary_spike_guardian_magic": "Spike Guardians 2:\n\n Yep. They are magicians. I have to be careful with how often I attack, or they'll use their magic against me, so that's good to know.",
 		
 		"desc_mask_survivor" : "Mask Of The Survivor\n\nOnce belonging to a hunter who left his identity behind, this activated mask will give strength to those who are in extreme danger.",
+		"desc_mask_beauty" : "Mask Of Striking B eauty\n\nOnce belonging to an artist who tried to capture attraction, some of those who hurt the wearer of this mask will feel immediate regret.",
+		"desc_mask_maskmaker" : "Mask Of The Maskmaker\n\nA thousand lifetimes compressed into one. Any who wears this masks on their body will be able to wear deactivated masks.",
+		"desc_mask_brittle" : "Mask Of The Brittle Hollow\n\nOnce belonging to a young woman whose identity was her lack thereof, this mask will absorb the life any who get too close to its wearer.",
 		"desc_mask_none" : "",
 	},
 }

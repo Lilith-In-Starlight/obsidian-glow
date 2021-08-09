@@ -221,6 +221,8 @@ func _process(delta):
 			else:
 				c_mask = $Masks/Collected.get_children()[selected_mask]
 			
+			$Masks/Selector.rect_position = c_mask.rect_global_position
+			
 			for i in $Masks/Using.get_child_count():
 				$Masks/Using.get_children()[i].mask_hud = Persistent.masks_wearing[i]
 				if top_row and selected_mask == i:
@@ -450,8 +452,6 @@ func _input(event):
 						elif selected_mask > limit_min + 6:
 							selected_mask = limit_min + 6
 						
-						if selected_mask > $Masks/Using.get_child_count():
-							selected_mask = $Masks/Using.get_child_count()
 						
 						if top_row:
 							selected_mask = min($Masks/Using.get_child_count()-1, selected_mask)

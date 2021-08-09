@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=2]
+[gd_scene load_steps=31 format=2]
 
 [ext_resource path="res://HUD/HUD.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/HUD/Abilities/notchselect.png" type="Texture" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://Sprites/HUD/Abilities/dashnotch.png" type="Texture" id=9]
 [ext_resource path="res://Sprites/HUD/Items/DiaryCollect.png" type="Texture" id=10]
 [ext_resource path="res://HUD/MaskHUD.tscn" type="PackedScene" id=11]
+[ext_resource path="res://Sprites/HUD/Masks/Selector.png" type="Texture" id=12]
 
 [sub_resource type="DynamicFont" id=1]
 size = 12
@@ -37,32 +38,32 @@ font_data = ExtResource( 8 )
 [sub_resource type="StyleBoxFlat" id=6]
 bg_color = Color( 0, 0, 0, 0.654902 )
 
-[sub_resource type="StyleBoxFlat" id=17]
+[sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 0, 0, 0, 0.596078 )
 
-[sub_resource type="DynamicFont" id=18]
+[sub_resource type="DynamicFont" id=8]
 size = 10
 font_data = ExtResource( 8 )
 
-[sub_resource type="StyleBoxFlat" id=7]
+[sub_resource type="StyleBoxFlat" id=9]
 bg_color = Color( 0, 0, 0, 0.498039 )
 
-[sub_resource type="DynamicFont" id=8]
+[sub_resource type="DynamicFont" id=10]
 size = 9
 font_data = ExtResource( 8 )
 
-[sub_resource type="DynamicFont" id=9]
+[sub_resource type="DynamicFont" id=11]
 size = 23
 font_data = ExtResource( 8 )
 
-[sub_resource type="DynamicFont" id=10]
+[sub_resource type="DynamicFont" id=12]
 size = 12
 font_data = ExtResource( 8 )
 
-[sub_resource type="StyleBoxFlat" id=11]
+[sub_resource type="StyleBoxFlat" id=13]
 bg_color = Color( 0, 0, 0, 1 )
 
-[sub_resource type="Shader" id=12]
+[sub_resource type="Shader" id=14]
 code = "shader_type canvas_item;
 
 uniform float rest = 0.0;
@@ -79,16 +80,16 @@ void fragment()
 	}
 }"
 
-[sub_resource type="ShaderMaterial" id=13]
-shader = SubResource( 12 )
+[sub_resource type="ShaderMaterial" id=15]
+shader = SubResource( 14 )
 shader_param/rest = 0.0
 shader_param/angry = false
 
-[sub_resource type="DynamicFont" id=14]
+[sub_resource type="DynamicFont" id=16]
 size = 14
 font_data = ExtResource( 8 )
 
-[sub_resource type="Animation" id=15]
+[sub_resource type="Animation" id=17]
 length = 2.5
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:rect_position")
@@ -103,8 +104,7 @@ tracks/0/keys = {
 "values": [ Vector2( -100, 195 ), Vector2( 6, 195 ), Vector2( 6, 195 ), Vector2( -100, 195 ) ]
 }
 
-[sub_resource type="Animation" id=16]
-resource_name = "Update"
+[sub_resource type="Animation" id=18]
 length = 2.5
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:rect_position")
@@ -354,7 +354,7 @@ __meta__ = {
 [node name="Masks" type="Panel" parent="HUD"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_styles/panel = SubResource( 17 )
+custom_styles/panel = SubResource( 7 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -402,18 +402,21 @@ margin_left = 38.0
 margin_top = 0.0
 margin_right = 72.0
 margin_bottom = 34.0
+mask_hud = "beauty"
 
 [node name="MaskHUD3" parent="HUD/Masks/Collected" instance=ExtResource( 11 )]
 margin_left = 76.0
 margin_top = 0.0
 margin_right = 110.0
 margin_bottom = 34.0
+mask_hud = "maskmaker"
 
 [node name="MaskHUD4" parent="HUD/Masks/Collected" instance=ExtResource( 11 )]
 margin_left = 114.0
 margin_top = 0.0
 margin_right = 148.0
 margin_bottom = 34.0
+mask_hud = "brittle"
 
 [node name="MaskHUD5" parent="HUD/Masks/Collected" instance=ExtResource( 11 )]
 margin_left = 152.0
@@ -432,18 +435,23 @@ margin_left = 257.0
 margin_top = 31.0
 margin_right = 364.0
 margin_bottom = 202.0
-custom_fonts/font = SubResource( 18 )
+custom_fonts/font = SubResource( 8 )
 autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Selector" type="TextureRect" parent="HUD/Masks"]
+margin_right = 40.0
+margin_bottom = 40.0
+texture = ExtResource( 12 )
 
 [node name="Abilities" type="Panel" parent="HUD"]
 anchor_left = 0.1
 anchor_top = 0.1
 anchor_right = 0.9
 anchor_bottom = 0.9
-custom_styles/panel = SubResource( 7 )
+custom_styles/panel = SubResource( 9 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -488,7 +496,7 @@ margin_top = 34.0
 margin_right = 17.0
 margin_bottom = 86.0
 grow_horizontal = 2
-custom_fonts/font = SubResource( 8 )
+custom_fonts/font = SubResource( 10 )
 text = "[Z] CHANGE ABILITY
 [X] CHANGE CONTROL
 [ESC][C] CLOSE"
@@ -503,7 +511,7 @@ anchor_left = 0.1
 anchor_top = 0.1
 anchor_right = 0.9
 anchor_bottom = 0.9
-custom_styles/panel = SubResource( 7 )
+custom_styles/panel = SubResource( 9 )
 __meta__ = {
 "_edit_group_": true,
 "_edit_lock_": true,
@@ -536,7 +544,7 @@ margin_top = -73.0
 margin_right = 86.5
 margin_bottom = -49.0
 grow_horizontal = 2
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 11 )
 text = "OBTAINED THE DASH"
 align = 1
 __meta__ = {
@@ -553,7 +561,7 @@ margin_top = 25.0
 margin_right = 120.0
 margin_bottom = 52.0
 grow_horizontal = 2
-custom_fonts/font = SubResource( 10 )
+custom_fonts/font = SubResource( 12 )
 text = "ACCELERATE FORWARD FOR A SHORT TIME  AND IGNORE  GRAVITY
 
 PRESS i NEAR A BENCH TO SET YOUR ABILITIES"
@@ -566,7 +574,7 @@ anchor_left = 0.1
 anchor_top = 0.1
 anchor_right = 0.9
 anchor_bottom = 0.9
-custom_styles/panel = SubResource( 7 )
+custom_styles/panel = SubResource( 9 )
 __meta__ = {
 "_edit_group_": true,
 "_edit_lock_": true,
@@ -599,7 +607,7 @@ margin_top = -73.0
 margin_right = 86.5
 margin_bottom = -49.0
 grow_horizontal = 2
-custom_fonts/font = SubResource( 9 )
+custom_fonts/font = SubResource( 11 )
 text = "OBTAINED THE DIARY"
 align = 1
 __meta__ = {
@@ -616,7 +624,7 @@ margin_top = 25.0
 margin_right = 120.0
 margin_bottom = 52.0
 grow_horizontal = 2
-custom_fonts/font = SubResource( 10 )
+custom_fonts/font = SubResource( 12 )
 text = "COLLECT YOUR THOUGHTS AND INFORMATION ABOUT CREATURES, PLACES AND PEOPLE
 
 PRESS TAB TO READ IT"
@@ -629,13 +637,13 @@ __meta__ = {
 [node name="Cutscene" type="Panel" parent="HUD"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_styles/panel = SubResource( 11 )
+custom_styles/panel = SubResource( 13 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Attacked" type="TextureRect" parent="HUD"]
-material = SubResource( 13 )
+material = SubResource( 15 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 texture = ExtResource( 4 )
@@ -663,14 +671,14 @@ margin_left = 35.7143
 margin_top = 8.57144
 margin_right = 122.714
 margin_bottom = 23.5714
-custom_fonts/font = SubResource( 14 )
+custom_fonts/font = SubResource( 16 )
 text = "Diary Updated"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Animation" type="AnimationPlayer" parent="HUD/DiaryUpdated"]
-anims/Update = SubResource( 15 )
+anims/Update = SubResource( 17 )
 
 [node name="MaskCollected" type="TextureRect" parent="HUD"]
 margin_left = -100.0
@@ -689,11 +697,11 @@ margin_left = 35.7143
 margin_top = 8.57144
 margin_right = 122.714
 margin_bottom = 23.5714
-custom_fonts/font = SubResource( 14 )
+custom_fonts/font = SubResource( 16 )
 text = "Mask Collected"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Animation" type="AnimationPlayer" parent="HUD/MaskCollected"]
-anims/Update = SubResource( 16 )
+anims/Update = SubResource( 18 )

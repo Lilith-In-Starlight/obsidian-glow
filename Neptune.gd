@@ -8,6 +8,7 @@ enum STATES {
 	GROUND,
 	AIR,
 	DASH,
+	SLASH,
 }
 
 const MAX_SPEED := 800.0 # Max speed in every direction
@@ -35,6 +36,7 @@ var move_down := false
 var jump_press := false
 var dash_press := false
 var attack_press := false
+var slash_press := false
 
 # State machine
 var current_state = STATES.GROUND
@@ -83,6 +85,10 @@ var using_shadow := 0.0 # The amount of shadow that has been used for healing
 var unpressed_jump_on_air = false # Controls the length of jumps
 
 var smoothing_reset := false # To make sure the camera isn't weird
+
+var will_slash := false # Whether the player will slash or not
+var slash_goal := Vector2(0, 0)
+var slash_timer := 0.0
 
 func _ready():
 	HUD = get_tree().get_nodes_in_group("hud")[0]
@@ -175,12 +181,16 @@ func _process(delta):
 			move_left = Input.is_key_pressed(Inputs.left_key)
 			move_right = Input.is_key_pressed(Inputs.right_key)
 			jump_press = Input.is_key_pressed(Inputs.jump_key)
+			attack_press = Input.is_key_pressed(Inputs.attack_key)
+			
 			# Abilities
 			for i in Persistent.notch_fillers.size():
 				match Persistent.notch_fillers[i]:
 					"dash":
 						dash_press = Input.is_key_pressed(Persistent.notch_keys[i])
-			attack_press = Input.is_key_pressed(Inputs.attack_key)
+					"slash":
+						slash_press = Input.is_key_pressed(Persistent.notch_keys[i])
+			
 		"door": # When the player enters a door
 			move_up = false
 			move_down = false
@@ -233,6 +243,21 @@ func _process(delta):
 
 
 func _physics_process(delta):
+	
+	# Controls the raycast for the slash attack
+	var attackables := get_tree().get_nodes_in_group("attackable")
+	if Persistent.notch_fillers.has("slash") and not attackables.empty():
+		$SlashCast.enabled = true
+		var closest
+		for i in attackables:
+			if (closest == null or i.position.distance_to(position) < closest.position.distance_to(position)) and i.position.distance_to(position) < 250:
+				closest = i
+				slash_goal = i.position
+		if closest != null:
+			$SlashCast.cast_to = closest.position - position
+	else:
+		$SlashCast.enabled = false
+	
 	# Controls the particles that appear during the healing animation
 	$HealParticles.emitting = using_shadow >= 0.08 and Persistent.shadow + using_shadow >= 4.0
 	# They only appear if the player is healing, and if the amount of shadow they have in total is enough to heal
@@ -250,8 +275,10 @@ func _physics_process(delta):
 			DashParticle.animation = "default"
 		
 		# The hitbox only matters if the player is attacking
-		Hitbox.monitoring = swording
-		Hitbox.monitorable = swording
+		Hitbox.monitoring = swording or current_state == STATES.SLASH
+		Hitbox.monitorable = swording or current_state == STATES.SLASH
+		$Hitbox2.monitoring = current_state == STATES.SLASH
+		$Hitbox2.monitorable = current_state == STATES.SLASH
 		
 		# Controls the attack sprite direction
 		match sword_dir:
@@ -376,6 +403,21 @@ func _physics_process(delta):
 					can_attack = false
 					AttackTimer.start()
 					$AnimatedSprite.frame = 0
+				
+				if slash_press:
+					slash_timer += delta
+					Engine.time_scale = 0.5
+					if slash_timer >= 0.5:
+						will_slash = true
+				elif will_slash and $SlashCast.is_colliding():
+					if $SlashCast.get_collider().is_in_group("attackable"):
+						current_state = STATES.SLASH
+					will_slash = false
+					slash_timer = 0.0
+				else:
+					will_slash = false
+					slash_timer = 0.0
+				
 			
 			STATES.AIR:
 				# The player can't be using their shadow if they're in the
@@ -443,7 +485,22 @@ func _physics_process(delta):
 					unpressed_jump_on_air = true
 					speed.y *= 0.6413
 					# To make the jump feel natural, instead of increasing
-					# the gravity, the player speed is reduced 
+					# the gravity, the player speed is reduced
+				
+				
+				if slash_press:
+					slash_timer += delta
+					if slash_timer >= 0.5:
+						Engine.time_scale = 0.5
+						will_slash = true
+				elif will_slash and $SlashCast.is_colliding():
+					if $SlashCast.get_collider().is_in_group("attackable"):
+						current_state = STATES.SLASH
+					will_slash = false
+					slash_timer = 0.0
+				else:
+					will_slash = false
+					slash_timer = 0.0
 			
 			STATES.DASH:
 				# If the player is dashing, they are not jumping, so
@@ -483,7 +540,22 @@ func _physics_process(delta):
 						speed.y = move_toward(speed.y, 0, 200 * delta*60)
 						play("dash_r")
 						attack_play(0)
-					
+			STATES.SLASH:
+				if speed.x > 0:
+					direction = "_r"
+				elif speed.x < 0:
+					direction = "_l"
+				
+				
+				play("spin" + direction)
+				
+				speed = (slash_goal - position).normalized() * 800
+				slash_timer += delta
+				if position.distance_to(slash_goal) < 20 or slash_timer >= 0.3:
+					current_state = STATES.AIR
+					speed *= 0.5
+					slash_timer = 0.0
+		
 		# Limit the speed
 		if speed.length() > MAX_SPEED:
 			speed = speed.normalized()*MAX_SPEED
@@ -593,14 +665,14 @@ func _on_body_attacked(body):
 		knockback.x = (position-body.position).normalized().x*200
 		speed.y = (position-body.position).normalized().y*250
 	if body.is_in_group("attackable"): 
-		if not (Persistent.masks_wearing.has("survivor") and Persistent.health == 1):
+		if not (Persistent.masks_wearing.has("survivor") and Persistent.health == 1) and current_state != STATES.SLASH:
 			body.call("attacked", 1, position, speed)
 		else:
 			body.call("attacked", 2, position, speed*1.5)
 
 func attacked(d, p, s):
 	# When the player is attacked
-	if not invulnerable:
+	if not invulnerable and not current_state == STATES.SLASH:
 		knockback = (position-p).normalized()*200 + s*0.5
 		Persistent.health -= d
 		emit_signal("health_change", -d)
@@ -647,6 +719,7 @@ func move_again():
 
 func _on_area_entered(area):
 	if area.is_in_group("sword_hurtbox"):
+		print("a")
 		knockback = (position-area.position).normalized()*200
 		shake = 0.4
 		Engine.time_scale = 0.04

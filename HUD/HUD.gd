@@ -25,7 +25,8 @@ const SELECTED_NOTCH_KEY_TXT := preload("res://Sprites/HUD/Abilities/notchselect
 
 var NotchDict := {
 	"" : preload("res://Sprites/HUD/Abilities/emptynotch.png"),
-	"dash" : preload("res://Sprites/HUD/Abilities/dashnotch.png")
+	"dash" : preload("res://Sprites/HUD/Abilities/dashnotch.png"),
+	"slash" : preload("res://Sprites/HUD/Abilities/slashnotch.png"),
 }
 
 onready var DialogueNode := $Dialogue
@@ -286,6 +287,11 @@ func _input(event):
 								if not center_notch:
 									if Persistent.player_cutscene == "no" and Persistent.near_bench:
 										notch_mode = NOTCH_MODES.ABILITY
+										selected_ability = Persistent.abilities.find(Persistent.notch_fillers[selected_notch])
+										# This makes sure that when the player is going to select an ability
+										# the first one in their list is the one in the current notch, if any
+										if selected_ability < 0:
+											selected_ability = 0
 								else:
 									c_menu = MENUS.MASKS
 							

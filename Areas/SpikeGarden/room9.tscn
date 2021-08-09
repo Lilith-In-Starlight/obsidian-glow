@@ -51,7 +51,7 @@ texture = ExtResource( 4 )
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="World"]
 modulate = Color( 1, 1, 1, 0.294118 )
 position = Vector2( -24, 0 )
-polygon = PoolVector2Array( -90, 281, -92, 0, 340, 0, 342, 35, 73, 35, 73, 62, 71, 78, 66, 87, -52, 88, -52, 138, 88, 138, 88, 160, 624, 160, 624, 39, 345, 35, 344, -1, 748, 0, 705, 290 )
+polygon = PoolVector2Array( -90, 266, -92, 0, 340, 0, 342, 35, 73, 35, 73, 62, 71, 78, 66, 87, -52, 88, -52, 138, 88, 138, 88, 160, 696, 160, 696, 120, 589, 120, 589, 38, 345, 35, 344, -1, 744, -2, 746, 268 )
 
 [node name="Enemies" type="Node2D" parent="."]
 
@@ -128,7 +128,12 @@ __meta__ = {
 environment = SubResource( 1 )
 
 [node name="SceneChanger2" parent="." instance=ExtResource( 6 )]
-position = Vector2( -40, 118 )
+position = Vector2( -40, 117 )
 newScene = "SpikeGarden/room8"
+
+[node name="SceneChanger3" parent="." instance=ExtResource( 6 )]
+position = Vector2( 640, 141 )
+newScene = "SpikeGarden/room10"
+enter_dir = 1
 
 [node name="HUD" parent="." instance=ExtResource( 8 )]

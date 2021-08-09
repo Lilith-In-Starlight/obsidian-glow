@@ -72,7 +72,7 @@ func _physics_process(delta):
 				play("release")
 				speed = lerp(speed, randv, 0.02)
 				time_attack += delta
-				if time_attack > 1.5:
+				if time_attack > 2.0:
 					time_attack = 0.0
 					state = STATES.IDLE
 		if Persistent.player_cutscene != "no":
@@ -94,6 +94,7 @@ func attacked(d, pos, s):
 	var prev_health := health
 	health -= d
 	if health <= 0 and prev_health > 0:
+		remove_from_group("attackable")
 		Persistent.killed.append([get_tree().current_scene.filename, name])
 		if not Persistent.diary.has("diary_angel") and not Persistent.recently_collected.has("diary_angel"):
 			Persistent.recently_collected.append("diary_angel")

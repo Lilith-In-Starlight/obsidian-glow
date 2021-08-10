@@ -88,10 +88,10 @@ func _ready():
 	WEnv.environment = Env
 	add_child(WEnv)
 	# Set up the timer for the scene changes
+	add_child(SChangeTimer)
 	SChangeTimer.wait_time = 0.35
 	SChangeTimer.connect("timeout", self, "change_time")
 	SChangeTimer.one_shot = true
-	add_child(SChangeTimer)
 	
 	# Load the settings and the save
 	var err_save := Savefile.load(current_save)
@@ -103,8 +103,8 @@ func _ready():
 	if err_settings == OK:
 		Env.adjustment_brightness = Settings.get_value("video", "brightness", 1.0)
 		Env.adjustment_saturation = Settings.get_value("video", "saturation", 1.0)
-		Env.adjustment_contrast =  Settings.get_value("video", "contrast", 1.0)
-		fullscreen =  Settings.get_value("video", "fullscreen", true)
+		Env.adjustment_contrast = Settings.get_value("video", "contrast", 1.0)
+		fullscreen = Settings.get_value("video", "fullscreen", true)
 		
 		Inputs.up_key = Settings.get_value("controls", "up", KEY_UP)
 		Inputs.down_key = Settings.get_value("controls", "down", KEY_DOWN)
@@ -117,7 +117,7 @@ func _ready():
 		OS.window_fullscreen = fullscreen
 
 
-#  When the scene is ready to change
+# When the scene is ready to change
 func change_time():
 	get_tree().change_scene_to(next_scene)
 
@@ -130,13 +130,13 @@ func load_():
 	persands = Savefile.get_value("player", "persands", 0) as int
 	max_health = Savefile.get_value("player", "max_health", 6) as int
 	shadow = Savefile.get_value("player", "shadow", 0.0) as float
-	masks = Savefile.get_value("player", "masks", []) as PoolStringArray
+	masks = Savefile.get_value("player", "masks", []) as Array
 	faces = Savefile.get_value("player", "faces", 2) as int
 	masks_wearing = Savefile.get_value("player", "masks_wearing", ["none", "none"]) as Array
 	
 	notches = Savefile.get_value("abilities", "notches", 2) as int
-	abilities = Savefile.get_value("abilities", "abilities", [""]) as PoolStringArray
-	notch_fillers = Savefile.get_value("abilities", "fillers", []) as PoolStringArray
+	abilities = Savefile.get_value("abilities", "abilities", [""]) as Array
+	notch_fillers = Savefile.get_value("abilities", "fillers", []) as Array
 	notch_keys = Savefile.get_value("abilities", "keys", []) as Array
 	
 	abandoned_ticket = Savefile.get_value("subway", "abandoned", false) as bool

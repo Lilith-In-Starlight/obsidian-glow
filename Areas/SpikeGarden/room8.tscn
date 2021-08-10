@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Sprites/Bg/Outskirts/sky.png" type="Texture" id=1]
 [ext_resource path="res://Sprites/Bg/Outskirts/townbgl.png" type="Texture" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://SceneChanger.tscn" type="PackedScene" id=6]
 [ext_resource path="res://Enemies/SpikeTrap.tscn" type="PackedScene" id=7]
 [ext_resource path="res://HUD/HUD.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Elements/Spikes.gd" type="Script" id=9]
 
 [sub_resource type="Environment" id=1]
 background_mode = 4
@@ -117,3 +118,12 @@ newScene = "SpikeGarden/room9"
 enter_dir = 1
 
 [node name="HUD" parent="." instance=ExtResource( 8 )]
+
+[node name="Spikes" type="Area2D" parent="."]
+script = ExtResource( 9 )
+
+[node name="CollisionPolygon2D3" type="CollisionPolygon2D" parent="Spikes"]
+position = Vector2( -270, 75 )
+polygon = PoolVector2Array( 390, 126, 410, 137, 791, 137, 809, 96, 801, 151, 397, 157 )
+
+[connection signal="body_entered" from="Spikes" to="Spikes" method="_on_body_entered"]

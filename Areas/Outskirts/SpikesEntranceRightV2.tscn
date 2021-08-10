@@ -44,7 +44,7 @@ position = Vector2( 25, 143 )
 texture = ExtResource( 8 )
 
 [node name="SubwayEntrance" type="Sprite" parent="World"]
-position = Vector2( 217, 224 )
+position = Vector2( 217, 222 )
 texture = ExtResource( 1 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="World"]

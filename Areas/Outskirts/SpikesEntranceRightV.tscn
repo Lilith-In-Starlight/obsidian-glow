@@ -44,10 +44,11 @@ position = Vector2( 25, 143 )
 texture = ExtResource( 8 )
 
 [node name="SubwayEntrance" type="Sprite" parent="World"]
-position = Vector2( 217, 223 )
+position = Vector2( 217, 222 )
 texture = ExtResource( 1 )
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="World"]
+visible = false
 modulate = Color( 1, 1, 1, 0.294118 )
 position = Vector2( -23, 0 )
 polygon = PoolVector2Array( -118, 401, -92, 0, 497, 1, 514, 446, -39, 448, -76, 428, -65, 419, 187, 412, 193, 382, 463, 377, 471, 345, 288, 344, 286, 269, 178, 265, 178, 218, 301, 216, 301, 137, 208, 135, 207, 113, 465, 110, 463, 77, 210, 77, 203, 71, 203, 32, 41, 35, 38, 134, -51, 134, -51, 183, 50, 185, 51, 349, 34, 358, -64, 358, -64, 418 )

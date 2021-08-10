@@ -33,13 +33,15 @@ func _physics_process(delta):
 		speed.x = -abs(speed.x)
 	match current_state:
 		STATES.IDLE:
-			if Cast.is_colliding() and Cast.get_collision_point().distance_to(Player.position) < 20 and position.distance_to(Player.position) < 200 and non_dash <= 1.0 and non_dash > 0.0:
+			if Cast.is_colliding() and Cast.get_collision_point().distance_to(Player.position) < 20 and position.distance_to(Player.position) < 200 and non_dash <= 1.5 and non_dash > 0.0:
 				$AnimatedSprite.play("dash")
 			elif Cast.is_colliding() and Cast.get_collision_point().distance_to(Player.position) < 20 and position.distance_to(Player.position) < 200 and non_dash <= 0.0:
 				current_state = STATES.DASHING
 				$AnimatedSprite.play("dash")
 				dash_to = Player.position
 			else:
+				if not (Cast.is_colliding() and Cast.get_collision_point().distance_to(Player.position) < 20 and position.distance_to(Player.position) < 200):
+					non_dash = 3.0
 				$AnimatedSprite.play("default")
 				speed += (speed.normalized()*150-speed) / 5.0
 			non_dash -= delta
@@ -61,7 +63,8 @@ func _physics_process(delta):
 	if health <= 0:
 		queue_free()
 	
-	move_and_slide(speed, Vector2.UP)
+	if non_dash > 1.0 or current_state != STATES.IDLE:
+		move_and_slide(speed, Vector2.UP)
 	
 func attacked(d, pos, s):
 	Persistent.shadow += 2.0 + randf()*4.0

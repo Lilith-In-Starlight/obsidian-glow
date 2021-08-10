@@ -45,6 +45,7 @@ func _physics_process(delta):
 			Animations.scale.x = -1
 		match state:
 			STATES.IDLE:
+				modulate = Color(1.0, 1.0, 1.0)
 				play("default")
 				speed = randv
 				if Ray.is_colliding():
@@ -59,16 +60,16 @@ func _physics_process(delta):
 				else:
 					speed = lerp(speed, (position-Player.position + randv).normalized()*50, 0.1)
 				time_attack += delta
-				if Player.position.distance_to(position) < 45:
-					if time_attack > 2.3:
-						time_attack = 0.0
-						var nf := FIREBALL.instance()
-						nf.position = position
-						nf.direction = (Player.position-position).normalized()
-						get_parent().get_parent().add_child(nf)
-						speed = (position-Player.position).normalized()*40
-						state = STATES.RELEASE
+				if time_attack > 2.3:
+					var nf := FIREBALL.instance()
+					nf.position = position
+					nf.direction = (Player.position-position).normalized()
+					get_parent().get_parent().add_child(nf)
+					speed = (position-Player.position).normalized()*40
+					state = STATES.RELEASE
+				modulate = Color(1.0, 1.0-time_attack/5.3, 1.0-time_attack/3.3)
 			STATES.RELEASE:
+				modulate = Color(1.0, 1.0, 1.0)
 				play("release")
 				speed = lerp(speed, randv, 0.02)
 				time_attack += delta

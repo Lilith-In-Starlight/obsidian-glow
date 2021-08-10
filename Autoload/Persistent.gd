@@ -105,6 +105,15 @@ func _ready():
 		Env.adjustment_saturation = Settings.get_value("video", "saturation", 1.0)
 		Env.adjustment_contrast =  Settings.get_value("video", "contrast", 1.0)
 		fullscreen =  Settings.get_value("video", "fullscreen", true)
+		
+		Inputs.up_key = Settings.get_value("controls", "up", KEY_UP)
+		Inputs.down_key = Settings.get_value("controls", "down", KEY_DOWN)
+		Inputs.left_key = Settings.get_value("controls", "left", KEY_LEFT)
+		Inputs.right_key = Settings.get_value("controls", "right", KEY_RIGHT)
+		Inputs.jump_key = Settings.get_value("controls", "jump", KEY_Z)
+		Inputs.attack_key = Settings.get_value("controls", "attack", KEY_X)
+		Inputs.cancel_key = Settings.get_value("controls", "cancel", KEY_C)
+		
 		OS.window_fullscreen = fullscreen
 
 
@@ -190,4 +199,12 @@ func save_settings():
 	Settings.set_value("video", "saturation", Env.adjustment_saturation)
 	Settings.set_value("video", "contrast", Env.adjustment_contrast)
 	Settings.set_value("video", "fullscreen", fullscreen)
+	
+	Settings.set_value("controls", "up", Inputs.up_key)
+	Settings.set_value("controls", "down", Inputs.down_key)
+	Settings.set_value("controls", "left", Inputs.left_key)
+	Settings.set_value("controls", "right", Inputs.right_key)
+	Settings.set_value("controls", "jump", Inputs.jump_key)
+	Settings.set_value("controls", "attack", Inputs.attack_key)
+	Settings.set_value("controls", "cancel", Inputs.cancel_key)
 	Settings.save("user://settings.and")

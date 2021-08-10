@@ -24,6 +24,7 @@ onready var VisualSettings := $VideoSettings
 onready var BrightnessLabel := $VideoSettings/BrightnessLabel
 onready var ContrastLabel := $VideoSettings/ContrastLabel
 onready var SaturationLabel := $VideoSettings/SaturationLabel
+onready var FullscreenLabel := $VideoSettings/FullscreenLabel
 
 onready var Controls := $Controls
 onready var ControlsLeft := $Controls/LeftLabel
@@ -147,7 +148,7 @@ func _input(event):
 							0: # Video settings
 								current_menu = MENUS.VIDEO
 								menu_option = 0
-								menu_list = 4
+								menu_list = 5
 							3: # Control settings
 								current_menu = MENUS.CONTROLS
 								menu_option = 0
@@ -179,6 +180,8 @@ func _input(event):
 								Persistent.Env.adjustment_contrast = max(Persistent.Env.adjustment_contrast - 0.25, 0.0)
 							2:
 								Persistent.Env.adjustment_saturation = max(Persistent.Env.adjustment_saturation - 0.25, 0.0)
+							3:
+								Persistent.fullscreen = !Persistent.fullscreen
 					Inputs.right_key:
 						match menu_option:
 							0:
@@ -187,10 +190,14 @@ func _input(event):
 								Persistent.Env.adjustment_contrast = min(Persistent.Env.adjustment_contrast + 0.25, 8.0)
 							2:
 								Persistent.Env.adjustment_saturation = min(Persistent.Env.adjustment_saturation + 0.25, 8.0)
+							3:
+								Persistent.fullscreen = !Persistent.fullscreen
 					# Select an option
 					Inputs.jump_key, Inputs.attack_key:
 						match menu_option:
 							3:
+								Persistent.fullscreen = !Persistent.fullscreen
+							4:
 								current_menu = MENUS.OPTIONS
 								menu_option = 0
 								menu_list = 5
@@ -306,6 +313,10 @@ func visual_update():
 			BrightnessLabel.text = "Brightness: " + str(Persistent.Env.adjustment_brightness)
 			ContrastLabel.text = "Contrast: " + str(Persistent.Env.adjustment_contrast)
 			SaturationLabel.text = "Saturation: " + str(Persistent.Env.adjustment_saturation)
+			if Persistent.fullscreen:
+				FullscreenLabel.text = "Fullscreen: On"
+			else:
+				FullscreenLabel.text = "Fullscreen: Off"
 		MENUS.CONTROLS:
 			labels_in_menu = Controls.get_children()
 			Menu.visible = false
@@ -341,6 +352,7 @@ func visual_update():
 	
 	# Constantly save the settings
 	Persistent.save_settings()
+	OS.window_fullscreen = Persistent.fullscreen
 
 
 func _on_HTTPRequest_request_completed(result, response_code, headers, body):

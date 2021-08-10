@@ -62,6 +62,8 @@ var masks := []
 var masks_wearing := []
 var faces := 2
 
+var fullscreen := true
+
 func _init():
 	for i in notches:
 		if notch_fillers.size() < notches:
@@ -102,6 +104,8 @@ func _ready():
 		Env.adjustment_brightness = Settings.get_value("video", "brightness", 1.0)
 		Env.adjustment_saturation = Settings.get_value("video", "saturation", 1.0)
 		Env.adjustment_contrast =  Settings.get_value("video", "contrast", 1.0)
+		fullscreen =  Settings.get_value("video", "fullscreen", true)
+		OS.window_fullscreen = fullscreen
 
 
 #  When the scene is ready to change
@@ -185,4 +189,5 @@ func save_settings():
 	Settings.set_value("video", "brightness", Env.adjustment_brightness)
 	Settings.set_value("video", "saturation", Env.adjustment_saturation)
 	Settings.set_value("video", "contrast", Env.adjustment_contrast)
+	Settings.set_value("video", "fullscreen", fullscreen)
 	Settings.save("user://settings.and")

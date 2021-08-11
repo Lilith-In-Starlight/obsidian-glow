@@ -13,10 +13,10 @@
 [ext_resource path="res://Sprites/Bg/SpikeGarden/monument_spikes.png" type="Texture" id=11]
 [ext_resource path="res://Cutscenes/SpikeGardenerCutscene.tscn" type="PackedScene" id=12]
 
-[sub_resource type="RectangleShape2D" id=2]
+[sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 10, 112 )
 
-[sub_resource type="Environment" id=1]
+[sub_resource type="Environment" id=2]
 background_mode = 4
 tonemap_mode = 2
 glow_enabled = true
@@ -69,11 +69,11 @@ polygon = PoolVector2Array( 796, 170, 796, 200, 516, 199, 516, 170 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="World"]
 position = Vector2( 0, 126 )
-shape = SubResource( 2 )
+shape = SubResource( 1 )
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="World"]
 position = Vector2( 600, 111 )
-shape = SubResource( 2 )
+shape = SubResource( 1 )
 
 [node name="Enemies" type="Node2D" parent="."]
 
@@ -117,7 +117,7 @@ __meta__ = {
 [node name="DecoFg" type="Node2D" parent="."]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource( 1 )
+environment = SubResource( 2 )
 
 [node name="SceneChanger2" parent="." instance=ExtResource( 6 )]
 position = Vector2( 283, -39 )

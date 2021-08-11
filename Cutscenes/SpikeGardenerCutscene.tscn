@@ -1,9 +1,10 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Cutscenes/SpikeGardenerCutscene.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/Characters/SpikeGardenNPC/idle_lookback_nod.png" type="Texture" id=2]
 [ext_resource path="res://Sprites/Characters/SpikeGardenNPC/idle.png" type="Texture" id=3]
 [ext_resource path="res://Sprites/Characters/SpikeGardenNPC/idle_lookback.png" type="Texture" id=4]
+[ext_resource path="res://DialogueObject.tscn" type="PackedScene" id=5]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 100, 100 )
@@ -53,21 +54,21 @@ shape = SubResource( 1 )
 [node name="Gardeners" type="Node2D" parent="."]
 
 [node name="Gardener3" type="AnimatedSprite" parent="Gardeners"]
-position = Vector2( 82, 49 )
+position = Vector2( 119, 49 )
 frames = SubResource( 6 )
 
 [node name="Gardener7" type="AnimatedSprite" parent="Gardeners"]
-position = Vector2( -59, 49 )
+position = Vector2( -53, 49 )
 scale = Vector2( -1, 1 )
 frames = SubResource( 6 )
 
 [node name="Gardener8" type="AnimatedSprite" parent="Gardeners"]
-position = Vector2( -131, 49 )
+position = Vector2( -155, 49 )
 scale = Vector2( -1, 1 )
 frames = SubResource( 6 )
 
 [node name="Gardener1" type="AnimatedSprite" parent="Gardeners"]
-position = Vector2( -91, 49 )
+position = Vector2( -104, 49 )
 scale = Vector2( -1, 1 )
 frames = SubResource( 6 )
 
@@ -76,11 +77,53 @@ position = Vector2( 66, 49 )
 frames = SubResource( 6 )
 
 [node name="Gardener5" type="AnimatedSprite" parent="Gardeners"]
-position = Vector2( 114, 49 )
+position = Vector2( 167, 49 )
 frames = SubResource( 6 )
 
 [node name="Gardener6" type="AnimatedSprite" parent="Gardeners"]
-position = Vector2( 130, 49 )
+position = Vector2( 215, 49 )
 frames = SubResource( 6 )
+
+[node name="DialogueObject" parent="." instance=ExtResource( 5 )]
+position = Vector2( -154, 51 )
+down_button = 4
+down_action = "dia_sgc1_1"
+down_text = "LISTEN"
+
+[node name="DialogueObject2" parent="." instance=ExtResource( 5 )]
+position = Vector2( -103, 51 )
+down_button = 4
+down_action = "dia_sgc1_2"
+down_text = "LISTEN"
+
+[node name="DialogueObject3" parent="." instance=ExtResource( 5 )]
+position = Vector2( -52, 51 )
+down_button = 4
+down_action = "dia_sgc1_3"
+down_text = "LISTEN"
+
+[node name="DialogueObject4" parent="." instance=ExtResource( 5 )]
+position = Vector2( 65, 51 )
+down_button = 4
+down_action = "dia_sgc1_4"
+down_text = "LISTEN"
+
+[node name="DialogueObject5" parent="." instance=ExtResource( 5 )]
+position = Vector2( 119, 51 )
+down_button = 4
+down_action = "dia_sgc1_5"
+down_text = "LISTEN"
+
+[node name="DialogueObject6" parent="." instance=ExtResource( 5 )]
+position = Vector2( 166, 51 )
+down_button = 4
+down_action = "dia_sgc1_6"
+down_text = "LISTEN"
+
+[node name="DialogueObject7" parent="." instance=ExtResource( 5 )]
+position = Vector2( 214, 51 )
+down_button = 4
+down_action = "dia_sgc1_7"
+down_text = "LISTEN"
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_body_entered"]

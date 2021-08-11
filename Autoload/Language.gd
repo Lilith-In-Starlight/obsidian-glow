@@ -17,6 +17,14 @@ var lines := {
 		"desc_mask_maskmaker" : "Mask Of The Maskmaker\n\nA thousand lifetimes compressed into one. Any who wears this masks on their body will be able to wear deactivated masks.",
 		"desc_mask_brittle" : "Mask Of The Brittle Hollow\n\nOnce belonging to a young woman whose identity was her lack thereof, this mask will absorb the life any who get too close to its wearer.",
 		"desc_mask_none" : "",
+		
+		"dia_sgc1_1" : ["I think there were some people waiting for you to the west of here. Something about a notebook?"],
+		"dia_sgc1_2" : ["We'll tell the rest of us to not attack you on sight.", "Be careful to get pierced with randomly placed spikes."],
+		"dia_sgc1_3" : ["I'm watching you."],
+		"dia_sgc1_4" : ["Every outsider who comes here finds themselves confused by how things work around here.", "I wonder what you'll think."],
+		"dia_sgc1_5" : ["Are you used to getting in trouble with angels? You're burnt all over!", "I'm actually surprised your skin is still.. well... skin.", "Does it hurt?"],
+		"dia_sgc1_6" : ["Those holes in your shirt... were you hurt? Do you need to treat those wounds?", "I'm surprised they missed any vital organs. Who did this?"],
+		"dia_sgc1_7" : ["I sincerely hope you are who we think you are.", "It's foolish, but it's all we have left.", "...", "Sorry, this is your journey alone."],
 	},
 }
 

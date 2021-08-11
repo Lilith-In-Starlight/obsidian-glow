@@ -254,9 +254,12 @@ func _input(event):
 						var changed := false # Only start the nomovetimer
 						# if the dialogue has been started
 						if !dialogue.empty():
-							changed = true
-							dialogue.pop_front()
-							DialogueText.visible_characters = 0
+							if DialogueText.visible_characters >= DialogueText.text.length() - 1:
+								changed = true
+								dialogue.pop_front()
+								DialogueText.visible_characters = 0
+							else:
+								DialogueText.visible_characters = DialogueText.text.length()
 							
 						if changed and dialogue.empty():
 							Player.NoMoveTimer.start()

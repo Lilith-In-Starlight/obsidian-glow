@@ -10,19 +10,22 @@ var do := [false, false, false, false]
 func _ready():
 	Player = get_tree().get_nodes_in_group("player")[0]
 	HUD = get_tree().get_nodes_in_group("hud")[0]
-	if Persistent.met_the_gardeners:
-		queue_free()
 
 
 func _process(delta):
-	if not Persistent.met_the_gardeners:
-		for i in $Gardeners.get_children():
-			if i.global_position.x < Player.position.x:
-				i.scale.x = -1
+	for i in $Gardeners.get_children():
+		if i.global_position.x < Player.position.x:
+			i.scale.x = -1
+		else:
+			i.scale.x = 1
+		
+		if not ongoing:
+			if i.global_position.distance_to(Player.position) < 50:
+				i.play("near")
 			else:
-				i.scale.x = 1
-		
-		
+				i.play("default")
+	
+	if not Persistent.met_the_gardeners:
 		if HUD.dialogue.empty():
 			if ongoing:
 				timer += delta
@@ -59,6 +62,7 @@ func _process(delta):
 				
 				elif timer > 4.0:
 					ongoing = false
+					Persistent.met_the_gardeners = true
 					Persistent.player_cutscene = "no"
 		
 		if ongoing:

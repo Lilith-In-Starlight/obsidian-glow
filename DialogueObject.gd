@@ -69,14 +69,12 @@ func _process(delta):
 		else:
 			Buttons.rect_position = lerp(Buttons.rect_position, -(Player.position - global_position)*0.5 + Vector2(-64,10), 0.1)
 		if Player.position.distance_to(global_position) < 23 and HUD.dialogue.empty():
-			print("a")
 			if not show_text:
 				Buttons.modulate.a = move_toward(Buttons.modulate.a, 1.0, 0.08)
 			else:
 				Text.modulate.a = move_toward(Text.modulate.a, 1.0, 0.05)
 				Buttons.modulate.a = move_toward(Buttons.modulate.a, 0.0, 0.08)
 			if Player.move_down and down_button != OPTIONS.NONE:
-				print("b")
 				match down_button:
 					OPTIONS.TEXT:
 						Text.text = down_action

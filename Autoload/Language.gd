@@ -25,6 +25,10 @@ var lines := {
 		"dia_sgc1_5" : ["Are you used to getting in trouble with angels? You're burnt all over!", "I'm actually surprised your skin is still.. well... skin.", "Does it hurt?"],
 		"dia_sgc1_6" : ["Those holes in your shirt... were you hurt? Do you need to treat those wounds?", "I'm surprised they missed any vital organs. Who did this?"],
 		"dia_sgc1_7" : ["I sincerely hope you are who we think you are.", "It's foolish, but it's all we have left.", "...", "Sorry, this is your journey alone."],
+		
+		"dia_gardener_bench" : ["Oh, hello. I hope you feel somewhat welcome.", "The going is very tough, so we keep trying to be tougher. I hope we didn't cause you too much trouble.", "Sit on the bench! Its design may be unorthodox for you, but I think it's good enough for a quick rest. To collect your thoughts and all that."],
+		"dia_gardener_tieaja" : ["We've been six years without someone being taken by the angels.", "On one hand, I'm glad no one's died in so long", "On the other hand... wow, I'm really glad for that, huh?"],
+		"dia_gardener_kasta" : ["I still don't know why everyone agreed to trust you.", "The last few years have been a bit too much for me to keep up with.", "Every other cluster unanimously decided that if you ever showed up, we should let you in.", "Mine decided to keep an eye on you in case you did something wrong, but that's only because I'm part of it.", "If I'm being honest, I just don't understand. I just hope they know what they're doing."],
 	},
 }
 

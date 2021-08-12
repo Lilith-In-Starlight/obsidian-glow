@@ -1,13 +1,22 @@
 extends Sprite
 
+enum TYPES {
+	REGULAR,
+	SPIKE,
+}
 
 onready var Player := $"../../Neptune"
+
+export(TYPES) var bench_place
 
 var HUD
 
 
 func _ready():
 	HUD = get_tree().get_nodes_in_group("hud")[0]
+	match bench_place:
+		TYPES.SPIKE:
+			texture = preload("res://Sprites/Elements/SpikeBench.png")
 
 
 func _process(delta):

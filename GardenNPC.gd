@@ -18,7 +18,7 @@ func _ready():
 		DiaObject.queue_free()
 
 func _process(delta):
-	if Player.position.distance_to(position) < 50:
+	if Player.position.distance_to(position) < 40:
 		Spr.texture = Near
 		if Player.position.x > position.x:
 			Spr.scale.x = -1

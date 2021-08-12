@@ -20,7 +20,7 @@ func _process(delta):
 			i.scale.x = 1
 		
 		if not ongoing:
-			if i.global_position.distance_to(Player.position) < 50:
+			if i.global_position.distance_to(Player.position) < 40:
 				i.play("near")
 			else:
 				i.play("default")

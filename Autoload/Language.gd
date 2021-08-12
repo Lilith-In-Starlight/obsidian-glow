@@ -19,7 +19,7 @@ var lines := {
 		"desc_mask_none" : "",
 		
 		"dia_sgc1_1" : ["I think there were some people waiting for you to the west of here. Something about a notebook?"],
-		"dia_sgc1_2" : ["We'll tell the rest of us to not attack you on sight.", "Be careful to get pierced with randomly placed spikes."],
+		"dia_sgc1_2" : ["We'll tell the rest of us to not attack you on sight.", "Be careful to not get pierced by randomly placed spikes."],
 		"dia_sgc1_3" : ["I'm watching you."],
 		"dia_sgc1_4" : ["Every outsider who comes here finds themselves confused by how things work around here.", "I wonder what you'll think."],
 		"dia_sgc1_5" : ["Are you used to getting in trouble with angels? You're burnt all over!", "I'm actually surprised your skin is still.. well... skin.", "Does it hurt?"],

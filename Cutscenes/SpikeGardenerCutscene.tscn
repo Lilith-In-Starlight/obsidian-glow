@@ -32,14 +32,14 @@ animations = [ {
 "name": "default",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ) ],
-"loop": false,
-"name": "nod",
-"speed": 5.0
-}, {
 "frames": [ ExtResource( 4 ) ],
 "loop": true,
 "name": "lookback",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ) ],
+"loop": false,
+"name": "nod",
 "speed": 5.0
 } ]
 
@@ -54,7 +54,7 @@ shape = SubResource( 1 )
 [node name="Gardeners" type="Node2D" parent="."]
 
 [node name="Gardener3" type="AnimatedSprite" parent="Gardeners"]
-position = Vector2( 119, 49 )
+position = Vector2( 102, 49 )
 frames = SubResource( 6 )
 
 [node name="Gardener7" type="AnimatedSprite" parent="Gardeners"]
@@ -73,15 +73,15 @@ scale = Vector2( -1, 1 )
 frames = SubResource( 6 )
 
 [node name="Gardener4" type="AnimatedSprite" parent="Gardeners"]
-position = Vector2( 66, 49 )
+position = Vector2( 49, 49 )
 frames = SubResource( 6 )
 
 [node name="Gardener5" type="AnimatedSprite" parent="Gardeners"]
-position = Vector2( 167, 49 )
+position = Vector2( 150, 49 )
 frames = SubResource( 6 )
 
 [node name="Gardener6" type="AnimatedSprite" parent="Gardeners"]
-position = Vector2( 215, 49 )
+position = Vector2( 198, 49 )
 frames = SubResource( 6 )
 
 [node name="DialogueObject" parent="." instance=ExtResource( 5 )]
@@ -103,25 +103,25 @@ down_action = "dia_sgc1_3"
 down_text = "LISTEN"
 
 [node name="DialogueObject4" parent="." instance=ExtResource( 5 )]
-position = Vector2( 65, 51 )
+position = Vector2( 48, 51 )
 down_button = 4
 down_action = "dia_sgc1_4"
 down_text = "LISTEN"
 
 [node name="DialogueObject5" parent="." instance=ExtResource( 5 )]
-position = Vector2( 119, 51 )
+position = Vector2( 102, 51 )
 down_button = 4
 down_action = "dia_sgc1_5"
 down_text = "LISTEN"
 
 [node name="DialogueObject6" parent="." instance=ExtResource( 5 )]
-position = Vector2( 166, 51 )
+position = Vector2( 149, 51 )
 down_button = 4
 down_action = "dia_sgc1_6"
 down_text = "LISTEN"
 
 [node name="DialogueObject7" parent="." instance=ExtResource( 5 )]
-position = Vector2( 214, 51 )
+position = Vector2( 197, 51 )
 down_button = 4
 down_action = "dia_sgc1_7"
 down_text = "LISTEN"

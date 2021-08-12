@@ -64,6 +64,8 @@ var faces := 2
 
 var fullscreen := true
 
+var met_the_gardeners := false
+
 func _init():
 	for i in notches:
 		if notch_fillers.size() < notches:
@@ -148,6 +150,8 @@ func load_():
 	diary = Savefile.get_value("diary", "diary", ["diary_opening"]) as Array
 	diary_page = Savefile.get_value("diary", "current_page", 0) as int
 	
+	met_the_gardeners = Savefile.get_value("garden", "met_gardeners", false) as bool
+	
 	if abilities.has("dash") and not outskirts_arena:
 		abilities = [""]
 	
@@ -189,6 +193,8 @@ func save(game:bool = true):
 	
 	Savefile.set_value("diary", "diary", diary)
 	Savefile.set_value("diary", "current_page", diary_page)
+	
+	Savefile.set_value("garden", "met_gardeners", met_the_gardeners)
 	
 	
 	

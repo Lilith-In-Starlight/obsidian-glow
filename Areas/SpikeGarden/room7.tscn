@@ -51,7 +51,7 @@ texture = ExtResource( 4 )
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="World"]
 modulate = Color( 1, 1, 1, 0.294118 )
 position = Vector2( -23, 0 )
-polygon = PoolVector2Array( -91, 344, -92, 0, 340, 0, 342, 135, 230, 128, 155, 118, 100, 135, 23.2863, 146.103, -52, 146, -52, 194, 531, 191, 531, 148, 405, 149, 380, 132, 342, 135, 348, 0, 567, 1, 566, 339 )
+polygon = PoolVector2Array( -91, 344, -92, 0, 340, 0, 342, 135, 230, 128, 155, 118, 100, 135, 23.2863, 146.103, -52, 146, -52, 194, 501, 191, 501, 148, 405, 149, 380, 132, 342, 135, 348, 0, 567, 1, 566, 339 )
 
 [node name="Enemies" type="Node2D" parent="."]
 

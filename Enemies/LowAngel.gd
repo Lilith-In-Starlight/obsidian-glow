@@ -45,6 +45,9 @@ func _physics_process(delta):
 			Animations.scale.x = -1
 		match state:
 			STATES.IDLE:
+				modulate.r = move_toward(modulate.r, 1.0, 0.05)
+				modulate.g = move_toward(modulate.g, 1.0, 0.05)
+				modulate.b = move_toward(modulate.b, 1.0, 0.05)
 				modulate = Color(1.0, 1.0, 1.0)
 				play("default")
 				speed = randv
@@ -67,9 +70,13 @@ func _physics_process(delta):
 					get_parent().get_parent().add_child(nf)
 					speed = (position-Player.position).normalized()*40
 					state = STATES.RELEASE
-				modulate = Color(1.0, 1.0-time_attack/5.3, 1.0-time_attack/3.3)
+				modulate.r = move_toward(modulate.r, 1.0, 0.05)
+				modulate.g = move_toward(modulate.g, 1.0-time_attack/5.3, 0.05)
+				modulate.b = move_toward(modulate.b, 1.0-time_attack/3.3, 0.05)
 			STATES.RELEASE:
-				modulate = Color(1.0, 1.0, 1.0)
+				modulate.r = move_toward(modulate.r, 1.0, 0.05)
+				modulate.g = move_toward(modulate.g, 1.0, 0.05)
+				modulate.b = move_toward(modulate.b, 1.0, 0.05)
 				play("release")
 				speed = lerp(speed, randv, 0.02)
 				time_attack += delta
@@ -90,6 +97,7 @@ func _physics_process(delta):
 
 func attacked(d, pos, s):
 	if health > 0:
+		modulate = Color("#a00000")
 		Persistent.shadow += 1.0 + randf()*2.0
 	speed = (position-pos).normalized()*200 + s
 	var prev_health := health

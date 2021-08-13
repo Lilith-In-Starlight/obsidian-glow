@@ -17,7 +17,7 @@ var Player
 var current_state = STATES.IDLE
 var speed := Vector2(0, 0)
 
-var health := 8
+var health := 5
 
 var attacks_while_defending := 0
 var time_since_last_damage := 0.0
@@ -34,6 +34,9 @@ func _physics_process(delta):
 	if health <= 0:
 		current_state = STATES.DEAD
 	time_since_last_damage += delta
+	modulate.r = move_toward(modulate.r, 1.0, 0.05)
+	modulate.g = move_toward(modulate.g, 1.0, 0.05)
+	modulate.b = move_toward(modulate.b, 1.0, 0.05)
 	match current_state:
 		STATES.IDLE:
 			$Hurtbox/CollisionShape2D2.disabled = true
@@ -157,6 +160,7 @@ func _on_frame_changed():
 func attacked(d, pos, s):
 	if time_since_last_damage > 0.7:
 		if health > 0:
+			modulate = Color("#a00000")
 			Persistent.shadow += 2.0 + randf()*2.0
 		speed = (position-pos).normalized()*200 + s
 		var prev_health := health
@@ -165,7 +169,6 @@ func attacked(d, pos, s):
 			Persistent.killed.append([get_tree().current_scene.filename, name])
 			if Language.not_in_diary("diary_spike_guardian"):
 				Persistent.recently_collected.append("diary_spike_guardian")
-				print(Persistent.recently_collected)
 			Persistent.persands += randi() % 5
 			queue_free()
 	else:

@@ -31,19 +31,26 @@ func _physics_process(delta):
 	elif position.x > Player.Cam.limit_right:
 		position.x = Player.Cam.limit_right
 		speed.x = -abs(speed.x)
+	$Area2D.monitorable = current_state == STATES.DASHING
+	$Area2D.monitoring = current_state == STATES.DASHING
+	modulate.r = move_toward(modulate.r, 1.0, 0.05)
+	modulate.g = move_toward(modulate.g, 1.0, 0.05)
+	modulate.b = move_toward(modulate.b, 1.0, 0.05)
 	match current_state:
 		STATES.IDLE:
-			if Cast.is_colliding() and Cast.get_collision_point().distance_to(Player.position) < 20 and position.distance_to(Player.position) < 200 and non_dash <= 1.5 and non_dash > 0.0:
+			if Cast.is_colliding() and Cast.get_collision_point().distance_to(Player.position) < 20 and position.distance_to(Player.position) < 120 and non_dash <= 1.5 and non_dash > 0.0:
 				$AnimatedSprite.play("dash")
-			elif Cast.is_colliding() and Cast.get_collision_point().distance_to(Player.position) < 20 and position.distance_to(Player.position) < 200 and non_dash <= 0.0:
+			elif Cast.is_colliding() and Cast.get_collision_point().distance_to(Player.position) < 20 and non_dash <= 0.0:
 				current_state = STATES.DASHING
 				$AnimatedSprite.play("dash")
 				dash_to = Player.position
 			else:
-				if not (Cast.is_colliding() and Cast.get_collision_point().distance_to(Player.position) < 20 and position.distance_to(Player.position) < 200):
-					non_dash = 3.0
-				$AnimatedSprite.play("default")
-				speed += (speed.normalized()*150-speed) / 5.0
+				if not (Cast.is_colliding() and Cast.get_collision_point().distance_to(Player.position) < 20 and position.distance_to(Player.position) < 120):
+					if non_dash > 1.0:
+						non_dash = 3.0
+						$AnimatedSprite.play("default")
+						speed += (speed.normalized()*80-speed) / 5.0
+			
 			non_dash -= delta
 			if is_on_wall():
 				speed.x *= -1
@@ -54,7 +61,7 @@ func _physics_process(delta):
 				
 		STATES.DASHING:
 			if position.distance_to(dash_to) > 20:
-				speed = (dash_to - position).normalized() * 400
+				speed = (dash_to - position).normalized() * 300
 			else:
 				non_dash = 3.0
 				$AnimatedSprite.play("default")
@@ -67,7 +74,9 @@ func _physics_process(delta):
 		move_and_slide(speed, Vector2.UP)
 	
 func attacked(d, pos, s):
-	Persistent.shadow += 2.0 + randf()*4.0
+	if health > 0:
+		Persistent.shadow += 2.0 + randf()*4.0
+		modulate = Color("#a00000")
 	speed = (position-pos).normalized()*200 + s
 	var prev_health := health
 	health -= d

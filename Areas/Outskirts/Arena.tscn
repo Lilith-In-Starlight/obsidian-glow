@@ -58,13 +58,7 @@ polygon = PoolVector2Array( 487, 214, 604, 216, 652, 216, 653, 28, 678, 28, 679,
 script = ExtResource( 6 )
 
 [node name="LowAngel2" parent="Enemies" instance=ExtResource( 7 )]
-position = Vector2( 40, 83 )
-
-[node name="LowAngel4" parent="Enemies" instance=ExtResource( 7 )]
-position = Vector2( 111, 36 )
-
-[node name="LowAngel5" parent="Enemies" instance=ExtResource( 7 )]
-position = Vector2( 124, 97 )
+position = Vector2( -44, 99 )
 
 [node name="LowAngel3" parent="Enemies" instance=ExtResource( 7 )]
 position = Vector2( -44, 49 )

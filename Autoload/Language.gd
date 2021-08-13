@@ -29,6 +29,12 @@ var lines := {
 		"dia_gardener_bench" : ["Oh, hello. I hope you feel somewhat welcome.", "The going is very tough, so we keep trying to be tougher. I hope we didn't cause you too much trouble.", "Sit on the bench! Its design may be unorthodox for you, but I think it's good enough for a quick rest. To collect your thoughts and all that."],
 		"dia_gardener_tieaja" : ["We've been six years without someone being taken by the angels.", "On one hand, I'm glad no one's died in so long", "On the other hand... wow, I'm really glad for that, huh?"],
 		"dia_gardener_kasta" : ["I still don't know why everyone agreed to trust you.", "The last few years have been a bit too much for me to keep up with.", "Every other cluster unanimously decided that if you ever showed up, we should let you in.", "Mine decided to keep an eye on you in case you did something wrong, but that's only because I'm part of it.", "If I'm being honest, I just don't understand. I just hope they know what they're doing."],
+		"dia_gardener_caia" : ["It's more fresh here under the roots.", "The only problem is that I have to be more careful with my hut's deisgn to make sure water doesn't enter my home.", "I think it's a good tradeoff."],
+		"dia_gardener_hera" : ["Have you ever seen a spike spider?", "My daughter calls them spikers. It's a bit silly, but I think the term is catching on.", "I work taking care of them, so we have one as a pet. Her name is Herrah.", " It's very similar to my name, but I don't think that's the reason she named it that."],
+		"dia_gardener_ember" : ["Don't talk to me. I'm annoyed.", "Do you know Ash? We're considering making a tunnel connecting us to the outside of the garden.", "That would make it easier to get resources. We think it's a good idea, but that's about where the agreement ends.", "Her proposals are preposterous. Just ridiculously dangerous.", "We can't harm our carefully crafted ecosystem like that.", "You agree with me, right?"],
+		"dia_gardener_lilanea" : ["I wonder how on earth Ash and Ember manage to stay in the same cluster. They just keep fighting over their projects.", "I get that the angels would kill us on sight if we went out unprotected. But I think they're escalating things up even more!"],
+		
+		
 	},
 }
 

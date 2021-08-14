@@ -120,6 +120,7 @@ func _ready():
 		Inputs.attack_key = Settings.get_value("controls", "attack", KEY_X)
 		Inputs.cancel_key = Settings.get_value("controls", "cancel", KEY_C)
 		
+		
 		OS.window_fullscreen = fullscreen
 
 

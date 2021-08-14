@@ -331,6 +331,7 @@ func _physics_process(delta):
 					
 				# Jump
 				if jump_press:
+					Persistent.jump_tutorial = true
 					speed.y = JUMP_FORCE
 					current_state = STATES.AIR
 				
@@ -354,6 +355,7 @@ func _physics_process(delta):
 						if using_shadow > 4.0:
 							using_shadow = 0.08
 							Persistent.health += 1
+							Persistent.heal_tutorial = true
 					else:
 						Persistent.shadow += using_shadow
 						using_shadow = 0
@@ -399,6 +401,7 @@ func _physics_process(delta):
 				
 				# Attacking
 				if attack_press and can_attack and not attack_echo:
+					Persistent.attack_tutorial = true
 					swording = true
 					can_attack = false
 					AttackTimer.start()
@@ -475,6 +478,7 @@ func _physics_process(delta):
 				
 				# Attack
 				if attack_press and can_attack and not attack_echo:
+					Persistent.attack_tutorial = true
 					swording = true
 					can_attack = false
 					AttackTimer.start()

@@ -34,7 +34,7 @@ var lines := {
 		"dia_gardener_ember" : ["Don't talk to me. I'm annoyed.", "Do you know Ash? We're considering making a tunnel connecting us to the outside of the garden.", "That would make it easier to get resources. We think it's a good idea, but that's about where the agreement ends.", "Her proposals are preposterous. Just ridiculously dangerous.", "We can't harm our carefully crafted ecosystem like that.", "You agree with me, right?"],
 		"dia_gardener_lilanea" : ["I wonder how on earth Ash and Ember manage to stay in the same cluster. They just keep fighting over their projects.", "I get that the angels would kill us on sight if we went out unprotected. But I think they're escalating things up even more!"],
 		
-		
+		"lore_tablet_shadow" :  ["Next in line, the darkness within you is strong.", "Attack your enemies, dim their lights, and use their shadow to heal your wounds."],
 	},
 }
 

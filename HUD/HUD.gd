@@ -49,6 +49,11 @@ onready var DiaryEven := $Diary/Pages/Evenpage
 
 onready var MaskNotificationImage := $MaskCollected
 
+onready var Instructions := $Instructions
+onready var InstructionJump := $Instructions/List/Jump
+onready var InstructionAttack := $Instructions/List/Attack
+onready var InstructionHeal := $Instructions/List/Heal
+
 var c_menu = MENUS.NONE
 var notch_mode = NOTCH_MODES.NONE
 var selected_ability := 0
@@ -69,6 +74,8 @@ func _init():
 	visible = true
 
 func _ready():
+	if not (Persistent.jump_tutorial and Persistent.attack_tutorial and Persistent.heal_tutorial):
+		Instructions.rect_position.x = 331
 	$Darkness.value = Persistent.shadow
 	Player.connect("health_change", self, "health_changed")
 	for i in Persistent.notches:
@@ -96,6 +103,22 @@ func _process(delta):
 	var aa = Attacked.get_material().get_shader_param("rest")
 	
 	Attacked.get_material().set_shader_param("angry", Persistent.health == 1 and Persistent.masks_wearing.has("survivor"))
+	
+	if not (Persistent.jump_tutorial and Persistent.attack_tutorial and Persistent.heal_tutorial):
+		Instructions.rect_position.x = lerp(Instructions.rect_position.x, 400-59, 0.1)
+	else:
+		Instructions.rect_position.x = lerp(Instructions.rect_position.x, 400, 0.1)
+	
+	InstructionJump.text = "[" + Inputs.custom_scancode_str(Inputs.jump_key) + "] Jump"
+	InstructionAttack.text = "[" + Inputs.custom_scancode_str(Inputs.attack_key) + "] Attack"
+	InstructionHeal.text = "[" + Inputs.custom_scancode_str(Inputs.down_key) + "] Heal"
+	
+	if Persistent.jump_tutorial:
+		InstructionJump.modulate = Color("#ffbc00")
+	if Persistent.attack_tutorial:
+		InstructionAttack.modulate = Color("ffbc00")
+	if Persistent.heal_tutorial:
+		InstructionHeal.modulate = Color("ffbc00")
 	
 	if not quitting:
 		if Persistent.health > 0:
@@ -347,7 +370,7 @@ func _input(event):
 						
 			MENUS.DASH, MENUS.DIARY:
 				# Both of these are just screens you can exit by pressing a key
-				if event.scancode == Inputs.attack_key or event.scancode == Inputs.jump_key:
+				if ($ObtainedDash.modulate.a > 0.8 or $ObtainedDiary.modulate.a > 0.8) and (event.scancode == Inputs.attack_key or event.scancode == Inputs.jump_key):
 					c_menu = MENUS.NONE
 					Player.NoMoveTimer.start()
 			

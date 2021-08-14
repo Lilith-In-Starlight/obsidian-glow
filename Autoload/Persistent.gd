@@ -66,6 +66,10 @@ var fullscreen := true
 
 var met_the_gardeners := false
 
+var jump_tutorial := false
+var attack_tutorial := false
+var heal_tutorial := false
+
 func _init():
 	for i in notches:
 		if notch_fillers.size() < notches:
@@ -152,6 +156,10 @@ func load_():
 	
 	met_the_gardeners = Savefile.get_value("garden", "met_gardeners", false) as bool
 	
+	jump_tutorial = Savefile.get_value("tutorial", "jump", false)
+	attack_tutorial = Savefile.get_value("tutorial", "attack", false)
+	heal_tutorial = Savefile.get_value("tutorial", "heal", false)
+	
 	if abilities.has("dash") and not outskirts_arena:
 		abilities = [""]
 	
@@ -195,6 +203,10 @@ func save(game:bool = true):
 	Savefile.set_value("diary", "current_page", diary_page)
 	
 	Savefile.set_value("garden", "met_gardeners", met_the_gardeners)
+	
+	Savefile.set_value("tutorial", "jump", jump_tutorial)
+	Savefile.set_value("tutorial", "attack", attack_tutorial)
+	Savefile.set_value("tutorial", "heal", heal_tutorial)
 	
 	
 	

@@ -86,202 +86,184 @@ func _process(delta):
 
 
 func _input(event):
-	if not event is InputEventMouseMotion:
-		var processed_event = Inputs.process_input(event)
-		# Whether the input should be processed in a specific device
-		var can_keyboard = not processed_event == "null" and event is InputEventKey and event.is_pressed() and not event.is_echo()
-		var can_mouse = not processed_event == "null" and event is InputEventMouseButton and event.pressed and not event.is_echo()
-		var can_controller = not processed_event == "null" and event is InputEventJoypadButton and Input.is_action_just_pressed(processed_event)
-		var can_axis = not processed_event == "null" and event is InputEventJoypadMotion and Input.is_action_just_pressed(processed_event)
-		print(processed_event, " ", event is InputEventJoypadMotion, " ", Input.is_action_just_pressed(processed_event))
-		if (can_keyboard or can_mouse or can_controller or can_axis) and go_to == null:
+	if event is InputEventKey or event is InputEventMouseButton or event is InputEventJoypadButton or event is InputEventJoypadMotion:
+		if go_to == null:
 			match current_menu: # State machine
 				MENUS.MENU:
-					match processed_event:
-						"escape": # Resets the savefile and the game variables
-							Persistent.Savefile = ConfigFile.new()
-							Persistent.Savefile.save(Persistent.save_name)
-							Persistent.load_()
-						# Navigate the menu
-						"down":
-							menu_option = (menu_option + 1) % menu_list
-						"up":
-							menu_option = (menu_option - 1)
-							if menu_option < 0:
-								menu_option = menu_list - 1
+					if Input.is_action_just_pressed("escape"): # Resets the savefile and the game variables
+						Persistent.Savefile = ConfigFile.new()
+						Persistent.Savefile.save(Persistent.save_name)
+						Persistent.load_()
+						
+					# Navigate the menu
+					elif Input.is_action_just_pressed("down"): 
+						menu_option = (menu_option + 1) % menu_list
+					elif Input.is_action_just_pressed("up"):
+						menu_option = (menu_option - 1)
+						if menu_option < 0:
+							menu_option = menu_list - 1
 						# Selection
-						"jump", "attack":
-							match menu_option:
-								0: # Start game
-	#								current_menu = MENUS.SELECT_SAVE
-	#								menu_option = 0
-	#								menu_list = 5
-									
-									# If there's a scene in the save file,
-									# go to that one
-									if Persistent.loaded_scene != "":
-										go_to = load(Persistent.loaded_scene)
-									else:
-										# if not, go to the start of the game
-										go_to = load("res://Areas/Field/Field.tscn")
-									SceneTimer.start()
-									# Start the timer that changes the scene
-								1:
-									# Take the player to the options
-									current_menu = MENUS.OPTIONS
-									menu_option = 0
-									menu_list = 5
-									print("went")
-								2:
-									# Take the player to the credits
-									current_menu = MENUS.CREDITS
-									menu_option = 0
-									menu_list = 1
-									CreditsAnimation.play("Up")
-									# Restart the credits animation
-								3: # Quit the game
-									get_tree().quit()
+					elif Input.is_action_just_pressed("jump") or Input.is_action_just_pressed("attack"):
+						match menu_option:
+							0: # Start game
+#								current_menu = MENUS.SELECT_SAVE
+#								menu_option = 0
+#								menu_list = 5
+								
+								# If there's a scene in the save file,
+								# go to that one
+								if Persistent.loaded_scene != "":
+									go_to = load(Persistent.loaded_scene)
+								else:
+									# if not, go to the start of the game
+									go_to = load("res://Areas/Field/Field.tscn")
+								SceneTimer.start()
+								# Start the timer that changes the scene
+							1:
+								# Take the player to the options
+								current_menu = MENUS.OPTIONS
+								menu_option = 0
+								menu_list = 5
+								print("went")
+							2:
+								# Take the player to the credits
+								current_menu = MENUS.CREDITS
+								menu_option = 0
+								menu_list = 1
+								CreditsAnimation.play("Up")
+								# Restart the credits animation
+							3: # Quit the game
+								get_tree().quit()
 				
 				MENUS.OPTIONS:
-					match processed_event:
-						# Menu navigation
-						"down":
-							menu_option = (menu_option + 1) % menu_list
-						"up":
-							menu_option = (menu_option - 1)
-							if menu_option < 0:
-								menu_option = menu_list - 1
+					if Input.is_action_just_pressed("down"):
+						menu_option = (menu_option + 1) % menu_list
+					elif Input.is_action_just_pressed("up"):
+						menu_option = (menu_option - 1)
+						if menu_option < 0:
+							menu_option = menu_list - 1
 						# Select an option
-						"jump", "attack":
-							match menu_option:
-								0: # Video settings
-									current_menu = MENUS.VIDEO
-									menu_option = 0
-									menu_list = 5
-								3: # Control settings
-									current_menu = MENUS.CONTROLS
-									menu_option = 0
-									menu_list = 8
-								4: # Back to the menu
-									current_menu = MENUS.MENU
-									menu_option = 1
-									menu_list = 4
+					elif Input.is_action_just_pressed("jump") or Input.is_action_just_pressed("attack"):
+						match menu_option:
+							0: # Video settings
+								current_menu = MENUS.VIDEO
+								menu_option = 0
+								menu_list = 5
+							3: # Control settings
+								current_menu = MENUS.CONTROLS
+								menu_option = 0
+								menu_list = 8
+							4: # Back to the menu
+								current_menu = MENUS.MENU
+								menu_option = 1
+								menu_list = 4
 						# Take the player one level back
-						"cancel":
-							current_menu = MENUS.MENU
-							menu_option = 1
-							menu_list = 4
+					if Input.is_action_just_pressed("cancel"):
+						current_menu = MENUS.MENU
+						menu_option = 1
+						menu_list = 4
+				
 				MENUS.VIDEO: # Video settings
-					match processed_event:
-						# Menu navigation
-						"down":
-							menu_option = (menu_option + 1) % menu_list
-						"up":
-							menu_option = (menu_option - 1)
-							if menu_option < 0:
-								menu_option = menu_list - 1
-						# Settings are controlled with the left and right keys
-						"left":
-							match menu_option:
-								0:
-									Persistent.Env.adjustment_brightness = max(Persistent.Env.adjustment_brightness - 0.25, 0.0)
-								1:
-									Persistent.Env.adjustment_contrast = max(Persistent.Env.adjustment_contrast - 0.25, 0.0)
-								2:
-									Persistent.Env.adjustment_saturation = max(Persistent.Env.adjustment_saturation - 0.25, 0.0)
-								3:
-									Persistent.fullscreen = !Persistent.fullscreen
-						"right":
-							match menu_option:
-								0:
-									Persistent.Env.adjustment_brightness = min(Persistent.Env.adjustment_brightness + 0.25, 8.0)
-								1:
-									Persistent.Env.adjustment_contrast = min(Persistent.Env.adjustment_contrast + 0.25, 8.0)
-								2:
-									Persistent.Env.adjustment_saturation = min(Persistent.Env.adjustment_saturation + 0.25, 8.0)
-								3:
-									Persistent.fullscreen = !Persistent.fullscreen
+					if Input.is_action_just_pressed("down"):
+						menu_option = (menu_option + 1) % menu_list
+					elif Input.is_action_just_pressed("up"):
+						menu_option = (menu_option - 1)
+						if menu_option < 0:
+							menu_option = menu_list - 1
+					# Settings are controlled with the left and right keys
+					elif Input.is_action_just_pressed("left"):
+						match menu_option:
+							0:
+								Persistent.Env.adjustment_brightness = max(Persistent.Env.adjustment_brightness - 0.25, 0.0)
+							1:
+								Persistent.Env.adjustment_contrast = max(Persistent.Env.adjustment_contrast - 0.25, 0.0)
+							2:
+								Persistent.Env.adjustment_saturation = max(Persistent.Env.adjustment_saturation - 0.25, 0.0)
+							3:
+								Persistent.fullscreen = !Persistent.fullscreen
+					elif Input.is_action_just_pressed("right"):
+						match menu_option:
+							0:
+								Persistent.Env.adjustment_brightness = min(Persistent.Env.adjustment_brightness + 0.25, 8.0)
+							1:
+								Persistent.Env.adjustment_contrast = min(Persistent.Env.adjustment_contrast + 0.25, 8.0)
+							2:
+								Persistent.Env.adjustment_saturation = min(Persistent.Env.adjustment_saturation + 0.25, 8.0)
+							3:
+								Persistent.fullscreen = !Persistent.fullscreen
 						# Select an option
-						"jump", "attack":
-							match menu_option:
-								3:
-									Persistent.fullscreen = !Persistent.fullscreen
-								4:
-									current_menu = MENUS.OPTIONS
-									menu_option = 0
-									menu_list = 5
-						# Go one level back
-						"cancel":
-							current_menu = MENUS.OPTIONS
-							menu_option = 0
-							menu_list = 5
+					elif Input.is_action_just_pressed("jump") or Input.is_action_just_pressed("attack"):
+						match menu_option:
+							3:
+								Persistent.fullscreen = !Persistent.fullscreen
+							4:
+								current_menu = MENUS.OPTIONS
+								menu_option = 0
+								menu_list = 5
+					# Go one level back
+					elif Input.is_action_just_pressed("cancel"):
+						current_menu = MENUS.OPTIONS
+						menu_option = 0
+						menu_list = 5
+				
 				MENUS.CONTROLS: # Control settings
 					if not change_controls: # If the player isn't currently
 						# rebinding a key
-						match processed_event:
-							# Menu navigation
-							"down":
-								menu_option = (menu_option + 1) % menu_list
-							"up":
-								menu_option = (menu_option - 1)
-								if menu_option < 0:
-									menu_option = menu_list - 1
+						
+						# Menu navigation
+						if Input.is_action_just_pressed("down"):
+							menu_option = (menu_option + 1) % menu_list
+						elif Input.is_action_just_pressed("up"):
+							menu_option = (menu_option - 1)
+							if menu_option < 0:
+								menu_option = menu_list - 1
 							# Select an option
-							"jump", "attack":
-								# The only option that doesn't make you
-								# rebind keys is the Back option
-								if menu_option != 7:
-									control_change = menu_option
-									change_controls = true
-								else:
-									current_menu = MENUS.OPTIONS
-									menu_option = 3
-									menu_list = 5
-							# Go one level back
-							"cancel":
+						elif Input.is_action_just_pressed("jump") or Input.is_action_just_pressed("attack"):
+							# The only option that doesn't make you
+							# rebind keys is the Back option
+							if menu_option != 7:
+								control_change = menu_option
+								change_controls = true
+							else:
 								current_menu = MENUS.OPTIONS
 								menu_option = 3
 								menu_list = 5
-					else: # If the player is rebinding a key
+						# Go one level back
+						elif Input.is_action_just_pressed("cancel"):
+							current_menu = MENUS.OPTIONS
+							menu_option = 3
+							menu_list = 5
+					elif not Input.is_action_just_released("jump") and not Input.is_action_just_released("attack") and not event is InputEventJoypadMotion: # If the player is rebinding a key
 						change_controls = false
 						# _input() is called whenever a key is pressed,
 						# so if they press a key and are rebinding it,
 						# they won't be rebinding it anymore
 						match control_change: # What control is being changed?
 							0:
-								Inputs.left_key = event.scancode
+								Inputs.left_key = Inputs.input_to_array(event)
 							1:
-								Inputs.right_key = event.scancode
+								Inputs.right_key = Inputs.input_to_array(event)
 							2:
-								Inputs.up_key = event.scancode
+								Inputs.up_key = Inputs.input_to_array(event)
 							3:
-								Inputs.down_key = event.scancode
+								Inputs.down_key = Inputs.input_to_array(event)
 							4:
-								Inputs.jump_key = event.scancode
+								Inputs.jump_key = Inputs.input_to_array(event)
 							5:
-								Inputs.attack_key = event.scancode
+								Inputs.attack_key = Inputs.input_to_array(event)
 							6:
-								Inputs.cancel_key = event.scancode
+								Inputs.cancel_key = Inputs.input_to_array(event)
+						Inputs.set_actions()
 				MENUS.CREDITS:
-					match processed_event:
-						# Credits only has one option, and it just takes you
-						# One level back
-						"jump", "attack", "cancel":
-							current_menu = MENUS.MENU
-							menu_option = 2
-							menu_list = 4
-							CreditsAnimation.stop(true)
-				MENUS.SELECT_SAVE:
-					match processed_event:
-					# Menu navigation
-						"down":
-							menu_option = (menu_option + 1) % menu_list
-						"up":
-							menu_option = (menu_option - 1)
-							if menu_option < 0:
-								menu_option = menu_list - 1
-						"jump", "attack":
-							pass
+					# Credits only has one option, and it just takes you
+					# One level back
+					if Input.is_action_just_pressed("jump") or Input.is_action_just_pressed("attack") or Input.is_action_just_pressed("cancel"):
+						current_menu = MENUS.MENU
+						menu_option = 2
+						menu_list = 4
+						CreditsAnimation.stop(true)
+#				MENUS.SELECT_SAVE:
+#
 		
 		visual_update() # Update how the menu looks like
 

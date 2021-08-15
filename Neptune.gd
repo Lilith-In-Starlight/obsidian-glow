@@ -176,12 +176,12 @@ func _process(delta):
 	# Create the inputs
 	match Persistent.player_cutscene:
 		"no": # No cutscene
-			move_up = Input.is_key_pressed(Inputs.up_key)
-			move_down = Input.is_key_pressed(Inputs.down_key)
-			move_left = Input.is_key_pressed(Inputs.left_key)
-			move_right = Input.is_key_pressed(Inputs.right_key)
-			jump_press = Input.is_key_pressed(Inputs.jump_key)
-			attack_press = Input.is_key_pressed(Inputs.attack_key)
+			move_up = Input.is_action_pressed("up")
+			move_down = Input.is_action_pressed("down")
+			move_left = Input.is_action_pressed("left")
+			move_right = Input.is_action_pressed("right")
+			jump_press = Input.is_action_pressed("jump")
+			attack_press = Input.is_action_pressed("attack")
 			
 			# Abilities
 			for i in Persistent.notch_fillers.size():

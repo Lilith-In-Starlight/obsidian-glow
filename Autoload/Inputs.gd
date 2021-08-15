@@ -64,6 +64,31 @@ func set_actions():
 				event.button_index = code[0]
 				InputMap.action_add_event(i, event)
 
+func set_ability_actions():
+	var abilities := ["dash", "slash"]
+	for i in abilities:
+		InputMap.action_erase_events(i)
+	for i in Persistent.notches:
+		if Persistent.notch_keys[i] is int:
+			Persistent.notch_keys[i] = [Persistent.notch_keys[i], METHODS.KEYBOARD]
+		if Persistent.notch_fillers[i] != "":
+			if Persistent.notch_keys[i][0] != -1:
+				var code = Persistent.notch_keys[i]
+				var event
+				match code[1]:
+					METHODS.KEYBOARD:
+						event = InputEventKey.new()
+						event.scancode = code[0]
+						InputMap.action_add_event(Persistent.notch_fillers[i], event)
+					METHODS.MOUSE:
+						event = InputEventMouseButton.new()
+						event.button_index = code[0]
+						InputMap.action_add_event(Persistent.notch_fillers[i], event)
+					METHODS.CONTROLLER:
+						event = InputEventJoypadButton.new()
+						event.button_index = code[0]
+						InputMap.action_add_event(Persistent.notch_fillers[i], event)
+
 func input_to_array(event):
 	if event is InputEventKey:
 		return [event.scancode, METHODS.KEYBOARD]

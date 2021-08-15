@@ -184,12 +184,8 @@ func _process(delta):
 			attack_press = Input.is_action_pressed("attack")
 			
 			# Abilities
-			for i in Persistent.notch_fillers.size():
-				match Persistent.notch_fillers[i]:
-					"dash":
-						dash_press = Input.is_key_pressed(Persistent.notch_keys[i])
-					"slash":
-						slash_press = Input.is_key_pressed(Persistent.notch_keys[i])
+			dash_press = Input.is_action_pressed("dash")
+			slash_press = Input.is_action_pressed("slash")
 			
 		"door": # When the player enters a door
 			move_up = false

@@ -105,6 +105,7 @@ func _ready():
 	
 	if err_save == OK:
 		load_()
+		Inputs.set_ability_actions()
 	
 	if err_settings == OK:
 		Env.adjustment_brightness = Settings.get_value("video", "brightness", 1.0)

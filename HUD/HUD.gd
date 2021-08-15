@@ -296,209 +296,203 @@ func _input(event):
 			MENUS.ABILITIES:
 				match notch_mode:
 					NOTCH_MODES.NONE:
-						match event.scancode:
 							# Close menu
-							KEY_ESCAPE:
-								c_menu = MENUS.NONE
+						if Input.is_action_just_pressed("pause"):
+							c_menu = MENUS.NONE
 							
 							# Navigate menu
-							Inputs.left_key:
-								selected_notch = (selected_notch + 1) % Persistent.notches
-							Inputs.right_key:
-								selected_notch = selected_notch - 1
-								if selected_notch < 0:
-									selected_notch = Persistent.notches - 1
-							
+						elif Input.is_action_just_pressed("left"):
+							selected_notch = (selected_notch + 1) % Persistent.notches
+						elif Input.is_action_just_pressed("right"):
+							selected_notch = selected_notch - 1
+							if selected_notch < 0:
+								selected_notch = Persistent.notches - 1
+						
 							# Change ability
-							Inputs.jump_key:
-								if not center_notch:
-									if Persistent.player_cutscene == "no" and Persistent.near_bench:
-										notch_mode = NOTCH_MODES.ABILITY
-										selected_ability = Persistent.abilities.find(Persistent.notch_fillers[selected_notch])
-										# This makes sure that when the player is going to select an ability
-										# the first one in their list is the one in the current notch, if any
-										if selected_ability < 0:
-											selected_ability = 0
-								else:
-									c_menu = MENUS.MASKS
-							
+						elif Input.is_action_just_pressed("jump"):
+							if not center_notch:
+								if Persistent.player_cutscene == "no" and Persistent.near_bench:
+									notch_mode = NOTCH_MODES.ABILITY
+									selected_ability = Persistent.abilities.find(Persistent.notch_fillers[selected_notch])
+									# This makes sure that when the player is going to select an ability
+									# the first one in their list is the one in the current notch, if any
+									if selected_ability < 0:
+										selected_ability = 0
+							else:
+								c_menu = MENUS.MASKS
+						
 							# Rebind notch
-							Inputs.attack_key:
-								if not center_notch:
-									if Persistent.player_cutscene == "no":
-										notch_mode = NOTCH_MODES.KEY
-								else:
-									c_menu = MENUS.MASKS
+						elif Input.is_action_just_pressed("attack"):
+							if not center_notch:
+								if Persistent.player_cutscene == "no":
+									notch_mode = NOTCH_MODES.KEY
+							else:
+								c_menu = MENUS.MASKS
 							
-							Inputs.up_key, Inputs.down_key:
-								center_notch = !center_notch
+						elif Input.is_action_just_pressed("up") or Input.is_action_just_pressed("down"):
+							center_notch = !center_notch
 					
 					NOTCH_MODES.ABILITY:
-						match event.scancode:
 							# Ability has been selected
-							Inputs.jump_key:
-								notch_mode = NOTCH_MODES.NONE
+						if Input.is_action_just_pressed("jump"):
+							notch_mode = NOTCH_MODES.NONE
 							
 							# Menu navigation
-							Inputs.left_key:
-								selected_ability = (selected_ability + 1) % Persistent.abilities.size()
-							Inputs.right_key:
-								selected_ability = (selected_ability - 1)
-								if selected_ability < 0:
-									selected_ability = Persistent.abilities.size() - 1
+						elif Input.is_action_just_pressed("left"):
+							selected_ability = (selected_ability + 1) % Persistent.abilities.size()
+						elif Input.is_action_just_pressed("right"):
+							selected_ability = (selected_ability - 1)
+							if selected_ability < 0:
+								selected_ability = Persistent.abilities.size() - 1
 							
-							# Rebind notch
-							Inputs.attack_key:
-								notch_mode = NOTCH_MODES.KEY
+						# Rebind notch
+						elif Input.is_action_just_pressed("attack"):
+							notch_mode = NOTCH_MODES.KEY
 						
 						# Update the current notch's ability
 						Persistent.notch_fillers[selected_notch] = Persistent.abilities[selected_ability]
 					
 					NOTCH_MODES.KEY:
-						# -1 means no key
-						var key := -1
-						# You can press escape to remove the key
-						if event.scancode != KEY_ESCAPE:
-							key = event.scancode
+						if not Input.is_action_just_released("attack") and not event is InputEventJoypadMotion:
+							# -1 means no key
+							var key := [-1, 0]
+							# You can press escape to remove the key
+							if not Input.is_action_just_pressed("pause"):
+								key = Inputs.input_to_array(event)
+								
+							# Update notch key
+							Persistent.notch_keys[selected_notch] = key
 							
-						# Update notch key
-						Persistent.notch_keys[selected_notch] = key
-						
-						# Exit the rebind mode
-						notch_mode = NOTCH_MODES.NONE
+							# Exit the rebind mode
+							notch_mode = NOTCH_MODES.NONE
+							Inputs.set_ability_actions()
 						
 			MENUS.DASH, MENUS.DIARY:
 				# Both of these are just screens you can exit by pressing a key
-				if ($ObtainedDash.modulate.a > 0.8 or $ObtainedDiary.modulate.a > 0.8) and (event.scancode == Inputs.attack_key or event.scancode == Inputs.jump_key):
+				if ($ObtainedDash.modulate.a > 0.8 or $ObtainedDiary.modulate.a > 0.8) and (Input.is_action_just_pressed("jump") or Input.is_action_just_pressed("attack")):
 					c_menu = MENUS.NONE
 					Player.NoMoveTimer.start()
 			
 			MENUS.PAUSE:
-				match event.scancode:
 					# Unpause
-					KEY_ESCAPE, Inputs.cancel_key:
-						c_menu = MENUS.NONE
-					
-					# Menu navigation
-					Inputs.down_key:
-						pause_menu_value = (pause_menu_value + 1) % 2
-					Inputs.up_key:
-						pause_menu_value = pause_menu_value - 1 
-						if pause_menu_value < 0:
+				if Input.is_action_just_pressed("pause") or Input.is_action_just_pressed("cancel"):
+					c_menu = MENUS.NONE
+				
+				# Menu navigation
+				elif Input.is_action_just_pressed("down"):
+					pause_menu_value = (pause_menu_value + 1) % 2
+				elif Input.is_action_just_pressed("up"):
+					pause_menu_value = pause_menu_value - 1 
+					if pause_menu_value < 0:
+						pause_menu_value = 1
+				
+				# Select an option
+				elif Input.is_action_just_pressed("jump") or Input.is_action_just_pressed("attack"):
+					match pause_menu_value:
+						0: # Resume, unpause
+							c_menu = MENUS.NONE
+						1: # Quit
+							c_menu = MENUS.QUIT
 							pause_menu_value = 1
-					
-					# Select an option
-					Inputs.jump_key, Inputs.attack_key:
-						match pause_menu_value:
-							0: # Resume, unpause
-								c_menu = MENUS.NONE
-							1: # Quit
-								c_menu = MENUS.QUIT
-								pause_menu_value = 1
 			
 			MENUS.QUIT:
-				match event.scancode:
-					# Back to pause menu
-					KEY_ESCAPE, Inputs.cancel_key:
-						c_menu = MENUS.PAUSE
+				# Back to pause menu
+				if Input.is_action_just_pressed("pause") or Input.is_action_just_pressed("cancel"):
+					c_menu = MENUS.PAUSE
+					pause_menu_value = 1
+				
+				# Menu navigation (this one's horizontal)
+				elif Input.is_action_just_pressed("right"):
+					pause_menu_value = (pause_menu_value + 1) % 2
+				elif Input.is_action_just_pressed("left"):
+					pause_menu_value = pause_menu_value - 1 
+					if pause_menu_value < 0:
 						pause_menu_value = 1
-					
-					# Menu navigation (this one's horizontal)
-					Inputs.right_key:
-						pause_menu_value = (pause_menu_value + 1) % 2
-					Inputs.left_key:
-						pause_menu_value = pause_menu_value - 1 
-						if pause_menu_value < 0:
+				
+				# Select an option
+				elif Input.is_action_just_pressed("jump") or Input.is_action_just_pressed("attack"):
+					match pause_menu_value:
+						0: # Go to menu
+							Persistent.next_scene = load("res://Menu.tscn")
+							Persistent.SChangeTimer.start()
+							quitting = true
+							# Reload the file
+							Persistent.load_()
+						1:
+							# Back to pause menu
+							c_menu = MENUS.PAUSE
 							pause_menu_value = 1
-					
-					# Select an option
-					Inputs.jump_key, Inputs.attack_key:
-						match pause_menu_value:
-							0: # Go to menu
-								Persistent.next_scene = load("res://Menu.tscn")
-								Persistent.SChangeTimer.start()
-								quitting = true
-								# Reload the file
-								Persistent.load_()
-							1:
-								# Back to pause menu
-								c_menu = MENUS.PAUSE
-								pause_menu_value = 1
 			
 			MENUS.OPEN_DIARY:
-				match event.scancode:
-					# Diary navigation
-					Inputs.left_key:
-						Persistent.diary_page = max(Persistent.diary_page - 1, 0)
-					Inputs.right_key:
-						Persistent.diary_page = min(Persistent.diary_page + 1, Persistent.diary.size() - 1)
-					KEY_TAB, KEY_ESCAPE, Inputs.cancel_key:
-						c_menu = MENUS.NONE
+				# Diary navigation
+				if Input.is_action_just_pressed("left"):
+					Persistent.diary_page = max(Persistent.diary_page - 1, 0)
+				elif Input.is_action_just_pressed("right"):
+					Persistent.diary_page = min(Persistent.diary_page + 1, Persistent.diary.size() - 1)
+				elif Input.is_action_just_pressed("diary") or Input.is_action_just_pressed("pause") or Input.is_action_just_pressed("cancel"):
+					c_menu = MENUS.NONE
 			
 			MENUS.MASKS:
-				match event.scancode:
-					Inputs.up_key:
-						if not top_row:
-							if selected_mask < 6:
-								top_row = true
-								selected_mask = min($Masks/Using.get_child_count()-1, selected_mask)
-							else:
-								selected_mask -= 6
-						
-						selected_mask = min($Masks/Collected.get_child_count()-1, selected_mask)
-						
-					Inputs.down_key:
-						if not top_row:
-							selected_mask += 6
-						else:
-							top_row = false
-						selected_mask = min($Masks/Collected.get_child_count()-1, selected_mask)
-						
-					Inputs.left_key:
-						var limit_min := int(selected_mask / 6.0) * 6
-						selected_mask -= 1
-						if selected_mask < limit_min:
-							selected_mask = limit_min
-						elif selected_mask > limit_min + 6:
-							selected_mask = limit_min + 6
-						
-						if top_row:
+				if Input.is_action_just_pressed("up"):
+					if not top_row:
+						if selected_mask < 6:
+							top_row = true
 							selected_mask = min($Masks/Using.get_child_count()-1, selected_mask)
 						else:
-							selected_mask = min($Masks/Collected.get_child_count()-1, selected_mask)
-						
-						
-						
-					Inputs.right_key:
-						var limit_min := int(selected_mask / 6.0) * 6
-						selected_mask += 1
-						if selected_mask < limit_min:
-							selected_mask = limit_min
-						elif selected_mask > limit_min + 6:
-							selected_mask = limit_min + 6
-						
-						
-						if top_row:
-							selected_mask = min($Masks/Using.get_child_count()-1, selected_mask)
-						else:
-							selected_mask = min($Masks/Collected.get_child_count()-1, selected_mask)
-						
-					Inputs.attack_key, Inputs.jump_key:
-						if Persistent.near_bench:
-							if top_row:
-								Persistent.masks_wearing[selected_mask] = "none"
-							else:
-								var c_mask = $Masks/Collected.get_children()[selected_mask]
-								var find = Persistent.masks_wearing.find(c_mask.mask_hud)
-								if find != -1:
-									Persistent.masks_wearing[find] = "none"
-								else:
-									find = Persistent.masks_wearing.find("none")
-									if find != -1 and Persistent.masks.has(c_mask.mask_hud):
-										Persistent.masks_wearing[find] = c_mask.mask_hud
+							selected_mask -= 6
 					
-					Inputs.cancel_key, KEY_ESCAPE:
-						c_menu = MENUS.ABILITIES
+					selected_mask = min($Masks/Collected.get_child_count()-1, selected_mask)
+					
+				elif Input.is_action_just_pressed("down"):
+					if not top_row:
+						selected_mask += 6
+					else:
+						top_row = false
+					selected_mask = min($Masks/Collected.get_child_count()-1, selected_mask)
+					
+				elif Input.is_action_just_pressed("left"):
+					var limit_min := int(selected_mask / 6.0) * 6
+					selected_mask -= 1
+					if selected_mask < limit_min:
+						selected_mask = limit_min
+					elif selected_mask > limit_min + 6:
+						selected_mask = limit_min + 6
+					
+					if top_row:
+						selected_mask = min($Masks/Using.get_child_count()-1, selected_mask)
+					else:
+						selected_mask = min($Masks/Collected.get_child_count()-1, selected_mask)
+					
+				elif Input.is_action_just_pressed("right"):
+					var limit_min := int(selected_mask / 6.0) * 6
+					selected_mask += 1
+					if selected_mask < limit_min:
+						selected_mask = limit_min
+					elif selected_mask > limit_min + 6:
+						selected_mask = limit_min + 6
+					
+					
+					if top_row:
+						selected_mask = min($Masks/Using.get_child_count()-1, selected_mask)
+					else:
+						selected_mask = min($Masks/Collected.get_child_count()-1, selected_mask)
+					
+				elif Input.is_action_just_pressed("attack") or Input.is_action_just_pressed("jump"):
+					if Persistent.near_bench:
+						if top_row:
+							Persistent.masks_wearing[selected_mask] = "none"
+						else:
+							var c_mask = $Masks/Collected.get_children()[selected_mask]
+							var find = Persistent.masks_wearing.find(c_mask.mask_hud)
+							if find != -1:
+								Persistent.masks_wearing[find] = "none"
+							else:
+								find = Persistent.masks_wearing.find("none")
+								if find != -1 and Persistent.masks.has(c_mask.mask_hud):
+									Persistent.masks_wearing[find] = c_mask.mask_hud
+				
+				elif Input.is_action_just_pressed("pause") or Input.is_action_just_pressed("cancel"):
+					c_menu = MENUS.ABILITIES
 
 # If the player's health lowers, make the attack vignette appear
 func health_changed(change):

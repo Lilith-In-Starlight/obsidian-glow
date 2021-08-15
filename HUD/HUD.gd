@@ -308,7 +308,7 @@ func _input(event):
 							if selected_notch < 0:
 								selected_notch = Persistent.notches - 1
 						
-							# Change ability
+						# Change ability
 						elif Input.is_action_just_pressed("jump"):
 							if not center_notch:
 								if Persistent.player_cutscene == "no" and Persistent.near_bench:
@@ -321,7 +321,7 @@ func _input(event):
 							else:
 								c_menu = MENUS.MASKS
 						
-							# Rebind notch
+						# Rebind notch
 						elif Input.is_action_just_pressed("attack"):
 							if not center_notch:
 								if Persistent.player_cutscene == "no":
@@ -336,6 +336,7 @@ func _input(event):
 							# Ability has been selected
 						if Input.is_action_just_pressed("jump"):
 							notch_mode = NOTCH_MODES.NONE
+							Inputs.set_ability_actions()
 							
 							# Menu navigation
 						elif Input.is_action_just_pressed("left"):

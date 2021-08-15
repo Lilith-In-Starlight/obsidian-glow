@@ -105,7 +105,7 @@ func _ready():
 	
 	if err_save == OK:
 		load_()
-		Inputs.set_ability_actions()
+	
 	
 	if err_settings == OK:
 		Env.adjustment_brightness = Settings.get_value("video", "brightness", 1.0)
@@ -170,11 +170,14 @@ func load_():
 		if notch_fillers.size() < notches:
 			notch_fillers.append("")
 		if notch_keys.size() < notches:
-			notch_keys.append(-1)
+			notch_keys.append([-1, 0])
 	
 	for i in faces:
 		if masks_wearing.size() < faces:
 			masks_wearing.append("none")
+	
+	
+	Inputs.set_ability_actions()
 
 func save(game:bool = true):
 	loaded_scene = get_tree().current_scene.filename

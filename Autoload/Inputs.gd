@@ -22,6 +22,7 @@ var diary_key := [KEY_TAB, METHODS.KEYBOARD]
 
 func _ready():
 	set_actions()
+	Inputs.set_ability_actions()
 
 func custom_scancode_str(code:Array):
 	if code[0] == -1:

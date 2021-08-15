@@ -268,31 +268,30 @@ func _input(event):
 	if (event is InputEventKey or event is InputEventMouseButton or event is InputEventJoypadButton or event is InputEventJoypadMotion) and not quitting:
 		match c_menu:
 			MENUS.NONE: # No menu
-				match event.scancode:
-					KEY_I:
-						# Open the abilities menu
-						c_menu = MENUS.ABILITIES
-					Inputs.jump_key:
-						# Advance the dialogue
-						var changed := false # Only start the nomovetimer
-						# if the dialogue has been started
-						if !dialogue.empty():
-							if DialogueText.visible_characters >= DialogueText.text.length() - 1:
-								changed = true
-								dialogue.pop_front()
-								DialogueText.visible_characters = 0
-							else:
-								DialogueText.visible_characters = DialogueText.text.length()
-							
-						if changed and dialogue.empty():
-							Player.NoMoveTimer.start()
-					KEY_ESCAPE:
-						# Pause the game
-						c_menu = MENUS.PAUSE
-					KEY_TAB:
-						# Open the diary
-						if Persistent.got_diary:
-							c_menu = MENUS.OPEN_DIARY
+				if Input.is_action_just_pressed("inventory"):
+					# Open the abilities menu
+					c_menu = MENUS.ABILITIES
+				elif Input.is_action_just_pressed("jump"):
+					# Advance the dialogue
+					var changed := false # Only start the nomovetimer
+					# if the dialogue has been started
+					if !dialogue.empty():
+						if DialogueText.visible_characters >= DialogueText.text.length() - 1:
+							changed = true
+							dialogue.pop_front()
+							DialogueText.visible_characters = 0
+						else:
+							DialogueText.visible_characters = DialogueText.text.length()
+						
+					if changed and dialogue.empty():
+						Player.NoMoveTimer.start()
+				elif Input.is_action_just_pressed("pause"):
+					# Pause the game
+					c_menu = MENUS.PAUSE
+				elif Input.is_action_just_pressed("diary"):
+					# Open the diary
+					if Persistent.got_diary:
+						c_menu = MENUS.OPEN_DIARY
 			
 			MENUS.ABILITIES:
 				match notch_mode:

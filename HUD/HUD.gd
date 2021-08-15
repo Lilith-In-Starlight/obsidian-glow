@@ -265,7 +265,7 @@ func _process(delta):
 				$Masks/Text.text = ""
 func _input(event):
 	# Player can only interact with the HUD if they're not quitting the game
-	if event is InputEventKey and not event.is_echo() and event.is_pressed() and not quitting:
+	if (event is InputEventKey or event is InputEventMouseButton or event is InputEventJoypadButton or event is InputEventJoypadMotion) and not quitting:
 		match c_menu:
 			MENUS.NONE: # No menu
 				match event.scancode:

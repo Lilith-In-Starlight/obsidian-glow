@@ -59,7 +59,6 @@ func _ready():
 	Persistent.first_load = true
 	get_tree().paused = false # If the player comes from the game pause menu
 	# the tree will be paused, unpause it
-	var err
 	$HTTPRequest.request("https://itch.io/api/1/x/wharf/latest?game_id=1138381&channel_name=win")
 	# Request to see the current version of the game on the itch.io page
 	

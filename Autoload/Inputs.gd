@@ -17,6 +17,9 @@ var jump_key := [KEY_Z, METHODS.KEYBOARD]
 var attack_key := [KEY_X, METHODS.KEYBOARD]
 var cancel_key := [KEY_C, METHODS.KEYBOARD]
 
+var inventory_key := [KEY_I, METHODS.KEYBOARD]
+var diary_key := [KEY_TAB, METHODS.KEYBOARD]
+
 func _ready():
 	set_actions()
 
@@ -40,6 +43,8 @@ func set_actions():
 		"jump" : jump_key,
 		"attack" : attack_key,
 		"cancel" : cancel_key,
+		"inventory" : inventory_key,
+		"diary" : diary_key
 	}
 	InputMap.load_from_globals()
 	for i in input_dict.keys():

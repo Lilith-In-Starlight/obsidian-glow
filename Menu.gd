@@ -152,7 +152,7 @@ func _input(event):
 							3: # Control settings
 								current_menu = MENUS.CONTROLS
 								menu_option = 0
-								menu_list = 8
+								menu_list = 10
 							4: # Back to the menu
 								current_menu = MENUS.MENU
 								menu_option = 1
@@ -221,7 +221,7 @@ func _input(event):
 						elif Input.is_action_just_pressed("jump") or Input.is_action_just_pressed("attack"):
 							# The only option that doesn't make you
 							# rebind keys is the Back option
-							if menu_option != 7:
+							if menu_option != 9:
 								control_change = menu_option
 								change_controls = true
 							else:
@@ -253,6 +253,10 @@ func _input(event):
 								Inputs.attack_key = Inputs.input_to_array(event)
 							6:
 								Inputs.cancel_key = Inputs.input_to_array(event)
+							7:
+								Inputs.inventory_key = Inputs.input_to_array(event)
+							8:
+								Inputs.diary_key = Inputs.input_to_array(event)
 						Inputs.set_actions()
 				MENUS.CREDITS:
 					# Credits only has one option, and it just takes you

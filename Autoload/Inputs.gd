@@ -32,7 +32,10 @@ func custom_scancode_str(code:Array):
 	else:
 		match code[1]:
 			METHODS.KEYBOARD:
-				return OS.get_scancode_string(code[0])
+				var scancode_string := OS.get_scancode_string(code[0])
+				if scancode_string == "I":
+					scancode_string = "i"
+				return scancode_string
 			METHODS.CONTROLLER:
 				if Input.get_connected_joypads().size() > 0:
 					var nam := Input.get_joy_name(0).to_lower()

@@ -76,6 +76,8 @@ func _init():
 func _ready():
 	if not (Persistent.jump_tutorial and Persistent.attack_tutorial and Persistent.heal_tutorial):
 		Instructions.rect_position.x = 0
+	else:
+		Instructions.rect_position.x = 400
 	$Darkness.value = Persistent.shadow
 	Player.connect("health_change", self, "health_changed")
 	for i in Persistent.notches:
@@ -198,11 +200,13 @@ func _process(delta):
 			get_tree().paused = true
 			$ObtainedDash.modulate.a = move_toward($ObtainedDash.modulate.a, 1.0, 0.01)
 			$ObtainedDiary.modulate.a = move_toward($ObtainedDiary.modulate.a, 0.0, 0.05)
+			$ObtainedDash/Label2.text = "ACCELERATE FORWARD FOR A SHORT TIME  AND IGNORE  GRAVITY\nPRESS [key] NEAR A BENCH TO SET YOUR ABILITIES".replace("[key]", Inputs.custom_scancode_str(Inputs.inventory_key))
 		MENUS.DIARY:
 			$Pause.visible = false
 			get_tree().paused = true
 			$ObtainedDash.modulate.a = move_toward($ObtainedDash.modulate.a, 0.0, 0.05)
 			$ObtainedDiary.modulate.a = move_toward($ObtainedDiary.modulate.a, 1.0, 0.01)
+			$ObtainedDiary/Label2.text = "COLLECT YOUR THOUGHTS AND INFORMATION ABOUT CREATURES, PLACES AND PEOPLE\nPRESS [key] TO READ IT".replace("[key]", Inputs.custom_scancode_str(Inputs.diary_key))
 		MENUS.PAUSE, MENUS.QUIT:
 			get_tree().paused = true
 			var children

@@ -51,31 +51,29 @@ func _process(delta):
 		ButtonsLibrarian.modulate.a = move_toward(ButtonsLibrarian.modulate.a, 0.0, 0.08)
 
 func _input(event):
-	if event is InputEventKey and not event.is_echo():
-		if event.is_pressed():
-			if event.scancode == Inputs.up_key:
-				if Player.position.distance_to(position) < 30:
-					inside = !inside
-				elif Player.position.distance_to($librarian.global_position) < 30 and Dialogue.dialogue.empty() and inside:
-					if not Persistent.got_diary:
-						Dialogue.dialogue = [
-									"Ah. As darkness foretold.", 
-									"I find your existence difficult to believe, but alas, you're here.", 
-									"Greetings, Ailment. I am the Librarian. I travel the world in search for information.", "I have been tasked with giving you something, and in turn you must do me a favor.",
-									"You are going to travel the world. I used to be capable of that, but my youth is falling apart.",
-									"Without traveling, there is no world, no information. So, please, take this diary and write on it, or draw, or anything. This will be of aid to you in your travels.",
-									"It is incomplete, however. Visit the spike gardeners, east of here. They are great magicians, and friends of mine, they will know what to do."
-							]
-						Persistent.got_diary = true
-					else:
-						Dialogue.dialogue = [
-								"Goodbye, little sickness. Continue your journeys, there's a lot of world for you to see."
-							]
-		else:
-			if event.scancode == Inputs.attack_key or event.scancode == Inputs.jump_key and Dialogue.dialogue.empty():
-				if not had_it_already and Persistent.got_diary:
-					Dialogue.c_menu = Dialogue.MENUS.DIARY
-					had_it_already = true
+	if Input.is_action_just_pressed("up"):
+		if Player.position.distance_to(position) < 30:
+			inside = !inside
+		elif Player.position.distance_to($librarian.global_position) < 30 and Dialogue.dialogue.empty() and inside:
+			if not Persistent.got_diary:
+				Dialogue.dialogue = [
+							"Ah. As darkness foretold.", 
+							"I find your existence difficult to believe, but alas, you're here.", 
+							"Greetings, Ailment. I am the Librarian. I travel the world in search for information.", "I have been tasked with giving you something, and in turn you must do me a favor.",
+							"You are going to travel the world. I used to be capable of that, but my youth is falling apart.",
+							"Without traveling, there is no world, no information. So, please, take this diary and write on it, or draw, or anything. This will be of aid to you in your travels.",
+							"It is incomplete, however. Visit the spike gardeners, east of here. They are great magicians, and friends of mine, they will know what to do."
+					]
+				Persistent.got_diary = true
+			else:
+				Dialogue.dialogue = [
+						"Goodbye, little sickness. Continue your journeys, there's a lot of world for you to see."
+					]
+	else:
+		if (Input.is_action_just_released("jump") or Input.is_action_just_released("attack")) and Dialogue.dialogue.empty():
+			if not had_it_already and Persistent.got_diary:
+				Dialogue.c_menu = Dialogue.MENUS.DIARY
+				had_it_already = true
 
 
 

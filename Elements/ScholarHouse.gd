@@ -76,8 +76,6 @@ func _input(event):
 				had_it_already = true
 
 
-
-
 func _draw():
 	if not Engine.editor_hint:
 		if Player.position.distance_to(global_position) < 30:

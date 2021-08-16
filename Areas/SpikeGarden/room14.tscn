@@ -64,7 +64,7 @@ position = Vector2( -24, 0 )
 polygon = PoolVector2Array( 24, 179, 24, 225, 624, 225, 624, 179 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="World"]
-position = Vector2( -80, 126 )
+position = Vector2( 0, 126 )
 shape = SubResource( 1 )
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="World"]

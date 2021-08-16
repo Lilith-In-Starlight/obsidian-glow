@@ -242,15 +242,14 @@ custom_fonts/font = SubResource( 1 )
 text = "Back"
 
 [node name="Controls" type="VBoxContainer" parent="."]
-visible = false
 anchor_left = 0.2
 anchor_top = 0.5
 anchor_right = 0.8
 anchor_bottom = 0.5
 margin_left = -72.0
-margin_top = -91.0
-margin_right = -72.0
-margin_bottom = 105.0
+margin_top = -90.5
+margin_right = 70.0
+margin_bottom = 105.5
 grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
@@ -259,74 +258,75 @@ __meta__ = {
 }
 
 [node name="LeftLabel" type="Label" parent="Controls"]
-margin_right = 240.0
-margin_bottom = 16.0
+margin_top = 2.0
+margin_right = 382.0
+margin_bottom = 18.0
 rect_pivot_offset = Vector2( 495, -87 )
 custom_fonts/font = SubResource( 1 )
 text = "Left:"
 
 [node name="RightLabel" type="Label" parent="Controls"]
-margin_top = 20.0
-margin_right = 240.0
-margin_bottom = 36.0
+margin_top = 22.0
+margin_right = 382.0
+margin_bottom = 38.0
 custom_fonts/font = SubResource( 1 )
 text = "Right:"
 
 [node name="UpLabel" type="Label" parent="Controls"]
-margin_top = 40.0
-margin_right = 240.0
-margin_bottom = 56.0
+margin_top = 42.0
+margin_right = 382.0
+margin_bottom = 58.0
 custom_fonts/font = SubResource( 1 )
 text = "Up:"
 
 [node name="DownLabel" type="Label" parent="Controls"]
-margin_top = 60.0
-margin_right = 240.0
-margin_bottom = 76.0
+margin_top = 62.0
+margin_right = 382.0
+margin_bottom = 78.0
 custom_fonts/font = SubResource( 1 )
 text = "Down:"
 
 [node name="JumpLabel" type="Label" parent="Controls"]
-margin_top = 80.0
-margin_right = 240.0
-margin_bottom = 96.0
+margin_top = 82.0
+margin_right = 382.0
+margin_bottom = 98.0
 custom_fonts/font = SubResource( 1 )
 text = "Jump/Confirm 1:"
 
 [node name="AttackLabel" type="Label" parent="Controls"]
-margin_top = 100.0
-margin_right = 240.0
-margin_bottom = 116.0
+margin_top = 102.0
+margin_right = 382.0
+margin_bottom = 118.0
 custom_fonts/font = SubResource( 1 )
 text = "Attack/Confirm 2:"
 
 [node name="CancelLabel" type="Label" parent="Controls"]
-margin_top = 120.0
-margin_right = 240.0
-margin_bottom = 136.0
+margin_top = 122.0
+margin_right = 382.0
+margin_bottom = 138.0
 custom_fonts/font = SubResource( 1 )
 text = "Cancel:"
 
 [node name="InventoryLabel" type="Label" parent="Controls"]
-margin_top = 140.0
-margin_right = 240.0
-margin_bottom = 156.0
+margin_top = 142.0
+margin_right = 382.0
+margin_bottom = 158.0
 custom_fonts/font = SubResource( 1 )
 text = "Inventory:"
 
 [node name="DiaryLabel" type="Label" parent="Controls"]
-margin_top = 160.0
-margin_right = 240.0
-margin_bottom = 176.0
+margin_top = 162.0
+margin_right = 382.0
+margin_bottom = 178.0
 custom_fonts/font = SubResource( 1 )
 text = "Diary:"
 
 [node name="Back" type="Label" parent="Controls"]
-margin_top = 180.0
-margin_right = 240.0
-margin_bottom = 196.0
+margin_top = 182.0
+margin_right = 382.0
+margin_bottom = 198.0
 custom_fonts/font = SubResource( 1 )
-text = "Back"
+text = "Apply and Go Back"
 
 [node name="Credits" type="Panel" parent="."]
 visible = false

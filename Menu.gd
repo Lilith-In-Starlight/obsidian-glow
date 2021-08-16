@@ -54,6 +54,17 @@ var SceneTimer := Timer.new() # Adds some delay to the scene change
 
 var go_to # Tells the game what scene it should go to when the game starts
 
+var new_controls := {
+	"up" : Inputs.up_key,
+	"down" : Inputs.down_key,
+	"left" : Inputs.left_key,
+	"right" : Inputs.right_key,
+	"jump" : Inputs.jump_key,
+	"attack" : Inputs.attack_key,
+	"cancel" : Inputs.cancel_key,
+	"inventory" : Inputs.inventory_key,
+	"diary" : Inputs.diary_key,
+}
 
 func _ready():
 	# Every time the player starts from the menu, it should be treated as
@@ -226,6 +237,17 @@ func _input(event):
 								control_change = menu_option
 								change_controls = true
 							else:
+								var nc := new_controls.duplicate(true)
+								Inputs.left_key = nc["left"]
+								Inputs.right_key = nc["right"]
+								Inputs.up_key = nc["up"]
+								Inputs.down_key = nc["down"]
+								Inputs.jump_key = nc["jump"]
+								Inputs.attack_key = nc["attack"]
+								Inputs.cancel_key = nc["cancel"]
+								Inputs.inventory_key = nc["inventory"]
+								Inputs.diary_key = nc["diary"]
+								Inputs.set_actions()
 								current_menu = MENUS.OPTIONS
 								menu_option = 3
 								menu_list = 5
@@ -241,24 +263,23 @@ func _input(event):
 						# they won't be rebinding it anymore
 						match control_change: # What control is being changed?
 							0:
-								Inputs.left_key = Inputs.input_to_array(event)
+								new_controls["left"] = Inputs.input_to_array(event)
 							1:
-								Inputs.right_key = Inputs.input_to_array(event)
+								new_controls["right"] = Inputs.input_to_array(event)
 							2:
-								Inputs.up_key = Inputs.input_to_array(event)
+								new_controls["up"] = Inputs.input_to_array(event)
 							3:
-								Inputs.down_key = Inputs.input_to_array(event)
+								new_controls["down"] = Inputs.input_to_array(event)
 							4:
-								Inputs.jump_key = Inputs.input_to_array(event)
+								new_controls["jump"] = Inputs.input_to_array(event)
 							5:
-								Inputs.attack_key = Inputs.input_to_array(event)
+								new_controls["attack"] = Inputs.input_to_array(event)
 							6:
-								Inputs.cancel_key = Inputs.input_to_array(event)
+								new_controls["cancel"] = Inputs.input_to_array(event)
 							7:
-								Inputs.inventory_key = Inputs.input_to_array(event)
+								new_controls["inventory"] = Inputs.input_to_array(event)
 							8:
-								Inputs.diary_key = Inputs.input_to_array(event)
-						Inputs.set_actions()
+								new_controls["diary"] = Inputs.input_to_array(event)
 				MENUS.CREDITS:
 					# Credits only has one option, and it just takes you
 					# One level back
@@ -322,15 +343,15 @@ func visual_update():
 			Credits.visible = false
 			
 			# Only update these with their values when the player can see them
-			ControlsLeft.text = "Left: " + Inputs.custom_scancode_str(Inputs.left_key)
-			ControlsRight.text = "Right: " + Inputs.custom_scancode_str(Inputs.right_key)
-			ControlsUp.text = "Up: " + Inputs.custom_scancode_str(Inputs.up_key)
-			ControlsDown.text = "Down: " + Inputs.custom_scancode_str(Inputs.down_key)
-			ControlsJump.text = "Jump/Confirm 1: " + Inputs.custom_scancode_str(Inputs.jump_key)
-			ControlsAttack.text = "Attack/Confirm 2: " + Inputs.custom_scancode_str(Inputs.attack_key)
-			ControlsCancel.text = "Cancel: " + Inputs.custom_scancode_str(Inputs.cancel_key)
-			ControlsInventory.text = "Inventory: " + Inputs.custom_scancode_str(Inputs.inventory_key)
-			ControlsDiary.text = "Diary: " + Inputs.custom_scancode_str(Inputs.diary_key)
+			ControlsLeft.text = "Left: " + Inputs.custom_scancode_str(new_controls["left"])
+			ControlsRight.text = "Right: " + Inputs.custom_scancode_str(new_controls["right"])
+			ControlsUp.text = "Up: " + Inputs.custom_scancode_str(new_controls["up"])
+			ControlsDown.text = "Down: " + Inputs.custom_scancode_str(new_controls["down"])
+			ControlsJump.text = "Jump/Confirm 1: " + Inputs.custom_scancode_str(new_controls["jump"])
+			ControlsAttack.text = "Attack/Confirm 2: " + Inputs.custom_scancode_str(new_controls["attack"])
+			ControlsCancel.text = "Cancel: " + Inputs.custom_scancode_str(new_controls["cancel"])
+			ControlsInventory.text = "Inventory: " + Inputs.custom_scancode_str(new_controls["inventory"])
+			ControlsDiary.text = "Diary: " + Inputs.custom_scancode_str(new_controls["diary"])
 		
 		MENUS.CREDITS:
 			labels_in_menu = Credits.get_children()
@@ -344,7 +365,10 @@ func visual_update():
 	for i in menu_list:
 		# If one of them matches the current option in the menu, color it
 		if i == menu_option:
-			labels_in_menu[i].modulate = Color("#ffc070")
+			if change_controls:
+				labels_in_menu[i].modulate = Color("#69001f")
+			else:
+				labels_in_menu[i].modulate = Color("#ffc070")
 		else:
 			labels_in_menu[i].modulate = Color("#ffffff")
 	

@@ -23,6 +23,8 @@ var diary_key := [KEY_TAB, METHODS.KEYBOARD]
 func _ready():
 	set_actions()
 	Inputs.set_ability_actions()
+	for i in range(0, 22):
+		print(custom_scancode_str([i, 2]))
 
 func custom_scancode_str(code:Array):
 	if code[0] == -1:
@@ -32,7 +34,55 @@ func custom_scancode_str(code:Array):
 			METHODS.KEYBOARD:
 				return OS.get_scancode_string(code[0])
 			METHODS.CONTROLLER:
+				if Input.get_connected_joypads().size() > 0:
+					var nam := Input.get_joy_name(0).to_lower()
+					if nam.find("xbox") or nam.find("xinput") or nam.find("x-box") or nam.find("x360"):
+						match code[0]:
+							0:
+								return "Xbox A"
+							1:
+								return "Xbox B"
+							2:
+								return "Xbox X"
+							3:
+								return "Xbox Y"
+							_:
+								return Input.get_joy_button_string(code[0])
+					elif nam.find("ps3") or nam.find("ps4") or nam.find("ps1") or nam.find("ps2") or nam.find("dualshock") or nam.find("sony"):
+						match code[0]:
+							0:
+								return "Dualshock X"
+							1:
+								return "Circle"
+							2:
+								return "Square"
+							3:
+								return "Triangle"
+							_:
+								return Input.get_joy_button_string(code[0])
+					elif nam.find("ds") or nam.find("nintendo"):
+						match code[0]:
+							0:
+								return "B"
+							1:
+								return "A"
+							2:
+								return "Y"
+							3:
+								return "X"
+							_:
+								return Input.get_joy_button_string(code[0])
 				return Input.get_joy_button_string(code[0])
+			METHODS.MOUSE:
+				match code[0]:
+					BUTTON_LEFT:
+						return "Left Click"
+					BUTTON_RIGHT:
+						return "Right Click"
+					BUTTON_MIDDLE:
+						return "Middle Click"
+					_:
+						return "Mouse"
 
 func set_actions():
 	var event

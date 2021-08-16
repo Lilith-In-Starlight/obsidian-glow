@@ -75,7 +75,7 @@ func _init():
 
 func _ready():
 	if not (Persistent.jump_tutorial and Persistent.attack_tutorial and Persistent.heal_tutorial):
-		Instructions.rect_position.x = 331
+		Instructions.rect_position.x = 0
 	$Darkness.value = Persistent.shadow
 	Player.connect("health_change", self, "health_changed")
 	for i in Persistent.notches:
@@ -105,7 +105,7 @@ func _process(delta):
 	Attacked.get_material().set_shader_param("angry", Persistent.health == 1 and Persistent.masks_wearing.has("survivor"))
 	
 	if not (Persistent.jump_tutorial and Persistent.attack_tutorial and Persistent.heal_tutorial):
-		Instructions.rect_position.x = lerp(Instructions.rect_position.x, 400-59, 0.1)
+		Instructions.rect_position.x = lerp(Instructions.rect_position.x, 0, 0.1)
 	else:
 		Instructions.rect_position.x = lerp(Instructions.rect_position.x, 400, 0.1)
 	

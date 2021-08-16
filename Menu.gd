@@ -34,6 +34,8 @@ onready var ControlsDown := $Controls/DownLabel
 onready var ControlsJump := $Controls/JumpLabel
 onready var ControlsAttack := $Controls/AttackLabel
 onready var ControlsCancel := $Controls/CancelLabel
+onready var ControlsInventory := $Controls/InventoryLabel
+onready var ControlsDiary := $Controls/DiaryLabel
 
 onready var Credits := $Credits
 onready var CreditsAnimation := $Credits/CreditsAnimation
@@ -327,6 +329,8 @@ func visual_update():
 			ControlsJump.text = "Jump/Confirm 1: " + Inputs.custom_scancode_str(Inputs.jump_key)
 			ControlsAttack.text = "Attack/Confirm 2: " + Inputs.custom_scancode_str(Inputs.attack_key)
 			ControlsCancel.text = "Cancel: " + Inputs.custom_scancode_str(Inputs.cancel_key)
+			ControlsInventory.text = "Inventory: " + Inputs.custom_scancode_str(Inputs.inventory_key)
+			ControlsDiary.text = "Diary: " + Inputs.custom_scancode_str(Inputs.diary_key)
 		
 		MENUS.CREDITS:
 			labels_in_menu = Credits.get_children()

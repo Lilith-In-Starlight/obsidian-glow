@@ -64,7 +64,7 @@ position = Vector2( -24, 0 )
 polygon = PoolVector2Array( 24, 179, 24, 225, 624, 225, 624, 179 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="World"]
-position = Vector2( 0, 126 )
+position = Vector2( -64, 126 )
 shape = SubResource( 1 )
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="World"]
@@ -93,7 +93,7 @@ position = Vector2( 694, 162 )
 dialogue = "dia_gardener_kean"
 
 [node name="colo_entrance_mg" type="Sprite" parent="DecoBg"]
-position = Vector2( 137, 119 )
+position = Vector2( 137, 113 )
 texture = ExtResource( 10 )
 script = ExtResource( 12 )
 depth = 1.0
@@ -123,7 +123,7 @@ __meta__ = {
 [node name="DecoFg" type="Node2D" parent="."]
 
 [node name="colo_entrance_fg" type="Sprite" parent="DecoFg"]
-position = Vector2( 141, 103 )
+position = Vector2( 126, 103 )
 texture = ExtResource( 7 )
 script = ExtResource( 12 )
 depth = 0.8

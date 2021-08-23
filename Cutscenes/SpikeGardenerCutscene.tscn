@@ -33,9 +33,9 @@ animations = [ {
 "name": "default",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 6 ) ],
+"frames": [ ExtResource( 4 ) ],
 "loop": true,
-"name": "near",
+"name": "lookback",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 2 ), SubResource( 3 ), SubResource( 4 ), SubResource( 5 ) ],
@@ -43,9 +43,9 @@ animations = [ {
 "name": "nod",
 "speed": 5.0
 }, {
-"frames": [ ExtResource( 4 ) ],
+"frames": [ ExtResource( 6 ) ],
 "loop": true,
-"name": "lookback",
+"name": "near",
 "speed": 5.0
 } ]
 
@@ -61,38 +61,45 @@ shape = SubResource( 1 )
 
 [node name="Gardener3" type="AnimatedSprite" parent="Gardeners"]
 position = Vector2( 102, 49 )
+z_index = -1
 frames = SubResource( 6 )
 animation = "near"
 
 [node name="Gardener7" type="AnimatedSprite" parent="Gardeners"]
 position = Vector2( -53, 49 )
 scale = Vector2( -1, 1 )
+z_index = -1
 frames = SubResource( 6 )
 
 [node name="Gardener8" type="AnimatedSprite" parent="Gardeners"]
 position = Vector2( -155, 49 )
 scale = Vector2( -1, 1 )
+z_index = -1
 frames = SubResource( 6 )
 animation = "near"
 
 [node name="Gardener1" type="AnimatedSprite" parent="Gardeners"]
 position = Vector2( -104, 49 )
 scale = Vector2( -1, 1 )
+z_index = -1
 frames = SubResource( 6 )
 animation = "near"
 
 [node name="Gardener4" type="AnimatedSprite" parent="Gardeners"]
 position = Vector2( 49, 49 )
+z_index = -1
 frames = SubResource( 6 )
 animation = "near"
 
 [node name="Gardener5" type="AnimatedSprite" parent="Gardeners"]
 position = Vector2( 150, 49 )
+z_index = -1
 frames = SubResource( 6 )
 animation = "near"
 
 [node name="Gardener6" type="AnimatedSprite" parent="Gardeners"]
 position = Vector2( 198, 49 )
+z_index = -1
 frames = SubResource( 6 )
 animation = "near"
 

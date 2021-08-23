@@ -662,8 +662,8 @@ func enter_door(x):
 # When the player attacks something
 func _on_body_attacked(body):
 	if not body.is_in_group("grass"):
-		knockback.x = (position-body.position).normalized().x*200
-		speed.y = (position-body.position).normalized().y*250
+		knockback.x = (position-body.global_position).normalized().x*200
+		speed.y = (position-body.global_position).normalized().y*250
 	if body.is_in_group("attackable"): 
 		if not (Persistent.masks_wearing.has("survivor") and Persistent.health == 1) and current_state != STATES.SLASH:
 			body.call("attacked", 1, position, speed)

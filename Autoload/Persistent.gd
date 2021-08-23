@@ -70,6 +70,7 @@ var jump_tutorial := false
 var attack_tutorial := false
 var heal_tutorial := false
 
+
 func _init():
 	for i in notches:
 		if notch_fillers.size() < notches:

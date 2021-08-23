@@ -37,11 +37,11 @@ wait_time = 0.3
 one_shot = true
 
 [node name="Timer2" type="Timer" parent="."]
-wait_time = 0.3
+wait_time = 0.6
 one_shot = true
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
-polygon = PoolVector2Array( 0, -12, -10, 8, 0, 10, 10, 7 )
+polygon = PoolVector2Array( 0, -12, -6, 7, 0, 10, 6, 7 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 5 )

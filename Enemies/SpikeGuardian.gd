@@ -25,6 +25,8 @@ var time_since_last_damage := 0.0
 var noise := OpenSimplexNoise.new()
 var time := 0.0
 
+var locked := 0.5
+
 func _ready():
 	noise.seed = hash(name)
 	if Persistent.killed.has([get_tree().current_scene.filename, name]):
@@ -34,6 +36,8 @@ func _ready():
 
 func _physics_process(delta):
 	time += 1
+	if locked > -0.1:
+		locked -= delta
 	Cast.cast_to = Player.position - global_position
 	$CheesePreventer.cast_to.x = -30 * Animations.scale.x
 	if health <= 0:
@@ -53,7 +57,7 @@ func _physics_process(delta):
 				Animations.play("fall")
 			if not $CheesePreventer.is_colliding():
 				if Cast.is_colliding() and Cast.get_collider() == Player:
-					if Player.position.distance_to(global_position) < 100 and (Player.position.y > global_position.y - 10 or Player.current_state == Player.STATES.AIR) and is_on_floor():
+					if Player.position.distance_to(global_position) < 100 and (Player.position.y > global_position.y - 10 or Player.current_state == Player.STATES.AIR) and is_on_floor() and locked <= 0.0:
 						current_state = STATES.SLASHING
 					else:
 						speed.x = move_toward(speed.x, clamp(50 * -Animations.scale.x + noise.get_noise_1d(time)*150, -50, 50), 50)

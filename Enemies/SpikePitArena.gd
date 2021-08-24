@@ -170,6 +170,33 @@ func _process(delta):
 					fight_set = true
 			9:
 				if not fight_set:
+					var new_gardener := SPIKE_GARDENER.instance()
+					new_gardener.name = str(randi())
+					add_child(new_gardener)
+					new_gardener.position.x = -100
+					new_gardener.position.y = -100
+					
+					new_gardener = SPIKE_GARDENER2.instance()
+					new_gardener.name = str(randi())
+					add_child(new_gardener)
+					new_gardener.position.x = -0
+					new_gardener.position.y = -100
+					
+					new_gardener = SPIKE_GARDENER.instance()
+					new_gardener.name = str(randi())
+					add_child(new_gardener)
+					new_gardener.position.x = 100
+					new_gardener.position.y = -100
+					
+					for i in range(-9, 10):
+						var new_trap := SPIKE_TRAP.instance()
+						$Plants.add_child(new_trap)
+						new_trap.name = str(i)
+						new_trap.position.x = i*15
+						new_trap.position.y = 15
+					fight_set = true
+			10:
+				if not fight_set:
 					var new_gardener := SPIKE_GARDENER2.instance()
 					new_gardener.name = str(randi())
 					add_child(new_gardener)
@@ -179,14 +206,15 @@ func _process(delta):
 					new_gardener = SPIKE_GARDENER.instance()
 					new_gardener.name = str(randi())
 					add_child(new_gardener)
-					new_gardener.position.x = -100
+					new_gardener.position.x = -90
 					new_gardener.position.y = -100
 					
 					new_gardener = SPIKE_GARDENER.instance()
 					new_gardener.name = str(randi())
 					add_child(new_gardener)
-					new_gardener.position.x = 100
+					new_gardener.position.x = 90
 					new_gardener.position.y = -100
+					
 					new_gardener = SPIKE_GARDENER2.instance()
 					new_gardener.name = str(randi())
 					add_child(new_gardener)
@@ -200,6 +228,7 @@ func _process(delta):
 						new_trap.position.x = i*15
 						new_trap.position.y = 15
 					fight_set = true
+		
 		if get_child_count() == 2:
 			if timer > 0.0:
 				timer -= delta

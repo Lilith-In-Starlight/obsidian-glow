@@ -125,7 +125,7 @@ func _physics_process(delta):
 			speed.x *= 0.75
 			Animations.play("dead")
 	
-	speed.y += 70
+	speed.y += 30
 	
 	if is_on_floor():
 		speed.y = 60

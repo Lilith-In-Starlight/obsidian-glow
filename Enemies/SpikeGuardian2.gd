@@ -21,9 +21,9 @@ var sees_player := false
 
 var attack := false
 
-var attack_timer := 1.0
+var attack_timer := 2.5
 
-var health := 5
+var health := 4
 
 var time_since_last_damage := 0.0
 var attacks_while_defending := 0
@@ -114,7 +114,7 @@ func _on_frame_changed():
 				new_spike.rotation = global_position.angle_to_point(Player.position)
 				get_tree().current_scene.get_node("Enemies").add_child(new_spike)
 			6:
-				attack_timer = 2.0
+				attack_timer = 2.5
 				state = STATES.AIR
 
 func attacked(d, pos, s):

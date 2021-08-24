@@ -42,21 +42,21 @@ func _process(delta):
 		match fight:
 			0:
 				if not fight_set:
-					spawn_gardener(-100)
+					spawn_gardener(-100, 1)
 					fight_set = true
 			1:
 				if not fight_set:
-					spawn_gardener(-100)
-					spawn_gardener(100)
+					spawn_gardener(-100, 1)
+					spawn_gardener(100, 1)
 					fight_set = true
 			2:
 				if not fight_set:
-					spawn_gardener(-50)
-					spawn_gardener(50)
+					spawn_gardener(-50, 1)
+					spawn_gardener(50, 1)
 					fight_set = true
 			3:
 				if not fight_set:
-					spawn_gardener(0)
+					spawn_gardener(0, 1)
 					for i in range(-3, 4):
 						var new_trap := SPIKE_TRAP.instance()
 						$Plants.add_child(new_trap)
@@ -66,8 +66,8 @@ func _process(delta):
 					fight_set = true
 			4:
 				if not fight_set:
-					spawn_gardener(100)
-					spawn_gardener(-100)
+					spawn_gardener(100, 1)
+					spawn_gardener(-100, 1)
 					for i in range(-15, 10):
 						var new_trap := SPIKE_TRAP.instance()
 						if $Plants.get_node_or_null(str(i)) == null:
@@ -90,12 +90,12 @@ func _process(delta):
 			7:
 				if not fight_set:
 					spawn_gardener(-100, 2)
-					spawn_gardener(100)
+					spawn_gardener(100, 1)
 					fight_set = true
 			8:
 				if not fight_set:
 					spawn_gardener(-100, 2)
-					spawn_gardener(0)
+					spawn_gardener(0, 1)
 					spawn_gardener(100, 2)
 					for i in range(-3, 4):
 						var new_trap := SPIKE_TRAP.instance()
@@ -106,9 +106,9 @@ func _process(delta):
 					fight_set = true
 			9:
 				if not fight_set:
-					spawn_gardener(-100)
+					spawn_gardener(-100, 1)
 					spawn_gardener(0, 2)
-					spawn_gardener(100)
+					spawn_gardener(100, 1)
 					
 					for i in range(-9, 10):
 						var new_trap := SPIKE_TRAP.instance()
@@ -120,8 +120,8 @@ func _process(delta):
 			10:
 				if not fight_set:
 					spawn_gardener(-180, 2)
-					spawn_gardener(-90)
-					spawn_gardener(90)
+					spawn_gardener(-60, 1)
+					spawn_gardener(60, 1)
 					spawn_gardener(180, 2)
 					
 					for i in range(-15, 16):
@@ -141,12 +141,13 @@ func _process(delta):
 				fight += 1
 
 
-func spawn_gardener(x:float, type:int = 0):
+func spawn_gardener(x:float, type):
 	var new_gardener
 	match type:
-		1, _:
+		1:
 			new_gardener = SPIKE_GARDENER.instance()
 		2:
+			print("a")
 			new_gardener = SPIKE_GARDENER2.instance()
 	new_gardener.name = str(randi())
 	add_child(new_gardener)

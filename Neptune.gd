@@ -142,7 +142,7 @@ func _ready():
 	ReAttackTimer.one_shot = true
 	ReAttackTimer.connect("timeout", self, "attack_again")
 	add_child(IvulnerableTimer)
-	IvulnerableTimer.wait_time =  0.2
+	IvulnerableTimer.wait_time =  0.3
 	IvulnerableTimer.one_shot = true
 	IvulnerableTimer.connect("timeout", self, "vulnerable_again")
 	add_child(NoMoveTimer)

@@ -70,6 +70,8 @@ var jump_tutorial := false
 var attack_tutorial := false
 var heal_tutorial := false
 
+var beat_the_gardeners := false
+
 
 func _init():
 	for i in notches:
@@ -159,6 +161,8 @@ func load_():
 	
 	met_the_gardeners = Savefile.get_value("garden", "met_gardeners", false) as bool
 	
+	beat_the_gardeners = Savefile.get_value("garden", "completed_pit", false) as bool
+	
 	jump_tutorial = Savefile.get_value("tutorial", "jump", false)
 	attack_tutorial = Savefile.get_value("tutorial", "attack", false)
 	heal_tutorial = Savefile.get_value("tutorial", "heal", false)
@@ -209,11 +213,11 @@ func save(game:bool = true):
 	Savefile.set_value("diary", "current_page", diary_page)
 	
 	Savefile.set_value("garden", "met_gardeners", met_the_gardeners)
+	Savefile.set_value("garden", "completed_pit", beat_the_gardeners)
 	
 	Savefile.set_value("tutorial", "jump", jump_tutorial)
 	Savefile.set_value("tutorial", "attack", attack_tutorial)
 	Savefile.set_value("tutorial", "heal", heal_tutorial)
-	
 	
 	
 	Savefile.save(current_save)

@@ -24,199 +24,206 @@ func _ready():
 
 func _process(delta):
 	update()
-	if not challenged:
-		if Player.position.x < global_position.x:
-			Buttons.rect_position = lerp(Buttons.rect_position, -(Player.position - global_position)*0.5 + Vector2(0,10), 0.1)
-		else:
-			Buttons.rect_position = lerp(Buttons.rect_position, -(Player.position - global_position)*0.5 + Vector2(-64,10), 0.1)
-		
-		if Player.position.distance_to(global_position) < 23:
-			Buttons.modulate.a = move_toward(Buttons.modulate.a, 1.0, 0.08)
-			if Player.move_up:
-				challenged = true
+	if not Persistent.beat_the_gardeners:
+		if not challenged:
+			if Player.position.x < global_position.x:
+				Buttons.rect_position = lerp(Buttons.rect_position, -(Player.position - global_position)*0.5 + Vector2(0,10), 0.1)
+			else:
+				Buttons.rect_position = lerp(Buttons.rect_position, -(Player.position - global_position)*0.5 + Vector2(-64,10), 0.1)
+			
+			if Player.position.distance_to(global_position) < 23:
+				Buttons.modulate.a = move_toward(Buttons.modulate.a, 1.0, 0.08)
+				if Player.move_up:
+					challenged = true
+			else:
+				Buttons.modulate.a = move_toward(Buttons.modulate.a, 0.0, 0.08)
 		else:
 			Buttons.modulate.a = move_toward(Buttons.modulate.a, 0.0, 0.08)
-	else:
-		Buttons.modulate.a = move_toward(Buttons.modulate.a, 0.0, 0.08)
-		
-		match fight:
-			-1:
-				if not fight_set:
-					fight_set = true
-			0:
-				if not fight_set:
-					spawn_gardener(-100, 1)
-					fight_set = true
-			1:
-				if not fight_set:
-					spawn_gardener(-100, 1)
-					spawn_gardener(100, 1)
-					fight_set = true
-			2:
-				if not fight_set:
-					spawn_gardener(-50, 1)
-					spawn_gardener(50, 1)
-					fight_set = true
-			3:
-				if not fight_set:
-					spawn_gardener(0, 1)
-					for i in range(-3, 4):
-						var new_trap := SPIKE_TRAP.instance()
-						$Plants.add_child(new_trap)
-						new_trap.name = str(i)
-						new_trap.position.x = i*15
-						new_trap.position.y = 15
-					fight_set = true
-			4:
-				if not fight_set:
-					spawn_gardener(100, 1)
-					spawn_gardener(-100, 1)
-					for i in range(-15, 10):
-						var new_trap := SPIKE_TRAP.instance()
-						if $Plants.get_node_or_null(str(i)) == null:
+			
+			match fight:
+				-1:
+					if not fight_set:
+						fight_set = true
+				0:
+					if not fight_set:
+						spawn_gardener(-100, 1)
+						fight_set = true
+				1:
+					if not fight_set:
+						spawn_gardener(-100, 1)
+						spawn_gardener(100, 1)
+						fight_set = true
+				2:
+					if not fight_set:
+						spawn_gardener(-50, 1)
+						spawn_gardener(50, 1)
+						fight_set = true
+				3:
+					if not fight_set:
+						spawn_gardener(0, 1)
+						for i in range(-3, 4):
+							var new_trap := SPIKE_TRAP.instance()
 							$Plants.add_child(new_trap)
 							new_trap.name = str(i)
 							new_trap.position.x = i*15
 							new_trap.position.y = 15
-					fight_set = true
-			5:
-				if not fight_set:
-					spawn_gardener(0, 2)
-					for i in $Plants.get_children():
-						i.queue_free()
-					fight_set = true
-			6:
-				if not fight_set:
-					spawn_gardener(-100, 2)
-					spawn_gardener(100, 2)
-					fight_set = true
-			7:
-				if not fight_set:
-					spawn_gardener(-100, 2)
-					spawn_gardener(100, 1)
-					fight_set = true
-			8:
-				if not fight_set:
-					spawn_gardener(-100, 2)
-					spawn_gardener(0, 1)
-					spawn_gardener(100, 2)
-					for i in range(-3, 4):
-						var new_trap := SPIKE_TRAP.instance()
-						$Plants.add_child(new_trap)
-						new_trap.name = str(i)
-						new_trap.position.x = i*15
-						new_trap.position.y = 15
-					fight_set = true
-			9:
-				if not fight_set:
-					spawn_gardener(-100, 1)
-					spawn_gardener(0, 2)
-					spawn_gardener(100, 1)
-					
-					for i in range(-9, 10):
-						var new_trap := SPIKE_TRAP.instance()
-						$Plants.add_child(new_trap)
-						new_trap.name = str(i)
-						new_trap.position.x = i*15
-						new_trap.position.y = 15
-					fight_set = true
-			10:
-				if not fight_set:
-					spawn_gardener(-180, 2)
-					spawn_gardener(-60, 1)
-					spawn_gardener(60, 1)
-					spawn_gardener(180, 2)
-					
-					for i in range(-15, 16):
-						var new_trap := SPIKE_TRAP.instance()
-						$Plants.add_child(new_trap)
-						new_trap.name = str(i)
-						new_trap.position.x = i*15
-						new_trap.position.y = 15
-					fight_set = true
-		
-		if get_child_count() == 3:
-			if timer > 0.0:
-				timer -= delta
-				match fight+1:
-					0:
-						set_platform(1, -100, 1)
-					1:
-						set_platform(1, -100, 1)
-						set_platform(2, 100, 1)
-					2:
-						set_platform(1, -50, 1)
-						set_platform(2, 50, 1)
-					3:
-						set_platform(1, 0, 1)
-					4:
-						set_platform(1, 100, 1)
-						set_platform(2, -100, 1)
-					5:
-						set_platform(1, 0, 2)
-					6:
-						set_platform(1, -100, 2)
-						set_platform(2, 100, 2)
-					7:
-						set_platform(1, -100, 2)
-						set_platform(2, 100, 1)
-					8:
-						set_platform(1, -100, 2)
-						set_platform(2, 0, 1)
-						set_platform(3, 100, 2)
-					9:
-						set_platform(1, -100, 1)
-						set_platform(2, 0, 2)
-						set_platform(3, 100, 1)
-					10:
-						set_platform(1, -180, 2)
-						set_platform(2, -60, 1)
-						set_platform(3, 60, 1)
-						set_platform(4, 180, 2)
-					11:
+						fight_set = true
+				4:
+					if not fight_set:
+						spawn_gardener(100, 1)
+						spawn_gardener(-100, 1)
+						for i in range(-15, 10):
+							var new_trap := SPIKE_TRAP.instance()
+							if $Plants.get_node_or_null(str(i)) == null:
+								$Plants.add_child(new_trap)
+								new_trap.name = str(i)
+								new_trap.position.x = i*15
+								new_trap.position.y = 15
+						fight_set = true
+				5:
+					if not fight_set:
+						spawn_gardener(0, 2)
 						for i in $Plants.get_children():
 							i.queue_free()
-			else:
-				timer = 3.0
-				fight_set = false
-				fight += 1
-				
-				match fight:
-					0:
-						quit_platform(1)
-					1:
-						quit_platform(1)
-						quit_platform(2)
-					2:
-						quit_platform(1)
-						quit_platform(2)
-					3:
-						quit_platform(1)
-					4:
-						quit_platform(1)
-						quit_platform(2)
-					5:
-						quit_platform(1)
-					6:
-						quit_platform(1)
-						quit_platform(2)
-					7:
-						quit_platform(1)
-						quit_platform(2)
-					8:
-						quit_platform(1)
-						quit_platform(2)
-						quit_platform(3)
-					9:
-						quit_platform(1)
-						quit_platform(2)
-						quit_platform(3)
-					10:
-						quit_platform(1)
-						quit_platform(2)
-						quit_platform(3)
-						quit_platform(4)
-				
+						fight_set = true
+				6:
+					if not fight_set:
+						spawn_gardener(-100, 2)
+						spawn_gardener(100, 2)
+						fight_set = true
+				7:
+					if not fight_set:
+						spawn_gardener(-100, 2)
+						spawn_gardener(100, 1)
+						fight_set = true
+				8:
+					if not fight_set:
+						spawn_gardener(-100, 2)
+						spawn_gardener(0, 1)
+						spawn_gardener(100, 2)
+						for i in range(-3, 4):
+							var new_trap := SPIKE_TRAP.instance()
+							$Plants.add_child(new_trap)
+							new_trap.name = str(i)
+							new_trap.position.x = i*15
+							new_trap.position.y = 15
+						fight_set = true
+				9:
+					if not fight_set:
+						spawn_gardener(-100, 1)
+						spawn_gardener(0, 2)
+						spawn_gardener(100, 1)
+						
+						for i in range(-9, 10):
+							var new_trap := SPIKE_TRAP.instance()
+							$Plants.add_child(new_trap)
+							new_trap.name = str(i)
+							new_trap.position.x = i*15
+							new_trap.position.y = 15
+						fight_set = true
+				10:
+					if not fight_set:
+						spawn_gardener(-180, 2)
+						spawn_gardener(-60, 1)
+						spawn_gardener(60, 1)
+						spawn_gardener(180, 2)
+						
+						for i in range(-15, 16):
+							var new_trap := SPIKE_TRAP.instance()
+							$Plants.add_child(new_trap)
+							new_trap.name = str(i)
+							new_trap.position.x = i*15
+							new_trap.position.y = 15
+						fight_set = true
+						for i in $Plants.get_children():
+							i.queue_free()
+							print("a")
+			
+			if get_child_count() == 3:
+				if timer > 0.0:
+					timer -= delta
+					match fight+1:
+						0:
+							set_platform(1, -100, 1)
+						1:
+							set_platform(1, -100, 1)
+							set_platform(2, 100, 1)
+						2:
+							set_platform(1, -50, 1)
+							set_platform(2, 50, 1)
+						3:
+							set_platform(1, 0, 1)
+						4:
+							set_platform(1, 100, 1)
+							set_platform(2, -100, 1)
+						5:
+							set_platform(1, 0, 2)
+						6:
+							set_platform(1, -100, 2)
+							set_platform(2, 100, 2)
+						7:
+							set_platform(1, -100, 2)
+							set_platform(2, 100, 1)
+						8:
+							set_platform(1, -100, 2)
+							set_platform(2, 0, 1)
+							set_platform(3, 100, 2)
+						9:
+							set_platform(1, -100, 1)
+							set_platform(2, 0, 2)
+							set_platform(3, 100, 1)
+						10:
+							set_platform(1, -180, 2)
+							set_platform(2, -60, 1)
+							set_platform(3, 60, 1)
+							set_platform(4, 180, 2)
+						11:
+							Persistent.beat_the_gardeners = true
+				else:
+					timer = 3.0
+					fight_set = false
+					fight += 1
+					
+					match fight:
+						0:
+							quit_platform(1)
+						1:
+							quit_platform(1)
+							quit_platform(2)
+						2:
+							quit_platform(1)
+							quit_platform(2)
+						3:
+							quit_platform(1)
+						4:
+							quit_platform(1)
+							quit_platform(2)
+						5:
+							quit_platform(1)
+						6:
+							quit_platform(1)
+							quit_platform(2)
+						7:
+							quit_platform(1)
+							quit_platform(2)
+						8:
+							quit_platform(1)
+							quit_platform(2)
+							quit_platform(3)
+						9:
+							quit_platform(1)
+							quit_platform(2)
+							quit_platform(3)
+						10:
+							quit_platform(1)
+							quit_platform(2)
+							quit_platform(3)
+							quit_platform(4)
+		
+		$Platforms/Exit/CollisionShape2D.disabled = not challenged or fight > 10
+	else:
+		$Platforms/Exit/CollisionShape2D.disabled = true
+		Buttons.modulate.a = move_toward(Buttons.modulate.a, 0.0, 0.08)
 
 
 func spawn_gardener(x:float, type):
@@ -233,7 +240,7 @@ func spawn_gardener(x:float, type):
 	new_gardener.speed.y = -250
 
 func _draw():
-	if not challenged:
+	if not challenged and not Persistent.beat_the_gardeners:
 		if not Engine.editor_hint:
 			if Player.position.distance_to(global_position) < 23:
 				draw_rect(Rect2(-3, -3, 4, 4), Color(0.9,0.5,0.1))

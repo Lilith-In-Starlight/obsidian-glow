@@ -99,7 +99,7 @@ script = ExtResource( 12 )
 depth = 3.0
 
 [node name="GardenDoor" parent="DecoBg" instance=ExtResource( 13 )]
-position = Vector2( 233, 156 )
+position = Vector2( 233, 155 )
 z_index = 1
 
 [node name="Neptune" parent="." instance=ExtResource( 5 )]

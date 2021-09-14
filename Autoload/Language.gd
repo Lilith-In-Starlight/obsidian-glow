@@ -35,6 +35,7 @@ var lines := {
 		"dia_gardener_lilanea" : ["I wonder how on earth Ash and Ember manage to stay in the same cluster. They just keep fighting over their projects.", "I get that the angels would kill us on sight if we went out unprotected. But I think they're escalating things up even more!"],
 		"dia_gardener_kean" : ["That over there is Ash. A few weeks ago we built the first of the tunnels we plan to dig, but she thinks we can do better.", "Ember, her colleague, disagrees. She thinks her methods are dangerous.", "I think it's a healthy push and pull, efficiency and safety.", "Sometimes I intervene, though. I think I'll have to do so this time."],
 		"dia_gardener_ash" : ["Ugh. These drills take ages to make. Let alone transporting them while keeping them alive", "We could magically engineer spikes that grow like this and do the drilling for us. That seems totally doable.", 'But of course she doesn\'t agree. "We can\'t just create a new species, Ash, its dangerous"', "We could do so much better... at least our friend can come visit us safely now.", "Oh. How long have you been standing there? Shoo. Go fight in the pit or something."],
+		"dia_gardener_elyx" : ["So they let you in after all. You're not just another fool...", "The person you're looking for are at the end of this tunnel."],
 		
 		"lore_tablet_shadow" :  ["Next in line, the darkness within you is strong.", "Attack your enemies, dim their lights, and use their shadow to heal your wounds."],
 	},

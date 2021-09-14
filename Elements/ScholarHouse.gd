@@ -62,12 +62,14 @@ func _input(event):
 							"Greetings, Ailment. I am the Librarian. I travel the world in search for information.", "I have been tasked with giving you something, and in turn you must do me a favor.",
 							"You are going to travel the world. I used to be capable of that, but my youth is falling apart.",
 							"Without traveling, there is no world, no information. So, please, take this diary and write on it, or draw, or anything. This will be of aid to you in your travels.",
-							"It is incomplete, however. Visit the spike gardeners, east of here. They are great magicians, and friends of mine, they will know what to do."
+							"I suggest you visit the spike gardeners, east of here. They are great magicians, and friends of mine.",
+							"Challenge them in The Pit and prove that you are who we're awaiting for.",
 					]
 				Persistent.got_diary = true
 			else:
 				Dialogue.dialogue = [
-						"Goodbye, little sickness. Continue your journeys, there's a lot of world for you to see."
+						"Go away. Continue your journey, there's a lot of world for you to see.",
+						"Once you are done, bring your diary back to me.",
 					]
 	else:
 		if (Input.is_action_just_released("jump") or Input.is_action_just_released("attack")) and Dialogue.dialogue.empty():
